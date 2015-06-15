@@ -1,15 +1,15 @@
 (function()
 {
-	var deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy"];
+	var deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy"];
 	if(bin.runtimeConfig.useNetLocal)
 	{
-		deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netDebugPolicy"];
+		deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy", "bin/core/netPolicy/netDebugPolicy"];
 	}
 	define(
 	deps,
-	function($, _, osUtil, NetCallbackPolicy, NetDebugPolicy)
+	function($, _, osUtil, NetCallbackPolicy, NetCachePolicy, NetSendCheckPolicy, NetDebugPolicy)
 	{
-		var DEFAULT_NET_OPTIONS = {loading:"model"};
+		var DEFAULT_NET_OPTIONS = {loading:"MODEL"};
 		var Net  = function()
 		{
 
@@ -28,6 +28,12 @@
 			
 			this._callbackPolicy = new NetCallbackPolicy(this);
 			this._callbackPolicy.init();
+
+			this._cachePolicy = new NetCachePolicy(this);
+			this._cachePolicy.init();
+
+			this._sendCheckPolicy = new NetSendCheckPolicy(this);
+			this._sendCheckPolicy.init();
 
 			console.info("Net module initialize");
 		}
@@ -48,17 +54,47 @@
 
 			var netParams = this._genNetParams(params);
 
+			// Try send-check policy
+			if(netParams.options.sendCheck)	
+			{
+				var checkResult = this._sendCheckPolicy.check(netParams);
+				if(checkResult)
+				{
+					switch(checkResult.policy)
+					{
+						case "CANCEL":
+						{
+							this._sendCheckPolicy.onComplete(checkResult.netParams);
+
+							if(checkResult.netParams.userdatas.request)
+							{
+								checkResult.netParams.userdatas.request.abort();
+							}
+
+							// Clear the old request call backs
+							checkResult.netParams.callbacks = {}; 
+						}
+						break;
+						case "REJECT":
+						{
+							return ;
+						}
+						break;
+					}
+				}
+			}	
+
 			// Try debug policy
 			if(this._debugPolicy)
 			{
 				var checkResult = this._debugPolicy.check(netParams);
 				if(checkResult)
 				{
-					netParams.userdatas.from = "debug";
+					netParams.userdatas.from = "DEBUG";
 
 					this._beforeSend(netParams);
 
-					this._debugPolicy.doDebug(checkResult, netParams, function(data)
+					this._debugPolicy.getData(checkResult, netParams, function(data)
 					{
 						self._success(data, netParams);
 						self._complete(netParams);
@@ -75,22 +111,39 @@
 
 			
 			// Try cache policy
+			if(netParams.options.cache)
 			{
+				var checkResult = this._cachePolicy.check(netParams);
+				if(checkResult)
+				{
+					netParams.userdatas.from = "CACHE";
+
+					this._beforeSend(netParams);
+
+					this._cachePolicy.getData(checkResult, netParams, function(data)
+					{
+						self._success(data, netParams);
+						self._complete(netParams);
+					},
+					function(error)
+					{
+						self._error(error, netParams);
+						self._complete(netParams);
+					});
+
+					return ;
+				}
 
 			}
 
-			// Try send-check policy	
-			{
+			netParams.userdatas.from = "NET";
 
-			}					
-
-
-			this.ajax(netParams);
+			netParams.userdatas.request = this.ajax(netParams);
 		}
 
 		Class.ajax = function(netParams)
 		{
-			$.ajax(netParams);
+			return $.ajax(netParams);
 		}
 
 		Class._genNetParams = function(params)
@@ -100,7 +153,6 @@
 			params.userdatas = {};
 			params.options   = _.extend(osUtil.clone(DEFAULT_NET_OPTIONS), params.options);	
 			params.callbacks = _.pick(params, ["success", "complete", "beforeSend", "error"]);
-
 
 			params.success = function(netData)
 			{
@@ -127,155 +179,37 @@
 
 		Class._success = function(data, netParams)
 		{
+			if(netParams.options.cache && netParams.userdatas.from === "NET")
+			{
+				this._cachePolicy.setData(netParams, data);
+			}
+
 			this._callbackPolicy.success(data, netParams);
 		}
 
 		Class._error = function(error, netParams)
 		{
-			if(bin.runtimeConfig.debug)
-			{
-				console.error("API["+netParams.api+"] Error "+error.status+" "+error.statusText);
-			}
-
 			this._callbackPolicy.error(error, netParams);
-
-			if(error.status === 0)
-			{
-				Notification.show
-				({
-					type: "error",
-					message: "网络连接失败，请检查您的网络"
-				});
-			}
-			else
-			{
-				Notification.show
-				({
-					type: "error",
-					message: "网络错误，错误代码 "+error.status
-				});
-
-			}
 		}
 
 		Class._complete = function(netParams)
 		{
-			// do post work
 			this._callbackPolicy.complete(netParams);
+
+			if(netParams.options.sendCheck)
+			{
+				this._sendCheckPolicy.onComplete(netParams);
+			}
 		}
 
 		Class._beforeSend = function(netParams)
 		{
+			if(netParams.options.sendCheck)
+			{
+				this._sendCheckPolicy.onBeforeSend(netParams);
+			}
+
 			this._callbackPolicy.beforeSend(netParams);
-		}
-
-		Class._doDebugFunc = function(func, netParams)
-		{
-			var data = func(netParams);
-
-			this._doDebugData(data, netParams);
-		}
-
-		Class._doDebugFile = function(file, netParams)
-		{
-			var self = this;
-			var params = {};
-			params.url = file;
-			params.success = function(data)
-			{
-				self._doDebugData(data, netParams);
-			}
-			params.error = function(error)
-			{
-				console.info("ERROR : Load net debug file ["+file+"] fail");
-				netParams.error(error);
-			}
-
-			$.ajax(params);
-		}
-
-		Class._doDebugData = function(data, netParams, error)
-		{
-			var netData = {code:0, data:osUtil.clone(data, true)};
-
-			netParams.beforeSend();
-			osUtil.delayCall(
-			function()
-			{
-				if(error)
-				{
-					netParams.error(error);
-				}
-				else
-				{
-					netParams.success(netData);
-				}
-				netParams.complete();
-			}, 500
-			);
-		}
-
-		Class._tryDebug = function(netParams)
-		{
-			if(!debugConfig)
-			{
-				return false;
-			}
-
-			var api = netParams.api;
-
-			var apiDebugConfig = debugConfig[api]; 
-			if(!apiDebugConfig)
-			{
-				return false;
-			}
-			netParams.userdatas.from = "debug";
-
-			// Check options
-			if(apiDebugConfig.options)
-			{
-				var reqMethod = netParams.type;
-				if(!reqMethod && (!apiDebugConfig.options.method || apiDebugConfig.options.method === "GET"))
-				{
-					// GET
-				}
-				else if(reqMethod && reqMethod === apiDebugConfig.options.method)
-				{
-
-				}
-				else if(reqMethod && !apiDebugConfig.options.method)
-				{
-					console.WARNING("API ["+api+"] method not configed in debugNetConfig");
-				}
-				else
-				{
-					this._doDebugData(null, netParams, {status:400, statusText:"Client error"});
-					return true;
-				}
-			}
-
-			var data = apiDebugConfig.data;
-			if(typeof(data) === "string")
-			{
-				if(data.substr(0, 5) === "file!")
-				{
-					this._doDebugFile(data.substr(5), netParams);		
-				}
-				else
-				{
-					this._doDebugData(data, netParams);
-				}
-			}
-			else if(typeof(data) === "function")
-			{
-				this._doDebugFunc(data, netParams);
-			}
-			else
-			{
-				this._doDebugData(data, netParams);
-			}
-
-			return true;
 		}
 		
 		return Net;

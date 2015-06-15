@@ -19,7 +19,7 @@ define(
 			return config[netParams.api];
 		}
 
-		Class.doDebug = function(checkResult, netParams, success, error)
+		Class.getData = function(checkResult, netParams, success, error)
 		{
 			var apiDebugConfig = checkResult; 
 			

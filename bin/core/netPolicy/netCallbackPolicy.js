@@ -19,7 +19,7 @@ define(
 			var options = netParams.options;
 			if(options.loading)
 			{
-				netParams.userdatas.indicatorID = indicator.show({model:options.loading === "model"});
+				netParams.userdatas.indicatorID = indicator.show({model:options.loading === "MODEL"});
 			}
 
 			if(netParams.callbacks.beforeSend)
