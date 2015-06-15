@@ -1,6 +1,6 @@
 define(
         [
-            "text!bin/html/defaultNaviBar.html",
+            "text!bin/res/html/defaultNaviBar.html",
             "bin/core/pageView",
             "bin/util/elemUtil"
         ],

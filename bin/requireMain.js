@@ -1,9 +1,9 @@
 var bin = {};
 require.config({baseUrl:'../'});
 	// bin frame-work namespace
-require(["bin/setupConfig"], function()
+require(["bin/core/setupConfig"], function()
 {
-	require(['domReady!', 'bin/util/fastclickUtil', 'bin/main'],  function(domReady, fastclickUtil, main)
+	require(['domReady!', 'bin/util/fastclickUtil', 'bin/core/main'],  function(domReady, fastclickUtil, main)
 	{
 		//ios7 issue fix
 		if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) 

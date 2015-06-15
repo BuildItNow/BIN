@@ -1,5 +1,5 @@
 define(
-	["config/netLocalConfig", "bin/util/osUtil"],
+	["bin/config/netLocalConfig", "bin/util/osUtil"],
 	function(config, osUtil)
 	{
 		var NetDebugPolicy = function(netManager)

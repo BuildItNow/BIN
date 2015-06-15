@@ -62,6 +62,8 @@ html
 
 	background-size: 20px 20px;
 	background-position: 10px 9px;
+
+	background-image: url("../img/back.png");
 }
 
 .bin-page-navi-right
@@ -149,7 +151,7 @@ html
   	left: 50%; 
   	margin-top: -20px; 
   	margin-left: -20px;
-  	background-image:url(../../bin/img/loading.png);
+  	background-image:url(../img/loading.png);
   	-webkit-background-size: 40px 40px;
   	background-size: 40px 40px;
 }

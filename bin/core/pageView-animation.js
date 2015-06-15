@@ -1,4 +1,4 @@
-define(["css!bin/css/pageViewAnimation"], function()
+define(["css!bin/res/css/pageViewAnimation"], function()
 {
     var animations = 
     [
