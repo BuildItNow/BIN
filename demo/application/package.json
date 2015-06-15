@@ -1,0 +1,10 @@
+{
+  "name": "应用类",
+ 	"identifier":"application",
+  "description": "",
+  "version": "1.0.0",
+  "dependencies": {},
+	"build" : 1,
+	"releaseNote": "",
+	"hidden" : false
+}

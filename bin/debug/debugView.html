@@ -1,0 +1,68 @@
+<div id="debugView" class="bin-page">
+	<style>
+		#debugView .DebugView-debug-infos 
+		{
+			width:100%;
+			height:100%;
+			font-size: 10px;
+			line-height: 12px;
+			padding:5px;
+			margin: 0px;
+			border: none;
+		}
+
+		#debugView .DebugView-debug-options
+		{
+			position: relative;
+			top: 0px;
+			width:100%;
+			height:40px;
+			background-color: rgb(200, 200,200);
+		}
+
+		#debugView .DebugView-debug-floating
+		{
+			position: absolute;
+			left: 10px;
+			top:10px;
+			width: 50px;
+			height: 20px;
+			font-size: 8px;
+			line-height: 20px;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugView .DebugView-clear-infos
+		{
+			position: absolute;
+			left: 70px;
+			top:10px;
+			width: 50px;
+			height: 20px;
+			font-size: 8px;
+			line-height: 20px;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugView .DebugView-debug-content
+		{
+			position: absolute;
+			top:40px;
+			width: 100%;
+			bottom: 0px;
+		}
+	</style>
+
+    <div class="bin-page-content">
+    	<div id="debugOptions" class="DebugView-debug-options">
+    		<div id="debugFloating" class="DebugView-debug-floating"></div>
+    		<div id="clearDebugInfos" class="DebugView-clear-infos">清空</div>
+    	</div>
+    	<div id="debugContent" class="DebugView-debug-content">
+    	</div>
+    	<!--textarea id="debugInfos" class="DebugView-debug-infos">
+    	</textarea-->
+    </div>
+</div>
