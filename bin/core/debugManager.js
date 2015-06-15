@@ -27,13 +27,13 @@ define(
             root.append(this._debugHUD);
             this._debugHUD.find("#debugSwitch").on("click", function()
             {
-                if(bin.naviController.getView('debug/debugView'))
+                if(bin.naviController.getView('bin/debug/debugView'))
                 {
                     bin.naviController.pop();
                 }
                 else
                 {
-                    bin.naviController.push("debug/debugView", self._elemInfos);
+                    bin.naviController.push("bin/debug/debugView", self._elemInfos);
                 }
             });
             this._debugFloating = this._debugHUD.find("#debugFloating");
