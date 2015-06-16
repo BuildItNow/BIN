@@ -1,15 +1,16 @@
 html
 {
-	font-family: "微软雅黑"
+	font-family: "微软雅黑";
+	font-size : 20px;
 }
 
 .bin-navigation-container
 {
 	position: absolute;
-	left: 0px;
-	top: 0px;
-	padding: 0px;
-	margin: 0px;
+	left: 0rem;
+	top: 0rem;
+	padding: 0rem;
+	margin: 0rem;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -18,10 +19,10 @@ html
 .bin-HUD-container
 {
 	position: absolute;
-	left: 0px;
-	top: 0px;
-	padding: 0px;
-	margin: 0px;
+	left: 0rem;
+	top: 0rem;
+	padding: 0rem;
+	margin: 0rem;
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
@@ -33,10 +34,10 @@ html
 .bin-page
 {
 	position: absolute;
-	left: 0px;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
+	left: 0rem;
+	top: 0rem;
+	right: 0rem;
+	bottom: 0rem;
 	overflow: hidden;
 	background-color: white;
 }
@@ -44,10 +45,10 @@ html
 .bin-page-navi-bar
 {
 	position: absolute;
-	left: 0px;
-	top: 0px;
+	left: 0rem;
+	top: 0rem;
 	width: 100%;
-	height:38px;
+	height:1.9rem;
 	background-color: blue;
 	text-align: center;
 }
@@ -56,12 +57,12 @@ html
 {
 	float: left;
 	text-align: left;
-	width: 38px;
-	height: 38px;
-	padding-left: 10px;
+	width: 1.9rem;
+	height: 1.9rem;
+	padding-left: 0.5rem;
 
-	background-size: 20px 20px;
-	background-position: 10px 9px;
+	background-size: 1rem 1rem;
+	background-position: 0.5rem 0.45rem;
 
 	background-image: url("../img/back.png");
 }
@@ -70,12 +71,12 @@ html
 {
 	float: right;
 	text-align: right;
-	width: 38px;
-	height: 38px;
-	padding-right: 10px;
+	width: 1.9rem;
+	height: 1.9rem;
+	padding-right: 0.5rem;
 
-	background-size: 20px 20px;
-	background-position: 18px 9px;
+	background-size: 1rem 1rem;
+	background-position: 0.9rem 0.45rem;
 }
 
 .bin-page-navi-image
@@ -87,8 +88,8 @@ html
 .bin-page-navi-text
 {
 	position: relative;
-	font-size: 12px;
-	line-height: 38px;
+	font-size: 0.6rem;
+	line-height: 1.9rem;
 	background-image: "";
 	color: white;
 	width: auto;
@@ -103,8 +104,8 @@ html
 	margin-bottom: 0px;
 	text-align: center;
 	width: 50%;
-	font-size: 14px;
-	line-height: 38px;
+	font-size: 0.7rem;
+	line-height: 1.9rem;
 	color: white;
 }
 
@@ -120,7 +121,7 @@ html
 
 .bin-page-navi-bar+.bin-page-content
 {
-	top:38px;
+	top:1.9rem;
 }
 
 @-webkit-keyframes loading 
@@ -131,29 +132,29 @@ html
 
 .bin-indicator
 {
-  	width: 100px; 
-  	height: 100px;
+  	width: 5rem; 
+  	height: 5rem;
   	position: fixed;
   	top: 50%; 
   	left: 50%; 
-  	margin-top: -50px; 
-  	margin-left: -50px;
+  	margin-top: -2.5rem; 
+  	margin-left: -2.5rem;
   	background-color: rgba(66,66,66,0.5);
-  	border-radius: 10px;
+  	border-radius: 0.5rem;
 }
 
 .bin-indicator>*:first-child
 {
   	position: absolute;
-  	width: 40px;
-  	height: 40px;
+  	width: 2rem;
+  	height: 2rem;
   	top: 50%; 
   	left: 50%; 
-  	margin-top: -20px; 
-  	margin-left: -20px;
+  	margin-top: -1rem; 
+  	margin-left: -1rem;
   	background-image:url(../img/loading.png);
-  	-webkit-background-size: 40px 40px;
-  	background-size: 40px 40px;
+  	-webkit-background-size: 2rem 2rem;
+  	background-size: 2rem 2rem;
 }
 
 .bin-indicator.active>*:first-child
