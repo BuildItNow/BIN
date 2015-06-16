@@ -1,0 +1,13 @@
+define([],
+[
+	{path:"normalPageDemo/index",name:"一般页面开发"},
+	{path:"naviPageDemo/index",name:"具有导航栏页面开发"},
+	{path:"remDemo/index",name:"rem页面适配"},
+	{path:"pageJumpDemo/index",name:"页面跳转效果"},
+	{path:"netDemo/index",name:"网络API开发"},
+	{path:"netLocalDemo/index",name:"网络本地数据框架"},
+	{path:"cacheDemo/index",name:"网络缓存"},
+	{path:"sendCheckDemo/index",name:"网络请求发送策略"},
+	{path:"listViewDemo/index",name:"列表开发"},
+	{path:"dialogDemo/index",name:"对话框开发"},
+]);

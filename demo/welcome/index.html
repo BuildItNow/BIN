@@ -1,46 +1,30 @@
-<div id="welcomeView" class="bin-page" data-view="welcome/index">
+<div id="welcomeView" class="bin-page">
 	<style>
 		#welcomeView .WelcomeView-label
 		{
-			margin-top: 1rem;
+			margin-top: 0.5rem;
 			margin-bottom: 0.5rem;
-			
 			text-align: center;
 			font-size: 1rem;
 			line-height: 1.1rem;
 			color: green;
 		}
 
-		#welcomeView .WelcomeView-test-api
+		#welcomeView .WelcomeView-tutorial-link
 		{
-			margin-top: 0.25rem;
-			font-size: 0.5rem;
-			line-height: 0.6rem;
-		}
-
-		#welcomeView .WelcomeView-button
-		{
-			font-size: 0.5rem;
-			line-height: 1rem;
-			width:3rem;
-			height:1rem;
-			display: inline-block;
-			background-color: #ddd;
+			text-align: center;
+			font-size: 0.7rem;
+			line-height: 1.2rem;
+			text-decoration:underline;
 		}
 	</style>
-	<div id="naviBar" class="bin-page-navi-bar" naviLeft="hide:true" naviTitle="text:Welcome to BIN" naviRight="image:url(../bin/res/img/oper_plus.png)">	    
+	<script id="tutorialLinkTemplate" type="text/x-underscore-template">
+		<div id="<%=id%>" class="WelcomeView-tutorial-link"><%=name%></div>
+	</script>
+	<div id="naviBar" class="bin-page-navi-bar" naviLeft="hide:true" naviTitle="text:WELCOME TO BIN" naviRight="hide:true">	    
 	</div>
-    
     <div class="bin-page-content">
-    	<h>网络测试API</h>
-    	<div id="testAPIByFunction" class="WelcomeView-test-api"></div>
-    	<div id="testAPIByData" class="WelcomeView-test-api"></div>
-    	<div id="testAPIByFile" class="WelcomeView-test-api"></div>
-    	<br>
-    	<h>跳转</h>
-    	<br>
-    	<div id="naviByFadeIO" class="WelcomeView-button">淡入淡出</div>
-    	<div id="naviByRightIO" class="WelcomeView-button">右进右出</div>
-    	<div id="naviByRightILeftO" class="WelcomeView-button">右进左出</div>
+    	<div class="WelcomeView-label">示例</div>
+    	<div id="tutorialContainer"></div>
     </div>
 </div>

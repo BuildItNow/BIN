@@ -55,7 +55,6 @@
 			var netParams = this._genNetParams(params);
 
 			// Try send-check policy
-			if(netParams.options.sendCheck)	
 			{
 				var checkResult = this._sendCheckPolicy.check(netParams);
 				if(checkResult)
@@ -137,7 +136,6 @@
 			}
 
 			netParams.userdatas.from = "NET";
-
 			netParams.userdatas.request = this.ajax(netParams);
 		}
 
@@ -196,19 +194,13 @@
 		{
 			this._callbackPolicy.complete(netParams);
 
-			if(netParams.options.sendCheck)
-			{
-				this._sendCheckPolicy.onComplete(netParams);
-			}
+			this._sendCheckPolicy.onComplete(netParams);
 		}
 
 		Class._beforeSend = function(netParams)
 		{
-			if(netParams.options.sendCheck)
-			{
-				this._sendCheckPolicy.onBeforeSend(netParams);
-			}
-
+			this._sendCheckPolicy.onBeforeSend(netParams);
+			
 			this._callbackPolicy.beforeSend(netParams);
 		}
 		

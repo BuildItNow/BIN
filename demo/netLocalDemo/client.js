@@ -16,5 +16,6 @@ define([], function()
 	{
 		bin.netManager.doAPI({api:"/api/byFile", success:success, type:"POST"});
 	}
+
 	return Class;
 });

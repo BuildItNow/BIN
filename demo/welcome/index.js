@@ -1,54 +1,32 @@
 define(
-	["bin/core/naviPageView", "welcome/client"],
-	function(Base, Client)
+	["bin/core/naviPageView", "underscore", "welcome/tutorialConfig"],
+	function(Base, _, config)
 	{
-		return Base.extend(
+		var Class = {};
+
+		Class.posGenHTML = function()
+		{
+			var template  = _.template(this.elementHTML("#tutorialLinkTemplate"));
+			var container = this.elementFragment("#tutorialContainer");
+			for(var i=0,i_sz=config.length; i<i_sz; ++i)
 			{
-				events:
-				{
-					"click #naviByFadeIO,#naviByRightIO,#naviByRightILeftO":"onNaviWithEffect"
-				},
-				asyncPosGenHTML : function()
-				{
-					var self = this;
-					Client.apiByFunction(function(data)
-					{
-						self.elementHTML("#testAPIByFunction", data.data);
-					})
+				container.append(template({id:i,name:config[i].name}));
+			}
 
-					Client.apiByData(function(data)
-					{
-						self.elementHTML("#testAPIByData", data.data);
-					})
-
-					Client.apiByFile(function(data)
-					{
-						self.elementHTML("#testAPIByFile", data.data);
-					})
-				},
-				onNaviWithEffect:function(e)
-				{
-					var id = e.currentTarget.id;
-
-					switch(id)
-					{
-						case "naviByFadeIO":
-						{
-							bin.naviController.push("welcome/page.html", null, {effect:"fadeIO"});
-						}
-						break;
-						case "naviByRightIO":
-						{
-							bin.naviController.push("welcome/page.html", null, {effect:"rightIO"});
-						}
-						break;
-						case "naviByRightILeftO":
-						{
-							bin.naviController.push("welcome/page.html", null, {effect:"rightILeftO"});
-						}
-						break;
-					}
-				}
+			var self = this;
+			container.find(".WelcomeView-tutorial-link").on("click", function(e)
+			{
+				self.onClickTutorial(config[e.currentTarget.id]);
 			});
+
+			container.setup();
+		}
+
+		Class.onClickTutorial = function(config)
+		{
+			bin.naviController.push(config.path, config);
+		}
+
+		return Base.extend(Class);
 	}
 );
