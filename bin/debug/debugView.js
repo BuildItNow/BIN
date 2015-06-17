@@ -22,16 +22,16 @@ define(
         {
             Base.prototype.onShow.call(this);
             
-            this.getElement("#debugContent").append(this._debugInfos);
+            this.$append("#debugContent", this._debugInfos);
             this._debugInfos.addClass("DebugView-debug-infos");
 
-            this.elementHTML("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");
+            this.$html("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");
         }
 
         Class.switchDebugFloating = function()
         {
             bin.debugManager.switchDebugFloating();
-            this.elementHTML("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");            
+            this.$html("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");            
         }
 
         Class.clearDebugInfos = function()

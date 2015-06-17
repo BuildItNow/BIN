@@ -11,10 +11,10 @@ define(["css!bin/res/css/pageViewAnimation"], function()
     {
         var self = this;
         var css  = 'animated '+name;
-        this.getRoot().addClass(css);
-        this.getRoot().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function()
+        this.$().addClass(css);
+        this.$().one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function()
         { 
-            self.getRoot().removeClass(css);
+            self.$().removeClass(css);
             if(onFinish)
             {
                 onFinish();

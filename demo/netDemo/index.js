@@ -14,7 +14,7 @@ define(
 			var self = this;
 			Client.testAPI(function(data)
 			{
-				self.getElement("#requestResult").text(osUtil.dump(data));
+				self.$("#requestResult").text(osUtil.dump(data));
 			})
 		}
 

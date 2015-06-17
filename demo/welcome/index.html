@@ -16,10 +16,11 @@
 			font-size: 0.7rem;
 			line-height: 1.2rem;
 			text-decoration:underline;
+			color: green;
 		}
 	</style>
 	<script id="tutorialLinkTemplate" type="text/x-underscore-template">
-		<div id="<%=id%>" class="WelcomeView-tutorial-link"><%=name%></div>
+		<div id="<%=id%>" class="WelcomeView-tutorial-link" <%if(todo){%>style="color:red;"<%}%>><%=name%></div>
 	</script>
 	<div id="naviBar" class="bin-page-navi-bar" naviLeft="hide:true" naviTitle="text:WELCOME TO BIN" naviRight="hide:true">	    
 	</div>

@@ -14,7 +14,7 @@ define(
 			var self = this;
 			var onRequestResult = function(data)
 			{
-				self.getElement("#requestResult").text(osUtil.dump(data));
+				self.$("#requestResult").text(osUtil.dump(data));
 			}
 
 			switch(e.currentTarget.id)

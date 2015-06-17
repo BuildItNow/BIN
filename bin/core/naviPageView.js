@@ -149,7 +149,7 @@ define(
             {
                 var self = this;
                 // setup navagation
-                var navContainer = this.elementFragment("#naviBar");
+                var navContainer = this.$fragment("#naviBar");
                 if(!navContainer)
                 {
                     return ;
@@ -160,7 +160,7 @@ define(
                 {
                     if(this.navTemplate)
                     {
-                        navContainer.append($(this.navTemplate));
+                        navContainer.append(this.navTemplate);
                     }
                     else
                     {

@@ -12,7 +12,6 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 	Class.constructor = function(options)
 	{
 		this._isShow  = false;
-		this._root    = null;
 		
 		if(options && options._autoLoad)   // Load by BIN, BIN will auto set element by html content
         {
@@ -59,9 +58,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
     {
         if(this._html)
         {
-            // Assert there is a root node in html
-            this._root = $(this._html);
-            this.el = this._root[0];
+            this.setElement($(this._html), true);
         }
     }
 
@@ -79,18 +76,18 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
     Class.addView = function(sel, view)
     {
-        var node = this.getElement(sel);
+        var node = this.$(sel);
         if(node)
         {
-            node.append(view.getRoot());
+            node.append(view.$());
             view.show();
         }
     }
 
     Class.insertViewBefore = function(sel, view)
     {
-        var node = view.getRoot();
-        var beforeNode = this.getElement(sel);
+        var node = view.$();
+        var beforeNode = this.$(sel);
         if(beforeNode)
         {
             node.insertBefore(beforeNode);
@@ -113,7 +110,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 		}
 
 		this._isShow = true;
-		this.getRoot().css("display", "block");
+		this.$().css("display", "block");
 		this.onShow();
 	}
 	
@@ -125,7 +122,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 		}
 		
 		this._isShow = false;
-		this.getRoot().css("display", "none");
+		this.$().css("display", "none");
 		this.onHide();
 	}
 
@@ -162,37 +159,21 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
 	Class.onWindowResize = function() {}
 
-	Class.getRoot = function()
+	Class.$ = function(sel, fromSel)
     {
-        if(!this._root)
+        if(fromSel)
         {
-            this._root = $(this.el);
-        }
-
-        return this._root;
-    }
-
-    Class.getElement = function(sel, fromSel)
-    {
-        if(!sel && !fromSel)
-        {
-            return this.getRoot();
-        }
-
-        var from = this.getElement(fromSel);
-        if(sel)
-        {
-            return from.find(sel);
+            return this.$(fromSel).find(sel); 
         }
         else
         {
-            return from;
+            return sel ? this.$el.find(sel) : this.$el;
         }
     }
 
-    Class.elementHTML = function(sel, html)
+    Class.$html = function(sel, html)
     {
-        var ele = this.getElement(sel);
+        var ele = this.$(sel);
 
         if(html)
         {
@@ -204,9 +185,28 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
         }
     }
 
-    Class.elementFragment = function(sel, fromSel)
+    Class.$text = function(sel, text)
     {
-        var elem = this.getElement(sel, fromSel);
+        var ele = this.$(sel);
+
+        if(text)
+        {
+            ele.text(text);
+        }
+        else
+        {
+            return ele.text();
+        }
+    }
+
+    Class.$append = function(sel, elem)
+    {
+        this.$(sel).append(elem);
+    }
+
+    Class.$fragment = function(sel, fromSel)
+    {
+        var elem = this.$(sel, fromSel);
         return elem ? elemUtil.newFragment(elem) : null;
     }
 	

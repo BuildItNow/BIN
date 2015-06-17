@@ -18,8 +18,7 @@ define(["bin/util/pathUtil"], function (pathUtil)
             {
                 constructor: function()
                 {
-                    this.el = elemPrototype.cloneNode(true);
-
+                    this.el  = elemPrototype.cloneNode(true);
                     View.apply(this, arguments);
                 }
             });

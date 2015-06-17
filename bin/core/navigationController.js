@@ -415,7 +415,7 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
         	// }
 
     	  	var newView = new ViewClass({_autoLoad:true});
-          	newView.getRoot().css("z-index", self.count()+100);
+          	newView.$().css("z-index", self.count()+100);
           	var curView = self.current();
           	if(newView.onViewPush)
           	{
