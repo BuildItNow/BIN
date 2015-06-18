@@ -164,3 +164,13 @@ html
   	-webkit-animation-iteration-count: infinite;
   	-webkit-animation-timing-function: linear;
 }
+
+.bin-refresh-view
+{
+	overflow: hidden;
+}
+
+.bin-refresh-view-content
+{
+	
+}

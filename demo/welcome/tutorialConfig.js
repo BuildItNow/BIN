@@ -11,4 +11,6 @@ define([],
 	{path:"sendCheckDemo/index",name:"网络请求发送策略", todo:true},
 	{path:"listViewDemo/index",name:"列表开发", todo:true},
 	{path:"dialogDemo/index",name:"对话框开发", todo:true},
+	{path:"refreshViewDemo/index",name:"下拉刷新开发"},
+	
 ]);

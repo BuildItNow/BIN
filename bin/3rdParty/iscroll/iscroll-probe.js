@@ -410,7 +410,7 @@ IScroll.prototype = {
 		this.startTime = utils.getTime();
 
 		if ( this.options.useTransition && this.isInTransition ) {
-			this.isInTransition = false;
+			this.isInTransitio_transitionTimen = false;
 			pos = this.getComputedPosition();
 			this._translate(Math.round(pos.x), Math.round(pos.y));
 			this._execEvent('scrollEnd');
@@ -427,6 +427,7 @@ IScroll.prototype = {
 		this.pointY    = point.pageY;
 
 		this._execEvent('beforeScrollStart');
+		this._execEvent('userTouchStart');
 	},
 
 	_move: function (e) {
@@ -556,6 +557,15 @@ IScroll.prototype = {
 		this.initiated = 0;
 		this.endTime = utils.getTime();
 
+		this._execEvent('userTouchEnd');
+		
+		if(this.options.pullToRefresh)
+		{
+			this.scrollTo(newX, newY);	// ensures that the last position is rounded	
+		
+			return ;
+		}
+
 		// reset if we are outside of the boundaries
 		if ( this.resetPosition(this.options.bounceTime) ) {
 			return;
@@ -634,7 +644,13 @@ IScroll.prototype = {
 		}, this.options.resizePolling);
 	},
 
-	resetPosition: function (time) {
+	resetPosition: function (time) 
+	{
+		if(this.options.pullToRefresh)
+		{
+			return false;
+		}
+
 		var x = this.x,
 			y = this.y;
 

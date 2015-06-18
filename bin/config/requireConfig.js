@@ -1,6 +1,5 @@
 define(
 {
-	baseUrl : '../',
 	packages : 
 	[{
 		name:"3rdParty",

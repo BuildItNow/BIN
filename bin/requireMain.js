@@ -21,8 +21,8 @@
 })();
 
 var bin = {};
-require.config({baseUrl:'../'});
-	// bin frame-work namespace
+require.config({baseUrl:'./'});
+// bin frame-work namespace
 require(["bin/core/setupConfig"], function()
 {
 	require(['domReady!', 'bin/util/fastclickUtil', 'bin/core/main'],  function(domReady, fastclickUtil, main)

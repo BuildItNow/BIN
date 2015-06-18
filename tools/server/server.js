@@ -3,7 +3,7 @@ var app = express();
 var path = require('path');
 
 var PATH = "../../demo";
-var PORT = 8003;
+var PORT = 8080;
 
 app.use(express.static(path.resolve(PATH)));
 
