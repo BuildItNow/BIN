@@ -17,18 +17,39 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
         {
             this._html = null;
             
-            Backbone.View.apply(this, arguments);
+            Backbone.View.call(this, options);
+
+            return ;
+        }
+
+        if(options && options.elem)       // Init from a element
+        {
+            options.el = options.elem;
+            options.elem = null;
+
+            Backbone.View.call(this, options);
+
+
+            osUtil.nextTick(function()
+            {
+                this.render();
+                this.show();
+            }.bind(this));
 
             return ;
         }
 
         this._html = options ? options.html : this.html;
 
-       	Backbone.View.apply(this, arguments);
+       	Backbone.View.call(this, options);
 
         if(this._html)
         {
-            this.render();
+            osUtil.nextTick(function()
+            {
+                this.render();
+                this.show();
+            }.bind(this));
         }
 	}
 

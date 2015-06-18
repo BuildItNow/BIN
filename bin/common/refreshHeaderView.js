@@ -1,14 +1,19 @@
-define(["text!refreshViewDemo/refreshHeaderView.html", "bin/core/view"], 
-function(html, Base)
+define(["text!bin/common/refreshHeaderView.html", "bin/core/view", "bin/util/disUtil"], 
+function(html, Base, disUtil)
 {
 	var Class = 
 	{
 		html:html,
 	};
 
+	Class.height = function()
+	{
+		return disUtil.rem2px(2);
+	}
+
 	Class.asyncPosGenHTML = function()
 	{
-		this._height    = this.$().height();
+		this._height    = this.height();
 		this._threshold = this._height+5;
 	}
 

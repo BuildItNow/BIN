@@ -704,6 +704,16 @@ IScroll.prototype = {
 		this.hasHorizontalScroll	= this.options.scrollX && this.maxScrollX < 0;
 		this.hasVerticalScroll		= this.options.scrollY && this.maxScrollY < 0;
 
+		if(this.options.alwaysScrollY)
+		{
+			this.hasVerticalScroll = true;
+
+			if(this.maxScrollY > 0)
+			{
+				this.maxScrollY = 0;
+			}
+		}
+
 		if ( !this.hasHorizontalScroll ) {
 			this.maxScrollX = 0;
 			this.scrollerWidth = this.wrapperWidth;

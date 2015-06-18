@@ -1,5 +1,5 @@
-define(["bin/core/view", "iscroll", "bin/util/osUtil", "refreshViewDemo/refreshHeaderView"], 
-function(Base, iscroll, osUtil, RefreshHeaderView)
+define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/util/disUtil", "bin/common/refreshHeaderView"], 
+function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 {
 	var Class = {};
 
@@ -8,36 +8,39 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 	var REFRESH_STATE_REFRESHING = 2;
 	var REFRESH_STATE_DONE = 3;
 
-	var REFRESH_HEADER_HEIGHT = 100000000000;
-	
 	Class.constructor = function(options)
 	{
-		Base.prototype.constructor.call(this, options);
-
 		this._refreshHeader = options.headerClass ? new options.headerClass() : new RefreshHeaderView();
+		this._headerHeight  = this._refreshHeader.height();
+		this._onRefresh = options.onRefresh;
+
+		this._elemScroller = null;
+		this._elemScrollerContent = null;
+		this._contentDirty = false;
+	
+		Base.prototype.constructor.call(this, options);
 	}
 
 	Class.genHTML = function()
 	{
 		Base.prototype.genHTML.call(this);
 
-		var content = $(this.$()[0].children[0]);
-		content.detach();
-		var scrContent = $("<div style='position:relative;top:-2rem'></div>");
-		scrContent.append(this._refreshHeader.$());
-		scrContent.append(content);
-		this.$().append(scrContent);
+		this._elemScrollerContent = $(this.$()[0].children[0]);
+		this._elemScrollerContent.detach();
+
+		this._elemScroller = $("<div style='position:relative;top:0px'></div>");
+		
+		this._elemScroller.append(this._refreshHeader.$());
+		this._elemScroller.append(this._elemScrollerContent);
+		this.$().append(this._elemScroller);
 	}
 
 	Class.asyncPosGenHTML = function()
 	{
-		REFRESH_HEADER_HEIGHT = this._refreshHeader.$().height();
-		
-		var self = this;
-		this._scoller = new IScroll(this.el, {probeType:2, bounce:true, useTransition:false});
-
+		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:2, bounce:true, useTransition:false});
 		this._refreshState = REFRESH_STATE_NONE;
 
+		var self = this;
 		this._scoller.on("userTouchStart", function()
 		{
 			self._onScrollerTouchStart();
@@ -72,17 +75,19 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		{
 			this._scoller.options.pullToRefresh = true;
 			this._refreshState = REFRESH_STATE_REFRESHING;
-			this._scoller.scrollTo(0, REFRESH_HEADER_HEIGHT, 100);	
+			this._scoller.scrollTo(0, this._headerHeight, 100);	
 			
-			this._onRefresh();
-
-			console.info("Start refresh");
+			this._refresh();
 		}
 		else if(this._refreshState === REFRESH_STATE_REFRESHING)
 		{
-			if(this._scoller.y > REFRESH_HEADER_HEIGHT)
+			if(this._scoller.y > this._headerHeight)
 			{
-				this._scoller.scrollTo(0, REFRESH_HEADER_HEIGHT, 100);
+				this._scoller.scrollTo(0, this._headerHeight, 100);
+			}
+			else if(this._scoller.y > 0)
+			{
+				this._scoller.scrollTo(0, 0, 100);
 			}	
 		}
 	}
@@ -102,20 +107,38 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		this._refreshState = this._refreshHeader.onScrollTo(this._scoller.y) ? REFRESH_STATE_READY : REFRESH_STATE_NONE;
 	}
 
-	Class._onRefresh = function()
+	Class._refresh = function()
 	{
 		this._refreshHeader.onRefresh();
-		var self = this;
-		osUtil.delayCall(function()
+
+		if(this._onRefresh)
 		{
-			self.refreshDone();
-		}, 1000);
+			this._onRefresh();
+		}
+	}
+
+	Class.refresh = function()
+	{
+		if(this._scoller)
+		{
+			if(this._contentDirty)
+			{
+				return ;
+			}
+
+			this._contentDirty = true;
+
+			osUtil.nextTick(function()
+			{
+				this._scoller.refresh();
+
+				this._contentDirty = false;
+			}.bind(this));
+		}
 	}
 
 	Class.refreshDone = function()
 	{
-		console.info("Refresh done");
-
 		this._refreshState = REFRESH_STATE_DONE;
 		this._scoller.options.pullToRefresh = false;
 
@@ -125,6 +148,9 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		{
 			this._scoller.scrollTo(0, 0, 100);
 		}
+
+		// refresh the scroller
+		this.refresh();
 	}
 
 	return Base.extend(Class);
