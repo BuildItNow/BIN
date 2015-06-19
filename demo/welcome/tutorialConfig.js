@@ -12,5 +12,5 @@ define([],
 	{path:"listViewDemo/index",name:"列表开发", todo:true},
 	{path:"dialogDemo/index",name:"对话框开发", todo:true},
 	{path:"refreshViewDemo/index",name:"下拉刷新开发"},
-	
+	{path:"refreshListViewDemo/index",name:"列表刷新开发"},	
 ]);

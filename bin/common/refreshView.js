@@ -28,7 +28,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		this._elemScrollerContent = $(this.$()[0].children[0]);
 		this._elemScrollerContent.detach();
 
-		this._elemScroller = $("<div style='position:relative;top:0px'></div>");
+		this._elemScroller = $("<div style='position:relative;top:0px;height:auto;'></div>");
 		
 		this._elemScroller.append(this._refreshHeader.$());
 		this._elemScroller.append(this._elemScrollerContent);
