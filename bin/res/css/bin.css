@@ -168,9 +168,21 @@ html
 .bin-refresh-view
 {
 	overflow: hidden;
+	height:100%;
 }
 
 .bin-refresh-view-content
 {
 	
+}
+
+.bin-list-view
+{
+	overflow: hidden;
+	height:100%;
+}
+
+.bin-list-view-content
+{
+	height: auto;
 }

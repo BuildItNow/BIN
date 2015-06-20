@@ -23,7 +23,12 @@ define(
 				self.$html("#list", h);
 				
 				self._refreshView.refreshDone();
-			}, 1000);
+			}, 2000);
+		}
+
+		Class.asyncPosGenHTML = function()
+		{
+			this._refreshView.refresh(true);
 		}
 
 		return Base.extend(Class);
