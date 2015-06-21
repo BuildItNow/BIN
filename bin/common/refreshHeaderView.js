@@ -33,7 +33,7 @@ function(html, Base, disUtil)
 
 	Class.onRefreshDone = function()
 	{
-		this.$text("#tips", "下拉刷新");
+		this.$text("#tips", "更新成功");
 	}
 
 	return Base.extend(Class);

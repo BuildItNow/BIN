@@ -1,6 +1,6 @@
 define(
-	["common/demoView", "bin/common/refreshView", "bin/util/osUtil"],
-	function(Base, RefreshView, osUtil)
+	["common/demoView", "bin/common/refreshView", "bin/util/osUtil", "text!refreshViewDemo/view0.html", "text!refreshViewDemo/view1.html"],
+	function(Base, RefreshView, osUtil, view0Html, view1Html)
 	{
 		var Class = {};
 
@@ -14,16 +14,18 @@ define(
 			var self = this;
 			osUtil.delayCall(function()
 			{
-				var n = (Math.random()*30);
-				var h = "";
-				for(var i=0;i<n; ++i)
+				if(Math.random() > 0.5)
 				{
-					h += "<li>Pretty row"+i+"</li>";
+					self.$html("#refreshContent", view0Html);
 				}
-				self.$html("#list", h);
+				else
+				{
+					self.$html("#refreshContent", view1Html);
+					self.$("#clickMe").on("click", function(){self.goBack()});
+				}
 				
 				self._refreshView.refreshDone();
-			}, 2000);
+			}, 1000);
 		}
 
 		Class.asyncPosGenHTML = function()

@@ -31,6 +31,31 @@
 		CASE("/api/byFile", TURN_ON, "file!../netLocalDemo/test.json", "POST");
 
 		CASE("/api/testAPI", TURN_ON, {a:10, b:"Hello BIN", c:{a:20, b:10}});
+
+		CASE("/api/refreshList", TURN_ON, function(netParams)
+			{	
+				console.info("Load page "+netParams.data.page);
+
+				var ret = 
+				{
+				};
+
+				if(netParams.data.page === 0)
+				{
+					ret.total = parseInt(Math.random()*60);
+
+					console.info("Load total "+ret.total);
+				}
+
+				ret.data = [];
+				
+				for(var i=0,i_sz=netParams.data.pageSize; i<i_sz; ++i)
+				{
+					ret.data.push({});
+				}
+
+				return ret;
+			});
 		
 		return config;
 	});

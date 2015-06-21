@@ -325,6 +325,8 @@ function IScroll (el, options) {
 	this.directionY = 0;
 	this._events = {};
 
+	this._animateData = {};
+
 // INSERT POINT: DEFAULTS
 
 	this._init();
@@ -1530,46 +1532,66 @@ IScroll.prototype = {
 		this.keyTime = now;
 	},
 
-	_animate: function (destX, destY, duration, easingFn) {
-		var that = this,
-			startX = this.x,
-			startY = this.y,
-			startTime = utils.getTime(),
-			destTime = startTime + duration;
+	_animate: function (destX, destY, duration, easingFn) 
+	{
 
-		function step () {
-			var now = utils.getTime(),
-				newX, newY,
-				easing;
+		this._animateData.startX = this.x;
+		this._animateData.startY = this.y;
+		this._animateData.destX  = destX;
+		this._animateData.destY  = destY;
+		this._animateData.easingFn = easingFn;
+		this._animateData.startTime = utils.getTime();
+		this._animateData.destTime  = this._animateData.startTime + duration;
+		this._animateData.duration  = duration;
 
-			if ( now >= destTime ) {
-				that.isAnimating = false;
-				that._translate(destX, destY);
-				
-				if ( !that.resetPosition(that.options.bounceTime) ) {
-					that._execEvent('scrollEnd');
-				}
 
-				return;
+		//	startX = this.x,
+		//	startY = this.y,
+		//	startTime = utils.getTime(),
+		//	destTime = startTime + duration;
+
+		if(!this.isAnimating)
+		{
+			this.isAnimating = true;
+			this._animateStep();
+		}
+	},
+
+	_animateStep:function()
+	{
+		var self = this;
+		var now = utils.getTime(),
+			newX, newY,
+			easing;
+
+		if ( now >= this._animateData.destTime ) 
+		{
+			this.isAnimating = false;
+			this._translate(this._animateData.destX, this._animateData.destY);
+			
+			if (!this.resetPosition(this.options.bounceTime) ) 
+			{
+				this._execEvent('scrollEnd');
 			}
 
-			now = ( now - startTime ) / duration;
-			easing = easingFn(now);
-			newX = ( destX - startX ) * easing + startX;
-			newY = ( destY - startY ) * easing + startY;
-			that._translate(newX, newY);
-
-			if ( that.isAnimating ) {
-				rAF(step);
-			}
-
-			if ( that.options.probeType == 3 ) {
-				that._execEvent('scroll');
-			}
+			return;
 		}
 
-		this.isAnimating = true;
-		step();
+		now = ( now - this._animateData.startTime ) / this._animateData.duration;
+		easing = this._animateData.easingFn(now);
+		newX = ( this._animateData.destX - this._animateData.startX ) * easing + this._animateData.startX;
+		newY = ( this._animateData.destY - this._animateData.startY ) * easing + this._animateData.startY;
+		this._translate(newX, newY);
+
+		if ( this.isAnimating ) 
+		{
+			rAF(function(){self._animateStep()});
+		}
+
+		if ( this.options.probeType == 3 ) 
+		{
+			this._execEvent('scroll');
+		}
 	},
 
 	handleEvent: function (e) {

@@ -6,7 +6,8 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 	var REFRESH_STATE_NONE = 0;
 	var REFRESH_STATE_READY = 1;
 	var REFRESH_STATE_REFRESHING = 2;
-	var REFRESH_STATE_DONE = 3;
+	var REFRESH_STATE_DONE_WATING = 3;
+	var REFRESH_STATE_DONE = 4;
 
 	Class.constructor = function(options)
 	{
@@ -111,18 +112,22 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 	Class.refreshDone = function()
 	{
-		this._refreshState = REFRESH_STATE_DONE;
-		this._scoller.options.pullToRefresh = false;
-
+		this._refreshState = REFRESH_STATE_DONE_WATING;
 		this._refreshHeader.onRefreshDone();
-
-		if(!this._scrollerTouching && this._scoller.y > 0)
-		{
-			this._scoller.scrollTo(0, 0, 100);
-		}
 
 		// refresh the scroller
 		this.refreshUI();
+
+		var self = this;
+		osUtil.delayCall(function()
+		{
+			self._refreshState = REFRESH_STATE_DONE;
+			self._scoller.options.pullToRefresh = false;
+			if(!self._scrollerTouching && self._scoller.y > 0)
+			{
+				self._scoller.scrollTo(0, 0, 100);
+			}	
+		}, 500)
 	}
 
 	Class._onScrollerTouchStart = function()
@@ -166,7 +171,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 			return ;
 		}
 
-		if(this._refreshState === REFRESH_STATE_REFRESHING || this._refreshState === REFRESH_STATE_DONE)
+		if(this._refreshState === REFRESH_STATE_REFRESHING || this._refreshState === REFRESH_STATE_DONE_WATING || this._refreshState === REFRESH_STATE_DONE)
 		{
 			return ;
 		}

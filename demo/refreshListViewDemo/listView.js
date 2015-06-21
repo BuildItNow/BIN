@@ -8,6 +8,8 @@ define(["bin/common/refreshView", "bin/util/osUtil", "refreshListViewDemo/refres
 		options.autoRefresh = "animation";
 
 		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
+		this._dataProvider  = options.dataProvider;
+		this._itemProvider  = options.itemProvider;
 		
 		var self = this;
 		this._onFooterClick = function()
@@ -24,71 +26,86 @@ define(["bin/common/refreshView", "bin/util/osUtil", "refreshListViewDemo/refres
 		Base.prototype.genHTML.call(this);
 	}
 
-	Class.refreshUI = function()
-	{
-		this._refreshFooter.$().detach();
-		this._elemScrollerContent.append(this._refreshFooter.$());
-		
-		Base.prototype.refreshUI.call(this);
-	}
-
 	Class._onRefresh = function()
 	{
 		var self = this;
-		osUtil.delayCall(function()
+		this._dataProvider.refresh(
+			function(beg, end)
+			{
+				self._onRefreshData(beg, end);
+			}, 
+			function(error)
+			{
+
+			});
+	}
+
+	Class._onRefreshData = function(beg, end)
+	{
+		this._refreshFooter.$().detach();
+
+		if(beg < end)
 		{
-			var n = (Math.random()*30);
 			var h = "";
-			for(var i=0;i<n; ++i)
+			for(var i=beg;i<end; ++i)
 			{
 				h += "<li>Pretty row"+i+"</li>";
 			}
 
-			self._unhookFooterClick();
-			self._refreshFooter.$().detach();
-			self._elemScrollerContent.html(h);
-			self._elemScrollerContent.append(self._refreshFooter.$());
-			self._hookFooterClick();
-			
-			self.refreshDone();
-		}, 1000);
-	}
+			this._elemScrollerContent.html(h);
+		}
 
-	Class._onLoadMore = function()
-	{
-		var self = this;
-		osUtil.delayCall(function()
+		if(this._dataProvider.anyMore())
 		{
-			var n = (Math.random()*30);
-			var h = "";
-			for(var i=0;i<n; ++i)
-			{
-				h += "<li>Pretty row"+i+"</li>";
-			}
+			this._elemScrollerContent.append(this._refreshFooter.$());
+			this._hookFooterClick();
+		}
 
-			self._refreshFooter.$().detach();
-			self._elemScrollerContent.append(h);
-			self._elemScrollerContent.append(self._refreshFooter.$());
-					
-			self._loadMoreDone();
-		});
+		this.refreshDone();
 	}
 
-	Class._loadMoreDone = function()
-	{
-		this._hookFooterClick();
-		this._refreshFooter.onLoadMoreDone();
-		this.refreshUI();
-	}
-
-	
 	Class._loadMore = function()
 	{
 		this._refreshFooter.onLoadMore();
 
 		this._unhookFooterClick();
 
-		this._onLoadMore();
+		var self = this;
+		this._dataProvider.loadMore(
+			function(beg, end)
+			{
+				self._onLoadMoreData(beg, end);
+			}, 
+			function(error)
+			{
+
+			});
+	}
+
+	Class._onLoadMoreData = function(beg, end)
+	{
+		this._refreshFooter.$().detach();
+
+		if(beg < end)
+		{
+			var h = "";
+			for(var i=beg;i<end; ++i)
+			{
+				h += "<li>Pretty row"+i+"</li>";
+			}
+
+			this._elemScrollerContent.append(h);
+		}
+
+		this._refreshFooter.onLoadMoreDone();
+		
+		if(this._dataProvider.anyMore())
+		{
+			this._elemScrollerContent.append(this._refreshFooter.$());
+			this._hookFooterClick();
+		}
+
+		this.refreshUI();
 	}
 
 	Class._hookFooterClick = function()
