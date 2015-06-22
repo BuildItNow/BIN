@@ -1,4 +1,4 @@
-define(["bin/core/view", "text!refreshListViewDemo/refreshFooterView.html", "bin/util/disUtil"], 
+define(["bin/core/view", "text!bin/common/refreshFooterView.html", "bin/util/disUtil"], 
 function(Base, html, disUtil)
 {
 	var Class = 

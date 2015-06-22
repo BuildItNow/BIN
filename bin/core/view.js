@@ -30,11 +30,11 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
             Backbone.View.call(this, options);
 
 
-            osUtil.nextTick(function()
-            {
+            //osUtil.nextTick(function()
+            //{
                 this.render();
                 this.show();
-            }.bind(this));
+            //}.bind(this));
 
             return ;
         }
@@ -45,11 +45,11 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
         if(this._html)
         {
-            osUtil.nextTick(function()
-            {
+            //osUtil.nextTick(function()
+            //{
                 this.render();
                 this.show();
-            }.bind(this));
+            //}.bind(this));
         }
 	}
 

@@ -31,9 +31,9 @@ function(html, Base, disUtil)
 		this.$text("#tips", "刷新中...");
 	}
 
-	Class.onRefreshDone = function()
+	Class.onRefreshDone = function(fail)
 	{
-		this.$text("#tips", "更新成功");
+		this.$text("#tips", fail ? "更新失败" : "更新成功");
 	}
 
 	return Base.extend(Class);

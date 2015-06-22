@@ -110,10 +110,10 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		}
 	}
 
-	Class.refreshDone = function()
+	Class.refreshDone = function(fail)
 	{
 		this._refreshState = REFRESH_STATE_DONE_WATING;
-		this._refreshHeader.onRefreshDone();
+		this._refreshHeader.onRefreshDone(fail);
 
 		// refresh the scroller
 		this.refreshUI();

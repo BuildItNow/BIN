@@ -34,8 +34,6 @@
 
 		CASE("/api/refreshList", TURN_ON, function(netParams)
 			{	
-				console.info("Load page "+netParams.data.page);
-
 				var ret = 
 				{
 				};
@@ -44,14 +42,13 @@
 				{
 					ret.total = parseInt(Math.random()*60);
 
-					console.info("Load total "+ret.total);
 				}
 
 				ret.data = [];
 				
 				for(var i=0,i_sz=netParams.data.pageSize; i<i_sz; ++i)
 				{
-					ret.data.push({});
+					ret.data.push({label:"Hello "+i});
 				}
 
 				return ret;

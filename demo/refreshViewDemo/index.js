@@ -7,6 +7,7 @@ define(
 		Class.posGenHTML = function()
 		{
 			this._refreshView = new RefreshView({elem:this.$("#refreshView"), onRefresh:function(){this._onRefresh()}.bind(this)});
+			this._refreshResult = 0;
 		}
 
 		Class._onRefresh = function()
@@ -14,17 +15,29 @@ define(
 			var self = this;
 			osUtil.delayCall(function()
 			{
-				if(Math.random() > 0.5)
+				if(self._refreshResult == 0)
 				{
 					self.$html("#refreshContent", view0Html);
+
+					self._refreshView.refreshDone();
 				}
-				else
+				else if(self._refreshResult == 1)
 				{
 					self.$html("#refreshContent", view1Html);
 					self.$("#clickMe").on("click", function(){self.goBack()});
+
+					self._refreshView.refreshDone();
 				}
+				else
+				{
+					self._refreshView.refreshDone(true);
+				}
+
+				++ self._refreshResult;
+
+				self._refreshResult %= 3;
 				
-				self._refreshView.refreshDone();
+				
 			}, 1000);
 		}
 

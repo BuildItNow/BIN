@@ -1,4 +1,4 @@
-define(["underscore", "bin/util/osUtil"], function(_, osUtil)
+define(["underscore", "bin/util/osUtil", "bin/common/extend"], function(_, osUtil, extend)
 {
 	var defLoadAPI = function(params, success, error)
 	{
@@ -18,6 +18,8 @@ define(["underscore", "bin/util/osUtil"], function(_, osUtil)
 		this._data  = [];
 		this._total = -1;
 	}
+
+	ListDataProvider.extend = extend;
 
 	var Class = ListDataProvider.prototype;
 
@@ -56,6 +58,11 @@ define(["underscore", "bin/util/osUtil"], function(_, osUtil)
 	Class.total = function()
 	{
 		return this._total;
+	}
+
+	Class.data = function(i)
+	{
+		return this._data[i];
 	}
 
 	Class.anyMore = function()

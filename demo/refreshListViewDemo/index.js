@@ -1,12 +1,12 @@
 define(
-	["common/demoView", "refreshListViewDemo/listView", "refreshListViewDemo/listDataProvider"],
+	["common/demoView", "bin/common/listView", "bin/common/listDataProvider"],
 	function(Base, ListView, ListDataProvider)
 	{
 		var Class = {};
 
 		Class.posGenHTML = function()
 		{
-			this._listView = new ListView({elem:this.$("#listView"), dataProvider:new ListDataProvider({type:"hello", pageSize:5})});
+			this._listView = new ListView({elem:this.$("#listView"), itemProvider:"<div><%=label%></div>", dataProvider:new ListDataProvider({type:"hello"})});
 		}
 
 		return Base.extend(Class);
