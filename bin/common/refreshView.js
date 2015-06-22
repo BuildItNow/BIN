@@ -40,7 +40,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 	Class.asyncPosGenHTML = function()
 	{
-		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:2, bounce:true, useTransition:false});
+		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:2, bounce:true, useTransition:false, mouseWheel:false});
 		
 		var self = this;
 		this._scoller.on("userTouchStart", function()
@@ -123,7 +123,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		{
 			self._refreshState = REFRESH_STATE_DONE;
 			self._scoller.options.pullToRefresh = false;
-			if(!self._scrollerTouching && self._scoller.y > 0)
+			if(/*!self._scrollerTouching &&*/ self._scoller.y > 0)
 			{
 				self._scoller.scrollTo(0, 0, 100);
 			}	
