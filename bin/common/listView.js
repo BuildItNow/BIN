@@ -93,7 +93,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
 			}, 
 			function(error)
 			{
-
+				self.refreshDone(true);
 			});
 	}
 
@@ -141,7 +141,8 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
 			}, 
 			function(error)
 			{
-
+				self._hookFooterClick();
+				self._refreshFooter.onLoadMoreDone();
 			});
 	}
 
@@ -185,5 +186,5 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
 		this._refreshFooter.$().off("click");
 	}
 
-	return Base.extend(Class);
+	return Base.extend(Class, {TemplateItemProvider:TemplateItemProvider});
 });

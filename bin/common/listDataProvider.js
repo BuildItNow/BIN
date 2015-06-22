@@ -28,25 +28,25 @@ define(["underscore", "bin/util/osUtil", "bin/common/extend"], function(_, osUti
 		var self = this;
 		this._options.loadAPI(	{type:this._options.type, page:0, pageSize:this._options.pageSize}, 
 								function(netData){self._onRefresh(null, netData, success, error)}, 
-								function(netError){self._onRefresh(netError, netData, success, error)});
+								function(netError){self._onRefresh(netError, null, success, error)});
 	}
 
 	Class.loadMore = function(success, error)
 	{
+		var self = this;
 		if(!this.anyMore())
 		{
 			osUtil.nextTick(function()
 			{
-				success(this.count(), this.count());
+				success(self.count(), self.count());
 			});
 
 			return ;
 		}
 
-		var self = this;
 		this._options.loadAPI(	{type:this._options.type, page:parseInt(this.count()/this._options.pageSize), pageSize:this._options.pageSize}, 
 								function(netData){self._onLoadMore(null, netData, success, error)}, 
-								function(netError){self._onLoadMore(netError, netData, success, error)});
+								function(netError){self._onLoadMore(netError, null, success, error)});
 
 	}
 

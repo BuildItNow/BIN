@@ -24,7 +24,7 @@ define(
 				else if(self._refreshResult == 1)
 				{
 					self.$html("#refreshContent", view1Html);
-					self.$("#clickMe").on("click", function(){self.goBack()});
+					self.$("#goBack").on("click", function(){self.goBack()});
 
 					self._refreshView.refreshDone();
 				}

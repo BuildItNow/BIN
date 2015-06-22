@@ -43,24 +43,6 @@ define(
 				console.error("API["+netParams.api+"] Error "+error.status+" "+error.statusText);
 			}
 
-			if(error.status === 0)
-			{
-				Notification.show
-				({
-					type: "error",
-					message: "网络连接失败，请检查您的网络"
-				});
-			}
-			else
-			{
-				Notification.show
-				({
-					type: "error",
-					message: "网络错误，错误代码 "+error.status
-				});
-
-			}
-
 			if(netParams.callbacks.error)
 			{
 				netParams.callbacks.error(error, netParams);

@@ -36,12 +36,12 @@
 			{	
 				var ret = 
 				{
+					
 				};
 
 				if(netParams.data.page === 0)
 				{
 					ret.total = parseInt(Math.random()*60);
-
 				}
 
 				ret.data = [];
