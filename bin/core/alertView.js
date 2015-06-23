@@ -84,9 +84,6 @@ function(Base, html, osUtil)
 
 	Class.asyncPosGenHTML = function()
 	{
-		console.info("Height "+this.$().height());
-		console.info("Content "+this.$("#contentBlock").height());
-
 		var top = (this.$().height()-this.$("#contentBlock").height())*0.5;
 		this.$("#contentBlock").css("top", top+"px");
 	}

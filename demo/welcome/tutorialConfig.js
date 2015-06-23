@@ -1,9 +1,9 @@
 define([],
 [
-	{path:"normalPageDemo/index",name:"一般页面开发", todo:true},
-	{path:"naviPageDemo/index",name:"具有导航栏页面开发", todo:true},
-	{path:"remDemo/index",name:"rem页面适配", todo:true},
-	{path:"pageJumpDemo/index",name:"页面跳转效果", todo:true},
+	{path:"normalPageDemo/index",name:"一般页面开发"},
+	{path:"naviPageDemo/index",name:"具有导航栏页面开发"},
+	{path:"remDemo/index",name:"rem页面适配"},
+	{path:"pageJumpDemo/index",name:"页面跳转效果"},
 	{path:"pageJumpParamsDemo/index",name:"页面跳转参数传递功能", todo:true},
 	{path:"netDemo/index",name:"网络API开发"},
 	{path:"netLocalDemo/index",name:"网络本地数据框架"},

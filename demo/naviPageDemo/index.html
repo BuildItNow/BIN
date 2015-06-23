@@ -1,0 +1,44 @@
+<!-- 该文件显示创建一个普通页面的HTML文件结构-->
+
+<!-- 所有页面使用一个div作为根节点，必须使用bin-page-->
+<div id="naviPageDemoView" class="bin-page">
+    
+    <!-- 定义该页面使用的CSS style，注意：使用根节点和类前缀来限定CSS只在该页面使用和生效，避免CSS类冲突-->
+    <style>
+        #naviPageDemoView .NaviPageDemoView-hello
+        {
+            width:100%;
+            height:auto;
+            text-align: left;
+            font-size: 0.7rem;
+            line-height: 1rem;
+        }
+	</style>
+
+    <!-- 定义该页面需要使用的模板节点，如果没有这不需要定义这些节点-->
+    <script id="helloTemplate" type="text/x-underscore-template">
+        <div class="NaviPageDemoView-hello"><%=desc%></div>
+    </script>
+
+    <!-- 定义该页面导航栏，如果要使用自带的配置导航栏功能，id必须使用"naviBar"，naviLeft,naviRight,naviTitle用于配置该导航栏
+    naviLeft : 配置左按钮
+        text : 按钮显示文字,比如 text:返回
+        image : 按钮显示的图表,比如 image:url(./img/xxx.png) 注意，当前不支持同时显示文字和图片
+        hide : 隐藏该按钮,比如 hide:true
+    naviRight : 配置右按钮，参见naviLeft的配置
+    naviTitle : 配置标题栏
+        text : 标题栏文字,比如 text:主页
+        hide : 隐藏标题栏,比如 hide:true
+
+    如果需要自定义导航栏,将id更改为其他名字，或者添加naviCustom="true"属性
+
+    注意：导航栏div必须放在content div的前面，并且作为相邻节点
+    -->
+    
+    <div id="naviBar" class="bin-page-navi-bar" naviLeft="text:左按钮" naviTitle="text:导航页面" naviRight="text:右按钮"></div>
+
+    <!-- 定义该页面内容，这个节点是实际内容的根节点，必须使用bin-page-content，一个页面的所有内容在该节点下开发，并且依赖该节点进行CSS定位-->
+	<div class="bin-page-content">
+    	<div id="helloContent"></div>
+    </div>
+</div>
