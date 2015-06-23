@@ -11,7 +11,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
 	Class.constructor = function(options)
 	{
-		this._isShow  = false;
+		this._show  = null;
 		
 		if(options && options._autoLoad)   // Load by BIN, BIN will auto set element by html content
         {
@@ -39,7 +39,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
             return ;
         }
 
-        this._html = options ? options.html : this.html;
+        this._html = options && options.html ? options.html : this.html;
 
        	Backbone.View.call(this, options);
 
@@ -125,31 +125,31 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
 	Class.show = function()
 	{
-		if(this.isShow())
+		if(this._show)
 		{
 			return ;
 		}
 
-		this._isShow = true;
+		this._show = true;
 		this.$().css("display", "block");
 		this.onShow();
 	}
 	
 	Class.hide = function()
 	{
-		if(!this.isShow())
+		if(this._show !== null && !this._show)
 		{
 			return ;
 		}
 		
-		this._isShow = false;
+		this._show = false;
 		this.$().css("display", "none");
 		this.onHide();
 	}
 
 	Class.isShow = function()
 	{
-		return this._isShow;
+		return this._show;
 	}
 	
 	Class.onShow = function()

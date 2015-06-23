@@ -9,7 +9,7 @@ define([],
 	{path:"netLocalDemo/index",name:"网络本地数据框架"},
 	{path:"cacheDemo/index",name:"网络缓存", todo:true},
 	{path:"sendCheckDemo/index",name:"网络请求发送策略", todo:true},
-	{path:"alertDemo/index",name:"Alert", todo:true},
+	{path:"alertDemo/index",name:"Alert"},
 	{path:"refreshViewDemo/index",name:"下拉刷新"},
 	{path:"refreshListViewDemo/index",name:"列表刷新"},	
 ]);
