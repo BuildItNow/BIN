@@ -12,4 +12,5 @@ define([],
 	{path:"alertDemo/index",name:"Alert"},
 	{path:"refreshViewDemo/index",name:"下拉刷新"},
 	{path:"refreshListViewDemo/index",name:"列表刷新"},	
+	{path:"indicatorDemo/index",name:"Indicator动画"},
 ]);

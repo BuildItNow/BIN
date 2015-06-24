@@ -1,6 +1,6 @@
 define(
-	["bin/common/indicator"],
-	function(indicator)
+	[],
+	function()
 	{
 		var NetCallbackPolicy = function(netManager)
 		{
@@ -19,7 +19,7 @@ define(
 			var options = netParams.options;
 			if(options.loading)
 			{
-				netParams.userdatas.indicatorID = indicator.show({model:options.loading === "MODEL"});
+				netParams.userdatas.indicatorID = bin.hudManager.startIndicator({model:options.loading === "MODEL"});
 			}
 
 			if(netParams.callbacks.beforeSend)
@@ -58,7 +58,7 @@ define(
 
 			if(netParams.userdatas.indicatorID)
 			{
-				indicator.stop(netParams.userdatas.indicatorID);
+				bin.hudManager.stopIndicator(netParams.userdatas.indicatorID);
 			}
 		}
 

@@ -14,7 +14,7 @@ define(
 
 		Class.showAlert = function()
 		{
-			bin.alertManager.alert(
+			bin.hudManager.alert(
 			{
 				title:{text:"你好！"},
 				message:{text:"BIN是一个轻量的Web APP框架，BIN的目的是让Web APP的开发像Native APP开发一样。BIN基于Cordova，支持Android和IOS平台。"},
@@ -27,12 +27,12 @@ define(
 
 		Class.infoAlert = function()
 		{
-			bin.alertManager.info("BIN是一个轻量的Web APP框架，BIN的目的是让Web APP的开发像Native APP开发一样。BIN基于Cordova，支持Android和IOS平台。");
+			bin.hudManager.alertInfo("BIN是一个轻量的Web APP框架，BIN的目的是让Web APP的开发像Native APP开发一样。BIN基于Cordova，支持Android和IOS平台。");
 		}
 
 		Class.customAlert = function()
 		{
-			var v = bin.alertManager.alert();
+			var v = bin.hudManager.alert();
 			var elem = v.setTitle({text:"这是一个Title", color:"green"});
 			elem.css("font-size", "1rem");
 			elem.css("line-height", "2rem");
@@ -44,9 +44,9 @@ define(
 
 		Class.multipleAlert = function()
 		{
-			bin.alertManager.info("这是Alert1");
-			bin.alertManager.info("这是Alert2", "你好");
-			bin.alertManager.info("这是Alert3");
+			bin.hudManager.alertInfo("这是Alert1");
+			bin.hudManager.alertInfo("这是Alert2", "你好");
+			bin.hudManager.alertInfo("这是Alert3");
 		}
 
 		return Base.extend(Class);

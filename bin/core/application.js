@@ -5,9 +5,9 @@ define([
 		"bin/core/netManager", 
 		"bin/core/navigationController", 
 		"bin/core/debugManager",
-		"bin/core/alertManager"
+		"bin/core/hudManager"
 		], 
-	function(_, Backbone, extend, NetManager, NavigationController, DebugManager, AlertManager)
+	function(_, Backbone, extend, NetManager, NavigationController, DebugManager, HUDManager)
 	{
 		var Application = function()
 		{
@@ -29,8 +29,8 @@ define([
 			this._netManager = new NetManager();
 			this._netManager.init();
 
-			this._alertManager = new AlertManager();
-			this._alertManager.init();
+			this._hudManager = new HUDManager();
+			this._hudManager.init();
 			
 			window.changanBackbutton = function() 
 			{
@@ -47,7 +47,7 @@ define([
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
 			bin.debugManager   = this._debugManager;
-			bin.alertManager   = this._alertManager;
+			bin.hudManager   = this._hudManager;
 		}
 
 		Class.onDeviceBack = function()

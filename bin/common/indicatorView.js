@@ -1,29 +1,24 @@
 define(
-	["underscore", "bin/util/osUtil"],
-	function(_, osUtil)
+	["bin/core/view", "text!bin/common/indicatorView.html", "bin/util/osUtil"],
+	function(Base, html, osUtil)
 	{
-		var Indicator = function()
+		var Class = 
 		{
+			html : html,
+		};
 
-		}
-
-		var Class = Indicator.prototype;
-		Class.init = function()
+		Class.constructor = function(options)
 		{
-			var root = $("#HUDContainer");
-			//this._loadingHUD = $("<div id='netLoadingHUD' style='position:absolute;background-color:transparent;pointer-events:none;z-index:10000000000000;width:100%;height:100%'><div id='HUDView'><div></div></div></div>");
-			this._loadingHUD = $("<div id='netLoadingHUD' style='position:absolute;background-color:transparent;pointer-events:none;z-index:1;width:100%;height:100%'><div id='HUDView' class='bin-indicator active'><div></div></div></div>");
-			
-			root.append(this._loadingHUD);
-			this._loadingIcon = this._loadingHUD.find('#HUDView');
-			this._loadingIcon.hide();
-			
+			Base.prototype.constructor.call(this, options);
+
 			this._lc = 0;
 			this._mc  = 0;
 			this._lv = 1;
+
+			this.reset();
 		}
 
-		Class.show = function(options)
+		Class.start = function(options)
 		{
 			if(!options)
 			{
@@ -58,8 +53,8 @@ define(
 
 		Class.reset = function()
 		{
-			this._loadingIcon.hide();
-			this._loadingHUD.css("pointer-events", "none");
+			this.hide();
+			this.$().css("pointer-events", "none");
 			this._lc = 0;
 			this._mc = 0;
 			
@@ -70,14 +65,14 @@ define(
 		{
 			if(this._incLoadingCount() == 1)
 			{
-				this._loadingIcon.show();
+				this.show();
 			}
 
 			if(model)
 			{
 				if(this._incModelCount() == 1)
 				{
-					this._loadingHUD.css("pointer-events", "auto");
+					this.$().css("pointer-events", "auto");
 				}
 			}
 		}
@@ -86,14 +81,14 @@ define(
 		{
 			if(this._decLoadingCount() == 0)
 			{
-				this._loadingIcon.hide();
+				this.hide();
 			}
 
 			if(model)
 			{
 				if(this._decModelCount() == 0)
 				{
-					this._loadingHUD.css("pointer-events", "none");
+					this.$().css("pointer-events", "none");
 				}
 			}
 		}
@@ -127,8 +122,6 @@ define(
 			return this._mc;
 		}
 
-		var inst = new Indicator();
-		inst.init();
-		return inst;
+		return Base.extend(Class);
 	}
 );

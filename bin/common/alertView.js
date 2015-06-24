@@ -1,6 +1,8 @@
-define(["bin/core/view", "text!bin/core/alertView.html", "bin/util/osUtil"], 
+define(["bin/core/view", "text!bin/common/alertView.html", "bin/util/osUtil"], 
 function(Base, html, osUtil)
 {
+	var zIndex = 1;
+
 	var Class = 
 	{
 		html:html
@@ -22,9 +24,22 @@ function(Base, html, osUtil)
 				}
 			}
 		}
+	}
+
+	Class.genHTML = function()
+	{
+		Base.prototype.genHTML.call(this);
+		this.$().css("z-index", zIndex);
+		++zIndex;
 
 		// Avoid flick effect, asyncPosGenHTML will fix the position
 		this.$("#contentBlock").css("top", "-100000px");
+	}
+
+	Class.asyncPosGenHTML = function()
+	{
+		var top = (this.$().height()-this.$("#contentBlock").height())*0.5;
+		this.$("#contentBlock").css("top", top+"px");
 	}
 
 	Class.setTitle = function(title)
@@ -80,12 +95,6 @@ function(Base, html, osUtil)
 	Class.close = function()
 	{
 		this.remove();
-	}
-
-	Class.asyncPosGenHTML = function()
-	{
-		var top = (this.$().height()-this.$("#contentBlock").height())*0.5;
-		this.$("#contentBlock").css("top", top+"px");
 	}
 
 	return Base.extend(Class);
