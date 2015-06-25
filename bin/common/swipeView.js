@@ -44,7 +44,10 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		delete this._initCurrent;
 
 		this._swiper = new Swiper(this.$(), options);
-		this._onSwiperSwipe(options.initialSlide);
+		if(options.initialSlide === 0)	// Swiper don't trigger event when initialSlide is 0
+		{
+			this._onSwiperSwipe(options.initialSlide);
+		}
 	}
 
 	Class.setCurrent = function(index, noTrigger)
