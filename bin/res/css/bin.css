@@ -145,28 +145,3 @@ html
 {
 	height: auto;
 }
-
-.bin-alert-view
-{
-	pointer-events:auto;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	overflow: hidden;
-	background-color: rgba(128, 128, 128, 0.6);
-	text-align: center;
-}
-
-.bin-indicator-view
-{
-	position:absolute;
-	background-color:transparent;
-	pointer-events:none;
-	width:100%;
-	height:100%;
-	z-index: 1000;
-	left: 0px;
-	top:0px;
-}

@@ -1,4 +1,4 @@
-﻿
+﻿ 
 define(["bin/config/globalConfig", "bin/config/requireConfig"],
 function(globalConfig, requireConfig)
 {

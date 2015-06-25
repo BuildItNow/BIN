@@ -1,5 +1,5 @@
-define(["bin/core/view", "text!bin/common/alertView.html", "bin/util/osUtil"], 
-function(Base, html, osUtil)
+define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/core/view", "bin/util/osUtil"], 
+function(html, css, Base, osUtil)
 {
 	var zIndex = 1;
 
@@ -40,6 +40,7 @@ function(Base, html, osUtil)
 	{
 		var top = (this.$().height()-this.$("#contentBlock").height())*0.5;
 		this.$("#contentBlock").css("top", top+"px");
+		this.$().fadeIn(100);
 	}
 
 	Class.setTitle = function(title)
@@ -80,7 +81,7 @@ function(Base, html, osUtil)
 		var elem = $('<div class="AlertView-line"></div><div class="AlertView-button">'+button.text+'</div>');
 		if(button.onClick)
 		{
-			elem.on("click", function(e){button.onClick(self, button.title)});
+			elem.on("click", function(e){button.onClick(self, button.text)});
 		}
 		if(button.color)
 		{
@@ -94,7 +95,8 @@ function(Base, html, osUtil)
 
 	Class.close = function()
 	{
-		this.remove();
+		var self = this;
+		this.$().fadeOut(100, function(){self.remove();});
 	}
 
 	return Base.extend(Class);

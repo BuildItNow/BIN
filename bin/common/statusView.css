@@ -1,0 +1,14 @@
+.StatusView
+{
+	font-size:0.6rem;
+	line-height: 0.7rem;
+	padding:0.3rem 0.3rem 0.3rem 0.3rem;
+	text-align:center;
+	word-break:break-all;
+	background-color: rgba(10, 10, 10, 0.7);
+	color:white;
+	position: absolute;
+	bottom:10000rem;
+	left: 0rem;
+	border-radius: 0.2rem;
+}

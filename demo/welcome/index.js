@@ -26,7 +26,7 @@ define(
 		{
 			if(config.todo)
 			{
-				console.info("正在开发中...");
+				bin.hudManager.showStatus("开发中...");
 			}
 			else
 			{

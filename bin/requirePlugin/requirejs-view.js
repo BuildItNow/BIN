@@ -4,14 +4,20 @@ define(["bin/util/pathUtil"], function (pathUtil)
     var loadViewClassByElement = function(require, name, el, success, fail)
     {
         var viewName = el.getAttribute('data-view');
-        if(!viewName || viewName == '')
+        if(!viewName || viewName == '' || viewName == '$')
         {
             viewName = name;
         }
 
+        var cssName = el.getAttribute('data-css');
+        if(cssName == '$')
+        {
+            cssName = name;
+        }
+
         viewName = pathUtil.toLeftSlash(viewName);
-        
-        require([viewName], function(View)
+
+        require((cssName ? [viewName, "css!"+pathUtil.toLeftSlash(cssName)+".css"] : [viewName]), function(View)
         {
             var elemPrototype = el;
             var Class = View.extend(

@@ -1,6 +1,6 @@
 define(
-	["bin/core/view", "text!bin/common/indicatorView.html", "bin/util/osUtil"],
-	function(Base, html, osUtil)
+	["bin/core/view", "text!bin/common/indicatorView.html", "css!bin/common/indicatorView.css", "bin/util/osUtil"],
+	function(Base, html, css, osUtil)
 	{
 		var Class = 
 		{

@@ -1,5 +1,5 @@
- define(["bin/common/indicatorView", "bin/common/alertView"], 
-	function(IndicatorView, AlertView)
+ define(["bin/common/indicatorView", "bin/common/alertView", "bin/common/statusView"], 
+	function(IndicatorView, AlertView, StatusView)
 	{
 		var HUDManager = function()
 		{
@@ -15,15 +15,17 @@
 			// Add net
 			var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
 			root.append(elemIndicatorContainer);
-			// Add alert
-			
-			this._elemAlertContainer = $("<div id='alertHUD'     style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
-			root.append(this._elemAlertContainer);
-           	
-			// Add status
 
 			this._indicator = new IndicatorView();
 			elemIndicatorContainer.append(this._indicator.$());
+
+			// Add alert
+			this._elemAlertContainer = $("<div id='alertHUD'       style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
+			root.append(this._elemAlertContainer);
+           	
+			// Add status
+			this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
+			root.append(this._elemStatusContainer);
 		}
 
 		Class.startIndicator = function(options)
@@ -34,6 +36,12 @@
 		Class.stopIndicator = function(indicatorID)
 		{
 			this._indicator.stop(indicatorID);
+		}
+
+		Class.showStatus = function(message)
+		{
+			var v = new StatusView({text:message});
+			this._elemStatusContainer.append(v.$()); 
 		}
 
 		Class.alert = function(options)
