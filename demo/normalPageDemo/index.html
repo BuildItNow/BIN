@@ -1,9 +1,17 @@
 <!-- 该文件显示创建一个普通页面的HTML文件结构-->
 
-<!-- 所有页面使用一个div作为根节点，必须使用bin-page-->
+<!-- 所有页面使用一个div作为根节点，必须使用bin-page.
+     可以通过data-view来指定对应的js文件，如果没有指定，默认加载同名的js文件。
+     可以通过data-css来指定对应的css文件，如果没有指定，将不会加载对应的css文件。
+     "$"代表加载自己同名的文件。
+-->
 <div id="normalPageDemoView" class="bin-page">
     
-    <!-- 定义该页面使用的CSS style，注意：使用根节点和类前缀来限定CSS只在该页面使用和生效，避免CSS类冲突-->
+    <!-- 定义该页面使用的CSS style。
+    注意：
+        1：使用根节点和类前缀来限定CSS只在该页面使用和生效，避免CSS类冲突
+        2：BIN提供了加载css文件和style两种方式，对于style比较多得情况建议使用css文件，因为requirejs只会加载一次css文件，而style在每次加载的时候都会解析。
+    -->
     <style>
         #normalPageDemoView .NormalPageDemoView-goback
         {

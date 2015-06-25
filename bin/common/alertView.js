@@ -31,16 +31,13 @@ function(html, css, Base, osUtil)
 		Base.prototype.genHTML.call(this);
 		this.$().css("z-index", zIndex);
 		++zIndex;
-
-		// Avoid flick effect, asyncPosGenHTML will fix the position
-		this.$("#contentBlock").css("top", "-100000px");
 	}
 
 	Class.asyncPosGenHTML = function()
 	{
 		var top = (this.$().height()-this.$("#contentBlock").height())*0.5;
 		this.$("#contentBlock").css("top", top+"px");
-		this.$().fadeIn(100);
+		this.$().hide().fadeIn(100).css("top", "0px");
 	}
 
 	Class.setTitle = function(title)

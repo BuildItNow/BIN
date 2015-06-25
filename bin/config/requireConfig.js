@@ -25,7 +25,7 @@ define(
 		iscroll: 'bin/3rdParty/iscroll/iscroll-probe',
 		moment: 'bin/3rdParty/moment/moment',
 		spin: 'bin/3rdParty/spinjs/spin',
-		swiper: 'bin/3rdParty/swiper/js/swiper',
+		swiper: 'bin/3rdParty/swiper/swiper',
 
 		// Add your paths here
 	},

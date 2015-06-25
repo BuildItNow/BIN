@@ -1,0 +1,60 @@
+<div id="tabBarDemoView" class="bin-page">
+	<style>
+		#tabBarDemoView .TabBarDemoView-tab-container
+		{
+			position: relative;
+			width:90%; 
+			height:2rem;
+			margin-left:5%;
+			margin-right: 5%; 
+			border:1px solid #1e9dfa; 
+			border-radius:0.25rem;
+			font-size: 0rem;
+			line-height: 2rem;
+		}
+
+		#tabBarDemoView .TabBarDemoView-tab-item
+		{
+			width:25%;
+			height: 100%;
+			border-right:1px solid #1e9dfa; 
+			text-align:center;
+			font-size:0.8rem; 
+			line-height: inherit;
+			display: inline-block;
+			vertical-align: top;
+			box-sizing:border-box;
+		}
+
+		#tabBarDemoView .TabBarDemoView-tab-item-active
+		{
+		 	background-color:#1e9dfa; 
+		 	color: white;
+		}
+
+		#tabBarDemoView .TabBarDemoView-tab-item-deactive
+		{
+		 	background-color:transparent; 
+		 	color: black;
+		}
+
+	</style>
+	<div id="naviBar" class="bin-page-navi-bar" naviTitle="text:WELCOME TO BIN" naviRight="hide:true">	    
+	</div>
+    <div class="bin-page-content">
+    	<p style="font-size:0.7rem;">根据CSS Style自动切换效果</p>
+    	<div id="tabBar" class="TabBarDemoView-tab-container">
+    		<div id="0" class="TabBarDemoView-tab-item">Tab 0</div>
+	        <div id="1" class="TabBarDemoView-tab-item">Tab 1</div>
+	        <div id="2" class="TabBarDemoView-tab-item">Tab 2</div>
+	        <div id="3" class="TabBarDemoView-tab-item" style="border-right:none;">Tab 3</div>
+	    </div>
+	    <p style="font-size:0.7rem;">手动切换效果</p>
+    	<div id="tabBar1" class="TabBarDemoView-tab-container">
+    		<div id="0" class="TabBarDemoView-tab-item">Tab 0</div>
+	        <div id="1" class="TabBarDemoView-tab-item">Tab 1</div>
+	        <div id="2" class="TabBarDemoView-tab-item">Tab 2</div>
+	        <div id="3" class="TabBarDemoView-tab-item" style="border-right:none;">Tab 3</div>
+	    </div>
+    </div>
+</div>
