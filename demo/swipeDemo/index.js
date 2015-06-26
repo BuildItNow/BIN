@@ -2,11 +2,28 @@ define(
 	["common/demoView", "bin/common/swipeView"],
 	function(Base, SwipeView)
 	{
-		var Class = {};
+		var Class = 
+		{
+			events:
+			{
+				"click #showSlide2" : "onShowSlide2",
+				"click #showSlide0" : "onShowSlide0",	
+			}
+		};
 
 		Class.posGenHTML = function()
 		{
-			this._swipeView = new SwipeView({elem:this.$("#swipeView"), current:1, onChange:function(index){bin.hudManager.showStatus("page "+index);}});
+			this._swipeView = new SwipeView({elem:this.$("#swipeView"), onChange:function(view, index){bin.hudManager.showStatus("page "+index);}});
+		}
+
+		Class.onShowSlide0 = function()
+		{
+			this._swipeView.setCurrent(0);
+		}
+
+		Class.onShowSlide2 = function()
+		{
+			this._swipeView.setCurrent(2);
 		}
 
 		return Base.extend(Class);

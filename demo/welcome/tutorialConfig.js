@@ -15,5 +15,6 @@ define([],
 	{path:"indicatorDemo/index",name:"指示器 IndicatorView"},
 	{path:"statusDemo/index",name:"消息提示 StatusView"},
 	{path:"tabBarDemo/index",name:"tab栏 TabBarView"},
-	{path:"swipeDemo/index",name:"swipe页面 SwipeView"},
+	{path:"swipeDemo/index",name:"滑动页 SwipeView"},
+	{path:"tabDemo/index",name:"tab页 TabView"},
 ]);

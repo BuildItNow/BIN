@@ -46,7 +46,7 @@ define(["bin/core/view"], function(Base)
 
 		if(!noTrigger && this._onChange)
 		{
-			this._onChange(this._current);
+			this._onChange(this, this._current);
 		}
 	}
 

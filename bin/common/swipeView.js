@@ -76,7 +76,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 		if(this._onChange)
 		{
-			this._onChange(this._current);
+			this._onChange(this, this._current);
 		}
 	}
 

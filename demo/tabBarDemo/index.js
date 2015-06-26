@@ -10,10 +10,10 @@ define(
 			{
 				elem : this.$("#tabBar"),
 				items : ["0", "1", "2", "3"],
-				current : "0",
+				current : "2",
 				activeStyle:"TabBarDemoView-tab-item-active",
 				deactiveStyle:"TabBarDemoView-tab-item-deactive",
-				onChange:function(item){bin.hudManager.showStatus(item+" tab");}
+				onChange:function(view, item){bin.hudManager.showStatus(item+" tab");}
 			});
 
 			this._tabBarView1 = new TabBarView(
@@ -31,7 +31,7 @@ define(
 					elem.removeClass("TabBarDemoView-tab-item-active");
 					elem.addClass("TabBarDemoView-tab-item-deactive");
 				},
-				onChange:function(item){bin.hudManager.showStatus("bar1 "+item+" tab");}
+				onChange:function(view, item){bin.hudManager.showStatus("bar1 "+item+" tab");}
 			});
 		}
 
