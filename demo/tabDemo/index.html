@@ -68,28 +68,54 @@
 			background-repeat: no-repeat;
 		}
 
-		#tabDemoView .TabDemoView-line
+		#tabDemoView .TabDemoView-Label
 		{
 			position: absolute;
 			width: 100%;
 			top:2rem;
-			height: 0.25rem;
+			height: 1rem;
 			background-color: gray;
+			text-align: center;
+			font-size : 0.7rem;
+			line-height: 1rem;
 		}
 
 	</style>
 	<div id="naviBar" class="bin-page-navi-bar" naviTitle="text:WELCOME TO BIN" naviRight="hide:true">	    
 	</div>
     <div class="bin-page-content">
-    	<div id="tabView" class="TabDemoView-tab-view" style="top:0.5rem;bottom:">
+    	<div id="tabView" class="TabDemoView-tab-view" style="top:0.5rem;bottom:50%">
+	    	<div class="TabDemoView-tab-container">
+	    		<div id="0" class="TabDemoView-tab-item">Tab 0</div>
+		        <div id="1" class="TabDemoView-tab-item">Tab 1</div>
+		        <div id="2" class="TabDemoView-tab-item">Tab 2</div>
+		        <div id="3" class="TabDemoView-tab-item" style="border-right:none;">Tab 3</div>
+		    </div>
+		    <div class="TabDemoView-swipe-view">
+	    		<div class="TabDemoView-swipe-slide">
+	    			<div class="TabDemoView-swipe-background" style="background-image:url(./swipeDemo/img/0.jpeg)"></div>
+	    		</div>
+	    		<div class="TabDemoView-swipe-slide">
+	    			<div class="TabDemoView-swipe-background" style="background-image:url(./swipeDemo/img/1.jpeg)"></div>
+	    		</div>
+	    		<div class="TabDemoView-swipe-slide">
+	    			<div class="TabDemoView-swipe-background" style="background-image:url(./swipeDemo/img/2.jpeg)"></div>	
+	    		</div>
+	    		<div class="TabDemoView-swipe-slide">
+	    			<div class="TabDemoView-swipe-background" style="background-image:url(./swipeDemo/img/3.jpg)"></div>
+	    		</div>
+	    	</div>
+    	</div>
+
+    	<div id="tabView2" class="TabDemoView-tab-view" style="top:51%;bottom:0rem">
 	    	<div id="tabBarView" class="TabDemoView-tab-container">
 	    		<div id="0" class="TabDemoView-tab-item">Tab 0</div>
 		        <div id="1" class="TabDemoView-tab-item">Tab 1</div>
 		        <div id="2" class="TabDemoView-tab-item">Tab 2</div>
 		        <div id="3" class="TabDemoView-tab-item" style="border-right:none;">Tab 3</div>
 		    </div>
-		    <div class="TabDemoView-line"></div>
-		    <div id="swipeView" class="TabDemoView-swipe-view">
+		    <div id="label" class="TabDemoView-Label"></div>
+		    <div id="swipeView" class="TabDemoView-swipe-view" style="top:3rem">
 	    		<div class="TabDemoView-swipe-slide">
 	    			<div class="TabDemoView-swipe-background" style="background-image:url(./swipeDemo/img/0.jpeg)"></div>
 	    		</div>

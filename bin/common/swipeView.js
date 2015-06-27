@@ -52,7 +52,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.setCurrent = function(index, noTrigger)
 	{
-		if(this._current === index)
+		if(this.getCurrent() === index)
 		{
 			return ;
 		}

@@ -30,13 +30,20 @@ define(["bin/core/view"], function(Base)
 	{
 		if(this._initCurrent)
 		{
-			this.setCurrent(this._initCurrent);
+			var current = this._initCurrent;
 			delete this._initCurrent;
+		
+			this.setCurrent(current);
 		}
 	}
 
 	Class.setCurrent = function(item, noTrigger)
 	{
+		if(this.getCurrent() === item)
+		{
+			return ;
+		}
+
 		if(this._current)
 		{
 			this._deactiveItem(this._current);
@@ -57,11 +64,6 @@ define(["bin/core/view"], function(Base)
 
 	Class._onTabClick = function(item)
 	{
-		if(this._current === item)
-		{
-			return ;
-		}
-
 		this.setCurrent(item);
 	}
 

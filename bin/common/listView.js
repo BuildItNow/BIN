@@ -3,17 +3,18 @@ define([
 "bin/util/osUtil", 
 "bin/common/refreshFooterView", 
 "bin/util/elemUtil", 
-"bin/common/listItemProvider",
+"bin/common/itemProvider",
+"bin/common/dataProvider",
 "bin/core/view",
 "underscore"
 ], 
-function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
+function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, View, _)
 {
-	var TemplateItemProvider = ListItemProvider.extend(
+	var TemplateItemProvider = ItemProvider.extend(
 	{
 		constructor:function(options)
 		{
-			ListItemProvider.prototype.constructor.call(this, options);
+			ItemProvider.prototype.constructor.call(this, options);
 
 			this._template = _.template(options.template);
 		},
@@ -25,11 +26,11 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
 		}
 	});
 
-	var GeneratorItemProvider = ListItemProvider.extend(
+	var GeneratorItemProvider = ItemProvider.extend(
 	{
 		constructor:function(options)
 		{
-			ListItemProvider.prototype.constructor.call(this, options);
+			ItemProvider.prototype.constructor.call(this, options);
 
 			this._generator = options.generator;
 		},
@@ -186,5 +187,5 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ListItemProvider, View, _)
 		this._refreshFooter.$().off("click");
 	}
 
-	return Base.extend(Class, {TemplateItemProvider:TemplateItemProvider});
+	return Base.extend(Class, {DataProvider:DataProvider, ItemProvider:ItemProvider, TemplateItemProvider:TemplateItemProvider});
 });

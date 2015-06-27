@@ -17,4 +17,5 @@ define([],
 	{path:"tabBarDemo/index",name:"tab栏 TabBarView"},
 	{path:"swipeDemo/index",name:"滑动页 SwipeView"},
 	{path:"tabDemo/index",name:"tab页 TabView"},
+	{path:"tabComplexDemo/index",name:"Complex Tab"},
 ]);
