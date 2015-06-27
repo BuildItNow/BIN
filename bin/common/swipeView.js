@@ -39,6 +39,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 			onSlideChangeEnd : function(swiper){self._onSwiperSwipe(swiper.activeIndex)},
 			initialSlide : this._initCurrent ? this._initCurrent : 0,
 			loop : false,
+			shortSwipes:true,
 		};
 
 		delete this._initCurrent;

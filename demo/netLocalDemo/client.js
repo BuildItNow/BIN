@@ -4,7 +4,7 @@ define([], function()
 	
 	Class.apiByFunction = function(success)
 	{
-		bin.netManager.doAPI({api:"/api/byFunction", success:success});
+		bin.netManager.doAPI({api:"/api/byFunction", success:success, data:{a:10, b:"中国"}});
 	}
 	
 	Class.apiByData = function(success)
@@ -14,7 +14,7 @@ define([], function()
 
 	Class.apiByFile = function(success)
 	{
-		bin.netManager.doAPI({api:"/api/byFile", success:success, type:"POST"});
+		bin.netManager.doAPI({api:"/api/byFile", success:success, type:"POST", data:{a:10, b:"Hello"}});
 	}
 
 	return Class;

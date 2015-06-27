@@ -40,19 +40,13 @@
 
 		Class.doAPI = function(params)
 		{
-			if(!params.url && !params.api)
+			var netParams = this._genNetParams(params);
+			if(!netParams)
 			{
 				return ;
 			}
 
-			if(!params.url)
-			{
-				params.url = bin.runtimeConfig.server+params.api;
-			}
-
 			var self = this;
-
-			var netParams = this._genNetParams(params);
 
 			// Try send-check policy
 			{
@@ -108,9 +102,7 @@
 				}
 			}
 
-			
 			// Try cache policy
-			if(netParams.options.cache)
 			{
 				var checkResult = this._cachePolicy.check(netParams);
 				if(checkResult)
@@ -144,11 +136,49 @@
 			return $.ajax(netParams);
 		}
 
+		Class._genUrlKey = function(url, data)
+		{
+			if(data)
+			{
+				var pairs = [];
+				for(var key in data)
+	            {
+	                pairs.push(key+"="+data[key]);    
+	            }
+
+	            return url+(url.indexOf('?')<0 ? "?" : "&")+pairs.join("&");
+			}
+			else
+			{
+				return url;
+			}
+		}
+
 		Class._genNetParams = function(params)
 		{
-			var self = this;
+			if(!params.url && !params.api)
+			{
+				return null;
+			}
 
 			params.userdatas = {};
+			
+			if(!params.url)
+			{
+				params.url = bin.runtimeConfig.server+params.api;
+			}
+
+			if(!params.type || params.type.toUpperCase() === "GET")
+			{
+				params.userdatas.urlKey = this._genUrlKey(params.url, params.data);
+			}
+			else
+			{
+				params.userdatas.urlKey = this._genUrlKey(params.url);
+			}
+
+			var self = this;
+
 			params.options   = _.extend(osUtil.clone(DEFAULT_NET_OPTIONS), params.options);	
 			params.callbacks = _.pick(params, ["success", "complete", "beforeSend", "error"]);
 
@@ -177,7 +207,7 @@
 
 		Class._success = function(data, netParams)
 		{
-			if(netParams.options.cache && netParams.userdatas.from === "NET")
+			if(netParams.userdatas.from === "NET")
 			{
 				this._cachePolicy.setData(netParams, data);
 			}

@@ -4,7 +4,7 @@ define([], function()
 	
 	Class.testAPI = function(success)
 	{
-		bin.netManager.doAPI({api:"/api/testAPI", success:success, type:"GET"});
+		bin.netManager.doAPI({api:"/api/testAPI", success:success, type:"GET", data:{a:10, b:"Hello"}});
 	}
 	return Class;
 });
