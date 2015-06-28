@@ -43,6 +43,27 @@ define(
 				console.error("API["+netParams.api+"] Error "+error.status+" "+error.statusText);
 			}
 
+			if(error.status === 0)
+			{
+				if(error.statusText === "abort")
+				{
+					netParams.userdatas.abort = true;
+				}
+				else if(error.statusText === "timeout")
+				{
+					netParams.userdatas.timeout = true;
+					bin.hudManager.showStatus("网络连接超时");
+				}
+				else
+				{
+					bin.hudManager.showStatus("网络连接失败，请检查您的网络");
+				}
+			}
+			else
+			{
+				bin.hudManager.showStatus("网络错误，错误代码 "+error.status);
+			}
+
 			if(netParams.callbacks.error)
 			{
 				netParams.callbacks.error(error, netParams);

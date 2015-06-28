@@ -23,9 +23,14 @@
 #alertView .AlertView-title
 {
 	width:100%;
-	height:2rem;
+	height:auto;
 	font-size:0.8rem;
-	line-height:2rem;
+	line-height: 0.9rem;
+	text-align: center;
+	word-break:break-all;
+	padding: 0.6rem 0.35rem 0.6rem 0.35rem;
+	box-sizing : border-box;
+
 	background-color: rgba(230, 230, 230, 1.0);
 }
 

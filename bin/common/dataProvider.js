@@ -2,7 +2,7 @@ define(["underscore", "bin/util/osUtil", "bin/common/extend"], function(_, osUti
 {
 	var defLoadAPI = function(params, success, error)
 	{
-		bin.netManager.doAPI({api:"/api/refreshList", data:params, success:success, error:error, options:{loading:false, sendCheck:"REJECT_ON_REQUESTING"}});
+		bin.netManager.doAPI({api:"/api/refreshList", data:params, success:success, error:error, options:{loading:false, sendCheck:"ABORT_ON_REQUESTING"}});
 	}
 
 	var DEFAULT_OPTIONS = 

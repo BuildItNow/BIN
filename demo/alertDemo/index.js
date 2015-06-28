@@ -37,6 +37,7 @@ define(
 			elem.css("font-size", "1rem");
 			elem.css("line-height", "2rem");
 			elem.css("height", "2rem");
+			elem.css("padding", "0");
 			elem = v.setMessage({text:"BIN是一个轻量的Web APP框架，BIN的目的是让Web APP的开发像Native APP开发一样。BIN基于Cordova，支持Android和IOS平台。"});
 			elem.css("text-align", "left");
 			v.addButton({text:"确定", onClick:function(v){v.close()}});

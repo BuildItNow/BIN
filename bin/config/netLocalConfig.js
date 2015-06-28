@@ -30,8 +30,6 @@
 
 		CASE("/api/byFile", TURN_ON, "file!./netLocalDemo/test.json", "POST");
 
-		CASE("/api/testAPI", TURN_ON, {a:10, b:"Hello BIN", c:{a:20, b:10}});
-
 		CASE("/api/refreshList", TURN_ON, function(netParams)
 			{	
 				var ret = 

@@ -1,0 +1,15 @@
+<div id="netDemoView" class="bin-page">
+	<style>
+	</style>
+	<div id="naviBar" class="bin-page-navi-bar" naviTitle="text:WELCOME TO BIN" naviRight="hide:true">	    
+	</div>
+    <div class="bin-page-content">
+    	<p style="font-size:0.7rem;">ABORT_ON_REQUESTING：如果已经有相同的API在请求，将会先abort原来的请求，重新发送新的请求。</p>
+    	<div id="abort" style="font-size:0.7rem;text-decoration:underline;color:green;">发送请求，重复点击会abort原来的请求</div>
+        <p id="abortResult" style="font-size:0.7rem;margin-top:0.1rem">结果：</p>
+        <br/>
+        <p style="font-size:0.7rem;">REJECT_ON_REQUESTING：如果已经有相同的API在请求，当前的请求将被reject掉，不能发送。</p>
+        <div id="reject" style="font-size:0.7rem;text-decoration:underline;color:green;">发送请求，在请求没有返回时，重复点击无效,注意返回数据的ID</div>
+        <p id="rejectResult" style="font-size:0.7rem;margin-top:0.1rem">结果：</p>
+    </div>
+</div>

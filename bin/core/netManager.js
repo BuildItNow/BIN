@@ -55,9 +55,8 @@
 				{
 					switch(checkResult.policy)
 					{
-						case "CANCEL":
+						case "ABORT":
 						{
-							// TODO : BUG HERE
 							this._sendCheckPolicy.onComplete(checkResult.netParams);
 
 							if(checkResult.netParams.userdatas.request)
