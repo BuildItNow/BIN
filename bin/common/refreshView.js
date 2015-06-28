@@ -130,6 +130,14 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		}, 500)
 	}
 
+	Class.onRemove = function()
+	{
+		if(this._scoller)
+		{
+			delete this._scoller;
+		}
+	}
+
 	Class._onScrollerTouchStart = function()
 	{
 		this._scrollerTouching = true;

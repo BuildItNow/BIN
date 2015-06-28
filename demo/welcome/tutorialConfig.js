@@ -2,7 +2,7 @@ define([],
 [
 	{path:"normalPageDemo/index",name:"一般页面开发"},
 	{path:"naviPageDemo/index",name:"具有导航栏页面开发"},
-	{path:"viewDemo/index",name:"view开发", todo:true},
+	{path:"viewDemo/index",name:"view开发"},
 	{path:"remDemo/index",name:"rem页面适配"},
 	{path:"pageJumpDemo/index",name:"页面跳转效果"},
 	{path:"pageJumpParamsDemo/index",name:"页面跳转参数传递和多级返回功能"},

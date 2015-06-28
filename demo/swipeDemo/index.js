@@ -26,6 +26,11 @@ define(
 			this._swipeView.setCurrent(2);
 		}
 
+		Class.onRemove = function()
+		{
+			this._swipeView.remove();
+		}
+
 		return Base.extend(Class);
 	} 
 );

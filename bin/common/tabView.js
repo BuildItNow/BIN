@@ -45,19 +45,6 @@ function(Base, TabBarView, SwipeView)
 		this._swipeView = new SwipeView(options);
 	}
 
-	Class._item2index = function(item)
-	{
-		for(var i=0,i_sz=this._options.items.length; i<i_sz; ++i)
-		{
-			if(this._options.items[i] === item)
-			{
-				return i;
-			}
-		}
-
-		return 0;
-	}
-
 	Class.getCurrent = function()
 	{
 		return this._tabBarView.getCurrent();
@@ -94,6 +81,21 @@ function(Base, TabBarView, SwipeView)
 		this.setCurrent(this._options.items[index], noTrigger);
 	}
 
+	Class.onRemove = function()
+	{
+		if(this._swipeView)
+		{
+			this._swipeView.remove();
+			delete this._swipeView;
+		}
+
+		if(this._tabBarView)
+		{
+			this._tabBarView.remove();
+			delete this._tabBarView;
+		}
+	}
+
 	Class._onTabChange = function(item)
 	{
 		this._swipeView.setCurrent(this._item2index(item), true);
@@ -112,6 +114,19 @@ function(Base, TabBarView, SwipeView)
 		{
 			this._options.onChange(this, this._options.items[index]);
 		}	
+	}
+
+	Class._item2index = function(item)
+	{
+		for(var i=0,i_sz=this._options.items.length; i<i_sz; ++i)
+		{
+			if(this._options.items[i] === item)
+			{
+				return i;
+			}
+		}
+
+		return 0;
 	}
 
 	return Base.extend(Class);

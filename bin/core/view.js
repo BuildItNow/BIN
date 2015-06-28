@@ -95,27 +95,6 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
     }
 
-    Class.addView = function(sel, view)
-    {
-        var node = this.$(sel);
-        if(node)
-        {
-            node.append(view.$());
-            view.show();
-        }
-    }
-
-    Class.insertViewBefore = function(sel, view)
-    {
-        var node = view.$();
-        var beforeNode = this.$(sel);
-        if(beforeNode)
-        {
-            node.insertBefore(beforeNode);
-            view.show();
-        }
-    }
-
 	Class.remove = function()
 	{
 		Backbone.View.prototype.remove.call(this);
@@ -173,7 +152,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
 	Class.onOrientationchange = function() 
 	{
-		this.$('input').blur();
+
 	}
 
 	Class.onWindowScroll = function() {}

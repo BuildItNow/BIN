@@ -46,6 +46,12 @@ define(
 			this._refreshView.refresh(true);
 		}
 
+		Class.onRemove = function()
+		{
+			this._refreshView.remove();
+		}
+
+
 		return Base.extend(Class);
 	}
 );

@@ -71,6 +71,15 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		return this._current!==null ? this._current : this._initCurrent; 
 	}
 
+	Class.onRemove = function()
+	{
+		if(this._swiper)
+		{
+			this._swiper.destroy(false);
+			delete this._swiper;
+		}
+	}
+
 	Class._onSwiperSwipe = function(index)
 	{
 		this._current = index;

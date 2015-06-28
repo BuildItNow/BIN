@@ -36,6 +36,13 @@ define(
 			});
 		}
 
+		Class.onRemove = function()
+		{
+			this._tabView.remove();
+			this._tabView2.remove();
+		}
+
+
 		return Base.extend(Class);
 	} 
 );
