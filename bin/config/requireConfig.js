@@ -26,6 +26,7 @@ define(
 		moment: 'bin/3rdParty/moment/moment',
 		spin: 'bin/3rdParty/spinjs/spin',
 		swiper: 'bin/3rdParty/swiper/swiper',
+		md5: 'bin/3rdParty/md5/md5',
 
 		// Add your paths here
 	},

@@ -2,8 +2,10 @@ define(
 ["underscore", "backbone", "bin/common/extend", "bin/util/lsUtil", "bin/util/ssUtil"],
 function(_, Backbone, extend, lsUtil, ssUtil)
 {
-	var USER_IDENTIFY = "BIN_USER_IDENTIFY";
-
+	// Global : Always
+	// Global Session : APP Runtime
+	// User : Always
+	// User Session : User Login Runtime
 	var DataCenter = function()
 	{
 
@@ -15,176 +17,83 @@ function(_, Backbone, extend, lsUtil, ssUtil)
 
 	Class.init = function()
 	{
-		this._userIdentify = window.localStorage[USER_IDENTIFY];
-		this._onUserIdentifyChanged();
-
+		this._globalSession = {};
+		
 		console.info("DataCenter module initialize");
 	}
+
+	Class.onUserLogin = function(identify)
+	{
+		this._userSession = {}
+
+		this._uvPrefix = identify+"_UV_";
+	}
+
+	Class.onUserLogout = function()
+	{
+		delete this._userSession;
+		this._uvPrefix = null;
+	}
 	
-	Class.setUserValue = function(key, value, seprate)
+	Class.setUserValue = function(key, value)
 	{
-		if(!this._userIdentify)
+		if(!this._uvPrefix)
 		{
 			return ;
 		}
 
-		if(seprate)
-		{
-			lsUtil.save(this._uvPrefix+key, value);
-
-			return ;
-		}
-
-		var ud = this.getUserData();
-		ud[key] = value;
-
-		this.setUserData(ud);
+		lsUtil.save(this._uvPrefix+key, value);
 	}
 
-	Class.getUserValue = function(key, def, seprate)
+	Class.getUserValue = function(key, def)
 	{
-		if(!this._userIdentify)
+		if(!this._uvPrefix)
 		{
 			return null;
 		}
 
+		var ret = lsUtil.load(this._uvPrefix+key);
+		return ret === null || ret === undefined ? def : ret;
+	}
+
+	Class.setUserSessionValue = function(key, value)
+	{
+		if(this._userSession)
+		{
+			this._userSession[key] = value;
+		}
+	}
+
+	Class.getUserSessionValue = function(key, def)
+	{
 		var ret = null;
-		if(seprate)
+		if(this._userSession)
 		{
-			ret = lsUtil.load(this._uvPrefix+key);
+			ret = this._userSession[key];
 		}
-		else
-		{
-			ret = this.getUserData()[key]
-		}
-
-		return ret === undefined || ret === null ? def : ret;
+		return ret === null || ret === undefined ? def : ret;
 	}
 
-	Class.getUserData = function()
+	Class.setGlobalValue = function(key, value)
 	{
-		if(!this._userIdentify)
-		{
-			return null;
-		}
-
-		var ret = lsUtil.load(this._udName);
-	
-		return ret || {};
+		lsUtil.save("BIN_"+key, value);
 	}
 
-	Class.setUserData = function(ud)
+	Class.getGlobalValue = function(key, def)
 	{
-		if(!this._userIdentify)
-		{
-			return ;
-		}
-
-		if(ud)
-		{
-			var oud = this.getUserData();
-			ud = _.extend(oud, ud);
-		}
-
-		lsUtil.save(this._udName, ud);
+		var ret = lsUtil.load("BIN_"+key);
+		return ret === null || ret === undefined ? def : ret;
 	}
 
-	Class.setUserSessionValue = function(key, value, seprate)
+	Class.setGlobalSessionValue = function(key, value)
 	{
-		if(!this._userIdentify)
-		{
-			return ;
-		}
-
-		if(seprate)
-		{
-			ssUtil.save(this._usvPrefix+key, value);
-
-			return ;
-		}
-
-		var usd = this.getUserSessionData();
-		usd[key] = value;
-
-		this.setUserSessionData(usd);
+		this._globalSession[key] = value;
 	}
 
-	Class.getUserSessionValue = function(key, def, seprate)
+	Class.getGlobalSessionValue = function(key, def)
 	{
-		if(!this._userIdentify)
-		{
-			return null;
-		}
-
-		var ret = null;
-		if(seprate)
-		{
-			ret = ssUtil.load(this._usvPrefix+key);
-		}
-		else
-		{
-			ret = this.getUserSessionData()[key]
-		}
-
-		return ret === undefined || ret === null ? def : ret;
-	}
-
-	Class.setUserSessionData = function(usd)
-	{
-		if(!this._userIdentify)
-		{
-			return ;
-		}
-
-		if(usd)
-		{
-			var ousd = this.getUserSessionData();
-			usd = _.extend(ousd, usd);
-		}
-		
-		ssUtil.save(this._usdName, usd);
-	}
-
-	Class.getUserSessionData = function()
-	{
-		if(!this._userIdentify)
-		{
-			return null;
-		}
-
-		var ret = ssUtil.load(this._usdName);
-		return ret ? ret : {};
-	}
-
-	Class.getUserIdentify = function()
-	{
-		return this._userIdentify;
-	}
-
-	Class.setUserIdentify = function(userIdentify)
-	{
-		window.localStorage[USER_IDENTIFY] = userIdentify;
-		this._userIdentify = userIdentify;
-
-		this._onUserIdentifyChanged();
-	}
-
-	Class._onUserIdentifyChanged = function()
-	{
-		if(this._userIdentify)
-		{
-			this._udName  = "BIN_"+this._userIdentify+"_UD";
-			this._usdName = "BIN_"+this._userIdentify+"_USD";
-			this._uvPrefix = "BIN_"+this._userIdentify+"_UV_";
-			this._usvPrefix = "BIN_"+this._userIdentify+"_USV_";
-		}
-		else
-		{
-			this._udName  = null;
-			this._usdName = null;
-			this._uvPrefix = null;
-			this._usvPrefix = null;
-		}
+		var ret = this._globalSession[key];
+		return ret === null || ret === undefined ? def : ret;
 	}
 	
 	_.extend(Class, Backbone.Events);

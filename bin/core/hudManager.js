@@ -26,6 +26,8 @@
 			// Add status
 			this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
 			root.append(this._elemStatusContainer);
+		
+			console.info("HUDManager module initialize");
 		}
 
 		Class.startIndicator = function(options)

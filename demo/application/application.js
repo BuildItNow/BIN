@@ -1,5 +1,5 @@
 define(
-["bin/core/application", "bin/core/dataCenter", "css!application/css/demo.css"],
+["bin/core/application", "application/dataCenter", "css!application/css/demo.css"],
 function(Base, DataCenter)
 {
 	var Application = {};
@@ -7,6 +7,11 @@ function(Base, DataCenter)
 	Application.init = function()
 	{
 		Base.prototype.init.call(this);
+
+		this._dataCenter = new DataCenter();
+		this._dataCenter.init();
+
+		this._dataCenter.setGlobalValue("A", undefined);
 	}
 
 	Application.run = function()

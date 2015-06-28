@@ -57,15 +57,13 @@
 					{
 						case "CANCEL":
 						{
+							// TODO : BUG HERE
 							this._sendCheckPolicy.onComplete(checkResult.netParams);
 
 							if(checkResult.netParams.userdatas.request)
 							{
 								checkResult.netParams.userdatas.request.abort();
 							}
-
-							// Clear the old request call backs
-							checkResult.netParams.callbacks = {}; 
 						}
 						break;
 						case "REJECT":
@@ -175,6 +173,11 @@
 			else
 			{
 				params.userdatas.urlKey = this._genUrlKey(params.url);
+			}
+
+			if(params.timeout === undefined)
+			{
+				params.timeout = bin.runtimeConfig.timeout;
 			}
 
 			var self = this;

@@ -5,6 +5,12 @@ define(
 
 		cls.save = function(name, data)
 	    {
+	    	if(data === null || data === undefined)
+            {
+                window.sessionStorage.removeItem(name);
+                return ;
+            }
+            
 	        window.sessionStorage[name] = JSON.stringify(data);
 	    }
 	        
@@ -17,7 +23,7 @@ define(
 
 	    cls.clear = function(name)
 	    {
-	    	window.sessionStorage[name] = null;
+	    	window.sessionStorage.removeItem(name);
 	    }
 
 	    return cls;
