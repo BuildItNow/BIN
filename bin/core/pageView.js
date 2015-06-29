@@ -19,31 +19,33 @@ define(
             bin.naviController.pop();
         }
 
-
-        Class.onViewBack = function(backFrom, backData)
-        {
+        // For performance reason, don't define these function in base class, 
+        // You can overwrite these function in your class to get these features.
         
-        }
-
-        Class.onViewPush = function(pushFrom, pushData, queryParams)
-        {
+        //Class.onViewBack = function(backFrom, backData)
+        //{
         
-        }
+        //}
 
-        Class.onInAnimationBeg = function()
-        {
+        //Class.onViewPush = function(pushFrom, pushData, queryParams)
+        //{
+        
+        //}
 
-        }
+        //Class.onInAnimationBeg = function()
+        //{
 
-        Class.onInAnimationEnd = function()
-        {
+        //}
+
+        //Class.onInAnimationEnd = function()
+        //{
             
-        }
+        //}
         
-        Class.onDeviceBack = function()
-        {
-            return false;
-        }
+        //Class.onDeviceBack = function()
+        //{
+        //    return false;
+        //}
 
         _.extend(Class, PageViewAnimation);
     

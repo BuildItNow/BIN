@@ -11,8 +11,28 @@ define(
 			}
 		};
 
-		Class.posGenHTML = function()
+		Class.onInAnimationBeg = function()
 		{
+			this._indicatorID = bin.hudManager.startIndicator({model:true});
+		}
+
+		Class.onInAnimationEnd = function()
+		{
+			bin.hudManager.stopIndicator(this._indicatorID);
+
+			this.$html("#swipeView", '<div class="SwipeDemoView-swipe-slide">\
+    			<div class="SwipeDemoView-swipe-background" style="background-image:url(./swipeDemo/img/0.jpeg)"></div>\
+    		</div>\
+    		<div class="SwipeDemoView-swipe-slide">\
+    			<div class="SwipeDemoView-swipe-background" style="background-image:url(./swipeDemo/img/1.jpeg)"></div>\
+    		</div>\
+    		<div class="SwipeDemoView-swipe-slide">\
+    			<div class="SwipeDemoView-swipe-background" style="background-image:url(./swipeDemo/img/2.jpeg)"></div>	\
+    		</div>\
+    		<div class="SwipeDemoView-swipe-slide">\
+    			<div class="SwipeDemoView-swipe-background" style="background-image:url(./swipeDemo/img/3.jpg)"></div>\
+    		</div>');
+
 			this._swipeView = new SwipeView({elem:this.$("#swipeView"), onChange:function(view, index){bin.hudManager.showStatus("page "+index);}});
 		}
 
