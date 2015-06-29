@@ -100,7 +100,7 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 	{
 		var self = this;
 		this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
-		this._container = $("#navigationContainer")[0];
+		this._container = $("#navigationContainer");
 
 		Backbone.history.start({pushState: false, silent:true});
 
@@ -406,15 +406,9 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 		var self = this;
 
 		// Require is async process, avoid _clear and requie conflicting, store the require stack version
-		//var stackV = this._stackV;
 		require(['view!' + pushData.path], function(ViewClass)
         {
-        	// if(self._stackV !== stackV)
-        	// {
-        	// 	return ;
-        	// }
-
-    	  	var newView = new ViewClass({_autoLoad:true});
+    	  	var newView = new ViewClass();
           	newView.$().css("z-index", self.count()+100);
           	var curView = self.current();
           	if(newView.onViewPush)
@@ -422,7 +416,7 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
           	   	newView.onViewPush(curView ? curView.name : null, pushData.data, pushData.queryParams);
           	}
           	newView.render();
-          	self._container.appendChild(newView.el);
+          	self._container.append(newView.$());
           
           	if(curView)
           	{

@@ -10,7 +10,7 @@ define(
         var Class =
         {
             // for mannually created view, the view's dom will be created in constructor,
-            // if the view is created by butterfly, html will be ignored.
+            // if the view is created by framework, html will be ignored.
             html:null,          
         };
 
@@ -20,20 +20,26 @@ define(
         }
 
 
-        // Get the data by foward view. bfNaviController.pop(1, {xxx:xxx})
         Class.onViewBack = function(backFrom, backData)
         {
-            //console.info("backFrom "+backFrom);
+        
         }
 
         Class.onViewPush = function(pushFrom, pushData, queryParams)
         {
-            //console.info("pushFrom "+pushFrom);
-            //console.info("queryParams");
-            //console.info(queryParams);
+        
+        }
+
+        Class.onInAnimationBeg = function()
+        {
+
+        }
+
+        Class.onInAnimationEnd = function()
+        {
+            
         }
         
-        // called when device back button click (For android)
         Class.onDeviceBack = function()
         {
             return false;

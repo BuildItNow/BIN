@@ -22,10 +22,11 @@ define(["bin/util/pathUtil"], function (pathUtil)
             var elemPrototype = el;
             var Class = View.extend(
             {
-                constructor: function()
+                constructor: function(options)
                 {
-                    this.el  = elemPrototype.cloneNode(true);
-                    View.apply(this, arguments);
+                    options = options || {};
+                    options.el = elemPrototype.cloneNode(true);
+                    View.apply(options);
                 }
             });
 

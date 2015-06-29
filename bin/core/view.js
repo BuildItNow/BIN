@@ -4,16 +4,14 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
 	var Class =  
 	{
-		// for mannually created view, the view's dom will be created in constructor,
-        // if the view is created by butterfly, html will be ignored.   
-    	html:null
+		html:null
     };
 
 	Class.constructor = function(options)
 	{
 		this._show  = null;
 		
-		if(options && options._autoLoad)   // Load by BIN, BIN will auto set element by html content
+		if(options && options.el)   // Load by BIN, BIN will auto set element by html content
         {
             this._html = null;
             
@@ -30,12 +28,9 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
             Backbone.View.call(this, options);
 
 
-            //osUtil.nextTick(function()
-            //{
-                this.render();
-                this.show();
-            //}.bind(this));
-
+            this.render();
+            this.show();
+            
             return ;
         }
 
@@ -45,11 +40,8 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 
         if(this._html)
         {
-            //osUtil.nextTick(function()
-            //{
-                this.render();
-                this.show();
-            //}.bind(this));
+            this.render();
+            this.show();
         }
 	}
 
