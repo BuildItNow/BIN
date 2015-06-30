@@ -18,9 +18,16 @@ function(html, css, Base, osUtil)
 
 			if(options.buttons)
 			{
-				for(var i=0,i_sz=options.buttons.length; i<i_sz; ++i)
+				if(options.buttons.length === 2)
 				{
-					this.addButton(options.buttons[i]);
+					this._wrap2Button(options.buttons[0], options.buttons[1]);
+				}
+				else
+				{
+					for(var i=0,i_sz=options.buttons.length; i<i_sz; ++i)
+					{
+						this.addButton(options.buttons[i]);
+					}
 				}
 			}
 		}
@@ -75,7 +82,9 @@ function(html, css, Base, osUtil)
 	Class.addButton = function(button)
 	{
 		var self = this;
-		var elem = $('<div class="AlertView-line"></div><div class="AlertView-button">'+button.text+'</div>');
+		this.$append("#buttons", '<div class="AlertView-line"></div>');
+
+		var elem = $('<div class="AlertView-button">'+button.text+'</div>');
 		if(button.onClick)
 		{
 			elem.on("click", function(e){button.onClick(self, button.text)});
@@ -88,6 +97,37 @@ function(html, css, Base, osUtil)
 		this.$append("#buttons", elem);
 
 		return elem;
+	}
+
+	Class._wrap2Button = function(button0, button1)
+	{
+		var self = this;
+		this.$append("#buttons", '<div class="AlertView-line"></div>');
+
+		var elemWrap = $('<div class="AlertView-wrap-block"></div>');
+		var elem     = $('<div class="AlertView-wrap-button">'+button0.text+'</div>');
+		if(button0.onClick)
+		{
+			elem.on("click", function(e){button0.onClick(self, button0.text)});
+		}
+		if(button0.color)
+		{
+			elem.css("color", button0.color);
+		}
+		elemWrap.append(elem);
+		elem = $('<div class="AlertView-wrap-button">'+button1.text+'</div>');
+		if(button1.onClick)
+		{
+			elem.on("click", function(e){button1.onClick(self, button1.text)});
+		}
+		if(button1.color)
+		{
+			elem.css("color", button1.color);
+		}
+		elemWrap.append(elem);
+		elemWrap.append("<div class='AlertView-v-line'></div>");
+		
+		this.$append("#buttons", elemWrap);
 	}
 
 	Class.close = function()
