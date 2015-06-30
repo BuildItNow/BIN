@@ -19,15 +19,12 @@ define(["bin/util/pathUtil"], function (pathUtil)
 
         require((cssName ? [viewName, "css!"+pathUtil.toLeftSlash(cssName)+".css"] : [viewName]), function(View)
         {
-            var Class = View.extend(
+            View.create = function()
             {
-                constructor: function()
-                {
-                   View.call(this, {el:el.cloneNode(true)});
-                }
-            });
+                return new View({el:el.cloneNode(true)});
+            }
 
-            success(Class);
+            success(View);
         }, fail);
     }
 

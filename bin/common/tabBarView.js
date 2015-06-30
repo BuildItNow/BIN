@@ -7,7 +7,7 @@ define(["bin/core/view"], function(Base)
 		this._items  = options.items;
 		this._activeStyle = options.activeStyle;
 		this._deactiveStyle = options.deactiveStyle;
-		this._initCurrent = options.current;
+		this._initCurrent = options.current || this._items[0];
 		this._onChange = options.onChange;
 
 		Base.prototype.constructor.call(this, options); 
@@ -24,17 +24,17 @@ define(["bin/core/view"], function(Base)
 		{
 			this.$("#"+this._items[i]).on("click", func);
 		}
+
+		// Add the style, avoid flick effect
+		this._activeItem(this._initCurrent);
 	}
 
 	Class.asyncPosGenHTML = function()
 	{
-		if(this._initCurrent)
-		{
-			var current = this._initCurrent;
-			delete this._initCurrent;
+		var current = this._initCurrent;
+		delete this._initCurrent;
 		
-			this.setCurrent(current);
-		}
+		this.setCurrent(current);
 	}
 
 	Class.setCurrent = function(item, noTrigger)

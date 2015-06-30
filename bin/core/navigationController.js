@@ -1,5 +1,5 @@
 define(
-	["backbone", "underscore", "bin/common/extend", "bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-IOEffecters"],
+	["backbone", "underscore", "bin/common/extend", "bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
 function(Backbone, _, extend, osUtil, pathUtil, effecters)
 {
 	var NavigationRouter = Backbone.Router.extend(
@@ -409,7 +409,7 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 		// Require is async process, avoid _clear and requie conflicting, store the require stack version
 		require(['view!' + pushData.path], function(ViewClass)
         {
-    	  	var newView = new ViewClass();
+    	  	var newView = ViewClass.create();
           	newView.$().css("z-index", self.count()+100);
           	var curView = self.current();
           	

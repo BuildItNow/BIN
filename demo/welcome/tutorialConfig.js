@@ -19,4 +19,5 @@ define([],
 	{path:"swipeDemo/index",name:"滑动页 SwipeView"},
 	{path:"tabDemo/index",name:"tab页 TabView"},
 	{path:"tabComplexDemo/index",name:"Complex Tab"},
+	{path:"IOAnimCallbackDemo/index", name:"过场动画回调"},
 ]);
