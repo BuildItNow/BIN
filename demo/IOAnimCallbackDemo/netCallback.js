@@ -4,6 +4,16 @@ define(
 	{
 		var Class = {};
 
+		Class.posGenHTML = function()
+		{
+			var self = this;
+			this._elem = $("<div></div>")
+			setTimeout(function()
+			{
+				self._elem.append($(contentHtml));
+			}, 150);
+		}
+
 		Class.onInAnimationBeg = function()
 		{
 			this._indicatorID = bin.hudManager.startIndicator({model:true});
@@ -13,7 +23,7 @@ define(
 		{
 			bin.hudManager.stopIndicator(this._indicatorID);
 			
-			this.$html(".bin-page-content", contentHtml);
+			this.$append(".bin-page-content", this._elem);
 			this.createTabView();
 		}
 

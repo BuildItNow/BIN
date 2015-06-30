@@ -26,7 +26,7 @@
 				return "api/byFunction : Welcome to BIN"
 			},"GET");
 
-		CASE("/api/byData", TURN_ON, "api/byData : Welcome to BIN", "GET");
+		CASE("/api/byData", TURN_ON, "api/byData : Welcome to BIN", {method:"GET", costTime:1000});
 
 		CASE("/api/byFile", TURN_ON, "file!./netLocalDemo/test.json", "POST");
 

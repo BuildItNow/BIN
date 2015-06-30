@@ -52,37 +52,37 @@ define(
 			{
 				if(data.substr(0, 5) === "file!")
 				{
-					this._doDebugFile(data.substr(5), netParams, success, error);		
+					this._doDebugFile(data.substr(5), netParams, success, error, apiDebugConfig);		
 				}
 				else
 				{
-					this._doDebugData(data, netParams, success, error);
+					this._doDebugData(data, netParams, success, error, apiDebugConfig);
 				}
 			}
 			else if(typeof(data) === "function")
 			{
-				this._doDebugFunc(data, netParams, success, error);
+				this._doDebugFunc(data, netParams, success, error, apiDebugConfig);
 			}
 			else
 			{
-				this._doDebugData(data, netParams, success, error);
+				this._doDebugData(data, netParams, success, error, apiDebugConfig);
 			}
 		}
 
-		Class._doDebugFunc = function(func, netParams, success, error)
+		Class._doDebugFunc = function(func, netParams, success, error, apiDebugConfig)
 		{
 			var data = func(netParams);
 
-			this._doDebugData(data, netParams, success, error);
+			this._doDebugData(data, netParams, success, error, apiDebugConfig);
 		}
 
-		Class._doDebugFile = function(file, netParams, success, error)
+		Class._doDebugFile = function(file, netParams, success, error, apiDebugConfig)
 		{
 			var self = this;
 			var params = {url:file};
 			params.success = function(data)
 			{
-				self._doDebugData(data, netParams, success, error);
+				self._doDebugData(data, netParams, success, error, apiDebugConfig);
 			}
 			params.error = function(error)
 			{
@@ -92,15 +92,16 @@ define(
 			this._netManager.ajax(params);
 		}
 
-		Class._doDebugData = function(data, netParams, success, error)
+		Class._doDebugData = function(data, netParams, success, error, apiDebugConfig)
 		{
 			var netData = {code:0, data:osUtil.clone(data, true)};
+			var time    = apiDebugConfig.options.costTime || 500;
 
 			osUtil.delayCall(
 			function()
 			{
 				success(netData);
-			}, 500
+			}, time
 			);
 		}
 

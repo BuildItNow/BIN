@@ -8,6 +8,8 @@ define(
 			{
 				"click #noCallback":"noCallback",
 				"click #callback"  :"callback",	
+				"click #netNoCallback":"netNoCallback",
+				"click #netCallback"  :"netCallback",	
 			}
 		};
 
@@ -24,6 +26,16 @@ define(
 		Class.callback = function()
 		{
 			bin.naviController.push("IOAnimCallbackDemo/callback");
+		}
+
+		Class.netNoCallback = function()
+		{
+			bin.naviController.push("IOAnimCallbackDemo/netNoCallback");
+		}
+
+		Class.netCallback = function()
+		{
+			bin.naviController.push("IOAnimCallbackDemo/netCallback");
 		}
 
 		return Base.extend(Class);
