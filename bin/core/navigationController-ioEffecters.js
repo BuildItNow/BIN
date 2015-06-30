@@ -23,13 +23,17 @@ function()
 		"fadeIO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				curView.show();
 				curView.animateFadeIn(function()
 				{
 					preView.hide();
 					curView.show();
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				});
 			},
 			// Out
@@ -47,13 +51,18 @@ function()
 		"rightIO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				curView.show();
 				curView.animateSlideInRight(function()
 				{
 					preView.hide();
 					curView.show();
+
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				});
 			},
 			// Out
@@ -71,7 +80,7 @@ function()
 		"rightILeftO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.animateSlideOutLeft(function()
 				{
@@ -81,6 +90,11 @@ function()
 				curView.animateSlideInRight(function()
 				{
 					curView.show();
+
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				});
 			},
 			// Out

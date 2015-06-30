@@ -10,7 +10,7 @@ define(
         var Class =
         {
             // for mannually created view, the view's dom will be created in constructor,
-            // if the view is created by butterfly, html will be ignored.
+            // if the view is created by framework, html will be ignored.
             html:null,          
         };
 
@@ -19,25 +19,33 @@ define(
             bin.naviController.pop();
         }
 
-
-        // Get the data by foward view. bfNaviController.pop(1, {xxx:xxx})
-        Class.onViewBack = function(backFrom, backData)
-        {
-            //console.info("backFrom "+backFrom);
-        }
-
-        Class.onViewPush = function(pushFrom, pushData, queryParams)
-        {
-            //console.info("pushFrom "+pushFrom);
-            //console.info("queryParams");
-            //console.info(queryParams);
-        }
+        // For performance reason, don't define these function in base class, 
+        // You can overwrite these function in your class to get these features.
         
-        // called when device back button click (For android)
-        Class.onDeviceBack = function()
-        {
-            return false;
-        }
+        //Class.onViewBack = function(backFrom, backData)
+        //{
+        
+        //}
+
+        //Class.onViewPush = function(pushFrom, pushData, queryParams)
+        //{
+        
+        //}
+
+        //Class.onInAnimationBeg = function()
+        //{
+
+        //}
+
+        //Class.onInAnimationEnd = function()
+        //{
+            
+        //}
+        
+        //Class.onDeviceBack = function()
+        //{
+        //    return false;
+        //}
 
         _.extend(Class, PageViewAnimation);
     
