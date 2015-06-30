@@ -95,7 +95,7 @@ define(
 		Class._doDebugData = function(data, netParams, success, error, apiDebugConfig)
 		{
 			var netData = {code:0, data:osUtil.clone(data, true)};
-			var time    = apiDebugConfig.options.costTime || 500;
+			var time    = (apiDebugConfig.options && apiDebugConfig.options.costTime) || 500;
 
 			osUtil.delayCall(
 			function()
