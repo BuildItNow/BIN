@@ -33,7 +33,12 @@ define(
     			<div class="SwipeDemoView-swipe-background" style="background-image:url(./swipeDemo/img/3.jpg)"></div>\
     		</div>');
 
-			this._swipeView = new SwipeView({elem:this.$("#swipeView"), onChange:function(view, index){bin.hudManager.showStatus("page "+index);}});
+			this._swipeView = new SwipeView({elem:this.$("#swipeView"), onChange:
+				function(view, index)
+				{
+					console.info("page "+index);
+					bin.hudManager.showStatus("page "+index);
+				}});
 		}
 
 		Class.onShowSlide0 = function()

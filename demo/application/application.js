@@ -11,7 +11,7 @@ function(Base, DataCenter)
 		this._dataCenter = new DataCenter();
 		this._dataCenter.init();
 
-		this._dataCenter.setGlobalValue("A", undefined);
+		bin.dataCenter = this._dataCenter;
 	}
 
 	Application.run = function()

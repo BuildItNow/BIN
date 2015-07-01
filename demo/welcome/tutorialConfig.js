@@ -20,4 +20,5 @@ define([],
 	{path:"tabDemo/index",name:"tab页 TabView"},
 	{path:"tabComplexDemo/index",name:"Complex Tab"},
 	{path:"IOAnimCallbackDemo/index", name:"过场动画回调"},
+	{path:"dataCenterDemo/index", name:"数据中心"},
 ]);
