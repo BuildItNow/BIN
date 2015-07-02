@@ -1,6 +1,19 @@
 # BIN
-BIN是一个轻量的Web APP框架，BIN的目的是让Web APP的开发像Native APP开发一样。BIN基于Cordova，支持Android和IOS平台。
-
+BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了对于APP开发的主体框架，通用的UI开发组件，使Web APP开发像Native APP开发一样，但是只需要开发一套代码。
+##功能
+* View概念
+* 一般页面 Pageview
+* 导航栏页面 NaviPageView
+* 下拉刷新页面 RefreshView
+* 列表页面 ListView
+* 指示器 IndicatorView
+* Alert框 AlertView
+* Tab栏 TabBarView
+* Swipe页面 Swipeview
+* Tab页面 TabView
+* 网络API模块
+* 网络缓存模块
+* 数据中心模块
 # 目录结构
 * bin : BIN 框架代码 <br/>
 * demo : 演示APP<br />
