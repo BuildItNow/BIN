@@ -44,7 +44,8 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 
 	Class.constructor = function(options)
 	{
-		options.onRefresh = Class._onRefresh.bind(this);
+		var self = this;
+		options.onRefresh = function(){ self._reload()};
 		options.autoRefresh = "animation";
 
 		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
@@ -67,8 +68,8 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		
 		this._onFooterClick = function()
 		{
-			this._loadMore();
-		}.bind(this)
+			self._loadMore();
+		};
 	 
 		Base.prototype.constructor.call(this, options);
 	}
@@ -84,7 +85,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		return this._items[i];
 	}
 
-	Class._onRefresh = function()
+	Class._reload = function()
 	{
 		var self = this;
 		this._dataProvider.refresh(

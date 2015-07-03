@@ -102,7 +102,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 		}
 
 		this._show = true;
-		this.$().css("display", "block");
+		this.$().show();
 		this.onShow();
 	}
 	
@@ -114,7 +114,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
 		}
 		
 		this._show = false;
-		this.$().css("display", "none");
+		this.$().hide();
 		this.onHide();
 	}
 

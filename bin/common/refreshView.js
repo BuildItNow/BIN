@@ -101,12 +101,13 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 			this._contentDirty = true;
 
+			var self = this;
 			osUtil.nextTick(function()
 			{
-				this._scoller.refresh();
+				self._scoller.refresh();
 
-				this._contentDirty = false;
-			}.bind(this));
+				self._contentDirty = false;
+			});
 		}
 	}
 

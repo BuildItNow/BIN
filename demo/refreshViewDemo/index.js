@@ -6,7 +6,8 @@ define(
 
 		Class.posGenHTML = function()
 		{
-			this._refreshView = new RefreshView({elem:this.$("#refreshView"), onRefresh:function(){this._onRefresh()}.bind(this)});
+			var self = this;
+			this._refreshView = new RefreshView({elem:this.$("#refreshView"), onRefresh:function(){self._onRefresh()}});
 			this._refreshResult = 0;
 		}
 
