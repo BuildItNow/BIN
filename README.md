@@ -48,6 +48,48 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
 2. 拷贝demo目录内容到ios-project/www目录下。 <br/>
 3. 编译IPK安装。<br/> 
 
+# 文档
+## View
+View是BIN中最基本的UI Controller，包含了HTML中某一个Element对应的逻辑，在ios中类似View Controller。
+* constructor(options)
+构造函数 <br/>
+options.html : 从html构造view,html应该包含一个根Element <br/>
+options.elem : 从已有Element构造view,elem可以是DOM或者JQuery节点 <br/>
+options.el   : 从已有Element构造view,elem可以是DOM或者JQuery节点，这种方式不会触发render和show的调用 <br/>
+注意：BIN中的view只能通过这几种方式来构造，三种方式是互斥的
+* genHTML()
+为view动态构造HTML结构函数
+* preGenHTML()
+genHTML的前事件函数
+* posGenHTML()
+genHTML的后事件函数
+* asyncPosGenHTML()
+posGenHTML的异步版本，对于需要依赖layout过后的属性(比如width,height)，在该函数中处理
+* show()
+显示该view
+* hide()
+隐藏该view
+* remove()
+移除该view,移除后，view在html中对一个的节点也会被移除
+* onShow()
+view在显示时被调用
+* onHide()
+view在隐藏时被调用
+* onRemove()
+view在移除时被调用，一些清理的逻辑在这里处理
+* isShow()
+返回view当前是否显示中
+* $(sel, fromSel)
+在view中从fromSel节点查询sel节点，并返回该节点，sel和fromSel为JQuery selector。如果fromSel为空，则从当前view的根节点查询；如果sel为空，返回view的根节点
+* $html(sel, html)
+如果html不为空，对sel节点设置html；如果html为空，则返回sel节点的html；如果sel为空，则对根节点操作
+* $text(sel, html)
+参照$html，不同点在于调用节点的text
+* $append(sel, elem)
+将elem插入到sel节点的最后
+* $fragment(sel, fromSel)
+对$(sel, fromSel)创建一个Fragment，对Fragment操作完后需要调用setup将实际内容append到$(sel, fromSel)节点
+
 # 开发和其他
 1. 使用自己熟悉的一个编辑器，比如: Sublime，Notepad++，vim ... <br/>
 2. 使用Chrome做模拟器和调试器。 <br/>
