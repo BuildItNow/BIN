@@ -53,3 +53,6 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
 2. 使用Chrome做模拟器和调试器。 <br/>
 3. 由于PC和手机WebKit的差异，需要在手机端进行测试。 <br/>
 4. 在Android手机上，为了避开不同手机在WebKit上的兼容性，BIN使用了Crosswalk内核，优点是：Crosswalk性能更好，不存在兼容性问题；缺点是：编译的APK会大10几MB；Crosswalk有lite版本，但是lite版本不稳定。<br/>
+
+# LICENSE
+MIT
