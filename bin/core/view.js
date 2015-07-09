@@ -167,7 +167,7 @@ define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, 
     {
         var ele = this.$(sel);
 
-        if(html)
+        if(html !== null && html !== undefined)
         {
             ele.html(html);
         }
