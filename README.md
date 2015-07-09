@@ -90,6 +90,52 @@ view在移除时被调用，一些清理的逻辑在这里处理
 * $fragment(sel, fromSel) <br/>
 对$(sel, fromSel)创建一个Fragment，对Fragment操作完后需要调用setup将实际内容append到$(sel, fromSel)节点
 
+## PageView
+PageView代表一个主页面，可具有过场动画；PageView从View继承
+* goBack()
+返回上一层页面
+* onViewBack(backFrom, backData)
+页面返回时回调 <br/>
+backFrom : 所返回页面的名字 <br/>
+backData : 所返回页面传递给该页面的参数 <br/>
+* onViewPush(pushFrom, pushData, queryParams)
+页面跳转时回调 <br/>
+pushFrom : 该页面所跳转页面的名字 <br/>
+pushData : 所跳转页面传递给该页面的参数 <br/>
+queryParams : 所跳转页面在url中传递的参数，建议不要使用该种方式传递，而是采用pushData来传递 <br/>
+注意 : onViewPush在render之前被调用
+* onInAnimationBeg()
+页面进入过场动画开始时回调
+* onInAnimationEnd()
+页面进入过场动画结束时回调
+* onDeviceBack()
+针对Android手机返回键点击事件回调，如果要处理该事件，不再传递该事件，请返回true
+
+## NaviPageView
+NaviPageView代表一个具有导航栏的主页面；NaviPageView从Page继承
+* onLeft()
+导航栏左按钮点击回调
+* onRight()
+导航栏右按钮点击回调
+* setLeftImage(img)
+设置左按钮的图片
+* setRightImage(img)
+设置右按钮的图片
+* setLeftText(text)
+设置左按钮的文本
+* setRightText(text)
+设置右按钮的文本 <br/>
+注意 : 导航按钮不支持同时设置图片和文字 
+* setLeftVisible(v)
+设置左按钮是否显示
+* setRightVisible(v)
+设置右按钮是否显示
+* setTitle(text)
+设置导航栏Title
+* setTitleVisible(v)
+设置导航栏是否显示
+
+
 # 开发和其他
 1. 使用自己熟悉的一个编辑器，比如: Sublime，Notepad++，vim ... <br/>
 2. 使用Chrome做模拟器和调试器。 <br/>
