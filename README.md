@@ -92,47 +92,47 @@ view在移除时被调用，一些清理的逻辑在这里处理
 
 ## PageView
 PageView代表一个主页面，可具有过场动画；PageView从View继承
-* goBack()
+* goBack() <br/>
 返回上一层页面
-* onViewBack(backFrom, backData)
+* onViewBack(backFrom, backData) <br/>
 页面返回时回调 <br/>
 backFrom : 所返回页面的名字 <br/>
 backData : 所返回页面传递给该页面的参数 <br/>
-* onViewPush(pushFrom, pushData, queryParams)
+* onViewPush(pushFrom, pushData, queryParams) <br/>
 页面跳转时回调 <br/>
 pushFrom : 该页面所跳转页面的名字 <br/>
 pushData : 所跳转页面传递给该页面的参数 <br/>
 queryParams : 所跳转页面在url中传递的参数，建议不要使用该种方式传递，而是采用pushData来传递 <br/>
 注意 : onViewPush在render之前被调用
-* onInAnimationBeg()
+* onInAnimationBeg() <br/>
 页面进入过场动画开始时回调
-* onInAnimationEnd()
+* onInAnimationEnd() <br/>
 页面进入过场动画结束时回调
-* onDeviceBack()
+* onDeviceBack() <br/>
 针对Android手机返回键点击事件回调，如果要处理该事件，不再传递该事件，请返回true
 
 ## NaviPageView
 NaviPageView代表一个具有导航栏的主页面；NaviPageView从Page继承
-* onLeft()
+* onLeft() <br/>
 导航栏左按钮点击回调
-* onRight()
+* onRight() <br/>
 导航栏右按钮点击回调
-* setLeftImage(img)
+* setLeftImage(img) <br/>
 设置左按钮的图片
-* setRightImage(img)
+* setRightImage(img) <br/>
 设置右按钮的图片
-* setLeftText(text)
+* setLeftText(text) <br/>
 设置左按钮的文本
-* setRightText(text)
+* setRightText(text) <br/>
 设置右按钮的文本 <br/>
 注意 : 导航按钮不支持同时设置图片和文字 
-* setLeftVisible(v)
+* setLeftVisible(v) <br/>
 设置左按钮是否显示
-* setRightVisible(v)
+* setRightVisible(v) <br/>
 设置右按钮是否显示
-* setTitle(text)
+* setTitle(text) <br/>
 设置导航栏Title
-* setTitleVisible(v)
+* setTitleVisible(v) <br/>
 设置导航栏是否显示
 
 
