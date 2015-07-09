@@ -36,6 +36,7 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
         启动本地API服务器：node server-demo.js，网络API请求需要。<br/>
 3. 打开Chrome浏览器，注意：Chrome需要使用--disable-web-security进行跨域，否则ajax请求会失败。</br>
 4. 使用localhost:8080进行访问。
+5. 右键，点击 审查元素，使用移动模式演示demo。
 
 在Android手机上演示demo: <br/>
 1. 拷贝bin目录中内容到demo/bin目录。 <br/>
