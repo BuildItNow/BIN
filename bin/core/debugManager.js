@@ -2,9 +2,10 @@ define(
     [
         "underscore", 
         "bin/common/extend", 
-        "bin/util/osUtil"
+        "bin/util/osUtil",
+        "text!bin/debug/debugFloatingView.html"
     ],
-    function (_, extend, osUtil)
+    function (_, extend, osUtil, floatingHtml)
     {
     	var DebugManager = function()
     	{
@@ -23,7 +24,7 @@ define(
             var self = this;
 
             var root = $("#HUDContainer");
-            this._debugHUD = $("<div id='debugHUD' style='position:absolute;background-color:transparent;pointer-events:none;z-index:100;width:100%;height:100%;text-align:center;'><div id='debugSwitch' style='pointer-events:auto;margin-left:auto;margin-right:auto;width:3rem;height:1.9rem;background-color:black;opacity:0.3;left:0px;top:0px;'></div><div id='debugFloating' style='position:absolute;width:100%;top:1.9rem;bottom:0px;pointer-events:none;opacity:0.5;background-color:#888;'><textarea id='debugInfos' style=' width:100%;height:100%;font-size: 0.5rem;line-height: 0.6rem;padding:0.25rem;margin: 0px;border: none;'></textarea></div></div>");
+            this._debugHUD = $(floatingHtml);
             root.append(this._debugHUD);
             this._debugHUD.find("#debugSwitch").on("click", function()
             {
@@ -35,6 +36,11 @@ define(
                 {
                     bin.naviController.push("bin/debug/debugView", self._elemInfos);
                 }
+            });
+
+            this._debugHUD.find("#deviceBack").on("click", function()
+            {
+                bin.app.onDeviceBack();
             });
             this._debugFloating = this._debugHUD.find("#debugFloating");
             this._elemFloatingInfos = this._debugHUD.find("#debugInfos");

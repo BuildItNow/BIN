@@ -60,6 +60,11 @@ define(
 			
 			++this._lv;
 		}
+
+		Class.running = function()
+		{
+			return this._lc > 0;
+		}
 			
 		Class._incLoading = function(model) 
 		{

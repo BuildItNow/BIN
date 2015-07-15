@@ -32,17 +32,6 @@ define([
 			this._hudManager = new HUDManager();
 			this._hudManager.init();
 			
-			window.changanBackbutton = function() 
-			{
-				if(!bin.app)
-				{
-					return ;
-				}
-
-				bin.app.onDeviceBack();
-			};
-			document.addEventListener("backbutton", window.changanBackbutton, false);
-
 			bin.app = this;
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
@@ -52,10 +41,17 @@ define([
 
 		Class.onDeviceBack = function()
 		{
-			if(this._navigationController && this._navigationController.onDeviceBack())
+			if(this._hudManager.onDeviceBack())
 			{
-				return ;
+				return true;
+			}				
+
+			if(this._naviController.onDeviceBack())
+			{
+				return true;
 			}
+
+			return false;
 		}
 
 		Class.run = function()

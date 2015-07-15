@@ -75,6 +75,23 @@
 			return this.alert(options);
 		} 
 
+		Class.onDeviceBack = function()
+		{
+			if(this._elemAlertContainer[0].children.length >  0)
+			{ 
+				return true;
+			}
+
+			if(this._indicator.running())
+			{
+				this._indicator.reset();
+
+				return true;
+			}
+
+			return false;
+		}
+
 		return HUDManager;
 	}
 );

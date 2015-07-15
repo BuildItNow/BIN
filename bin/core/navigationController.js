@@ -265,34 +265,26 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 			return false;
 		}
 
-		var currentViewName = curView.name;
-		if(this.count() === 1 || currentViewName === "" || currentViewName === "main/index" || currentViewName === "login/index")
-		 {
-			Dialog.createDialog({
-				closeBtn: false,
-				buttons: {
-					'取消': function() {
-						this.close();
-					},
-					'确定': function() {
-						navigator.app.exitApp();
-						this.close();
-					}
-				},
-				content: '是否退出程序?',
-				title: '退出'
+		if(curView.view.onDeviceBack && curView.view.onDeviceBack())
+		{
+			return true;
+		}
+
+		if(this.count() === 1)
+		{
+			bin.hudManager.alert
+			({
+				message:{text:"确定退出程序?"},
+				buttons:
+				[
+					{text:"确定", onClick:function(v){v.close()}},
+					{text:"取消", onClick:function(v){v.close()}},	
+				]
 			});
 		} 
 		else 
 		{
-			if(curView.view.onDeviceBack && curView.view.onDeviceBack())
-			{
-
-			}
-			else
-			{
-				this.pop();
-			}
+			this.pop();
 		}
 
 		return true;

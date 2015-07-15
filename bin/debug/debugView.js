@@ -18,9 +18,9 @@ define(
             this._debugInfos = pushData;
         }
 
-        Class.onShow = function()
+        Class.genHTML = function()
         {
-            Base.prototype.onShow.call(this);
+            Base.prototype.genHTML.call(this);
             
             this.$append("#debugContent", this._debugInfos);
             this._debugInfos.addClass("DebugView-debug-infos");
@@ -42,7 +42,7 @@ define(
         Class.onRemove  = function()
         {
             this._debugInfos.removeClass("DebugView-debug-infos");
-            this._debugInfos.remove();
+            this._debugInfos.detach();
 
             this._debugInfos = null;
         }
