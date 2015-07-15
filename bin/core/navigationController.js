@@ -277,7 +277,7 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 				message:{text:"确定退出程序?"},
 				buttons:
 				[
-					{text:"确定", onClick:function(v){v.close()}},
+					{text:"确定", onClick:function(v){v.close(); navigator.app.exitApp();}},
 					{text:"取消", onClick:function(v){v.close()}},	
 				]
 			});
