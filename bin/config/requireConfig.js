@@ -1,14 +1,12 @@
 define(
 {
 	packages : 
-	[{
-		name:"3rdParty",
-		location:"bin/3rdParty",
-		main:"",
-	}
-	],
+	[],
 	paths: 
 	{
+		// 3rdParty path
+		"3rdParty" : "bin/3rdParty",
+		
 		// equirejs plugins
 		text: 'bin/3rdParty/requirejs-text/text',
 		domReady: 'bin/3rdParty/requirejs-domready/domReady',

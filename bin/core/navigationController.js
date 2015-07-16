@@ -102,6 +102,9 @@ function(Backbone, _, extend, osUtil, pathUtil, effecters)
 		this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
 		this._container = $("#navigationContainer");
 
+		// Redirect to index.html
+		window.location.href = './index.html#';
+		// Start rooter
 		Backbone.history.start({pushState: false, silent:true});
 
 		console.info("NavigationController module initialize");
