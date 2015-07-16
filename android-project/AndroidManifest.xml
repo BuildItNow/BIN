@@ -26,6 +26,8 @@
         android:xlargeScreens="true"
         android:resizeable="true"
         android:anyDensity="true"
+
+        
         />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
