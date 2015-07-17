@@ -1,6 +1,6 @@
 define(
-	["backbone", "underscore", "bin/common/extend", "bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
-function(Backbone, _, extend, osUtil, pathUtil, effecters)
+	["bin/common/extend", "bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
+function(extend, osUtil, pathUtil, effecters)
 {
 	var NavigationRouter = Backbone.Router.extend(
 	{

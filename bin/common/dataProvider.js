@@ -1,4 +1,4 @@
-define(["underscore", "bin/util/osUtil", "bin/common/extend"], function(_, osUtil, extend)
+define(["bin/util/osUtil", "bin/common/extend"], function(osUtil, extend)
 {
 	var defLoadAPI = function(params, success, error)
 	{

@@ -1,11 +1,13 @@
 define(
-	[],
-	function()
+	["bin/common/extend"],
+	function(extend)
 	{
 		var NetCallbackPolicy = function(netManager)
 		{
 			this._netManager = netManager;
 		}
+
+		NetCallbackPolicy.extend = extend;
 
 		var Class = NetCallbackPolicy.prototype;
 

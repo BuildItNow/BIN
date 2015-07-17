@@ -5,10 +5,9 @@ define([
 "bin/util/elemUtil", 
 "bin/common/itemProvider",
 "bin/common/dataProvider",
-"bin/core/view",
-"underscore"
+"bin/core/view"
 ], 
-function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, View, _)
+function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, View)
 {
 	var TemplateItemProvider = ItemProvider.extend(
 	{

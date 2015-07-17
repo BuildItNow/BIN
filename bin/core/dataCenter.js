@@ -1,6 +1,6 @@
 define(
-["underscore", "backbone", "bin/common/extend", "bin/util/lsUtil", "bin/util/ssUtil"],
-function(_, Backbone, extend, lsUtil, ssUtil)
+["bin/common/extend", "bin/util/lsUtil", "bin/util/ssUtil"],
+function(extend, lsUtil, ssUtil)
 {
 	// Global : Always
 	// Global Session : APP Runtime
@@ -17,9 +17,7 @@ function(_, Backbone, extend, lsUtil, ssUtil)
 
 	Class.init = function()
 	{
-		this._globalSession = {};
-		
-		console.info("DataCenter module initialize");
+		this._globalSession = {};	
 	}
 
 	Class.onUserLogin = function(identify)

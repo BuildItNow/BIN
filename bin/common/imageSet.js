@@ -1,6 +1,6 @@
 define(
-	["backbone", "underscore", "butterfly/extend"],
-function(Backbone, _, extend)
+	["bin/common/extend"],
+function(extend)
 {
 	var ImageSet = function()
 	{

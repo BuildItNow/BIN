@@ -1,6 +1,6 @@
 define(
-	["bin/core/naviPageView", "underscore"],
-	function(Base, _)
+	["bin/core/naviPageView"],
+	function(Base)
 	{
 		var Class = {};
 

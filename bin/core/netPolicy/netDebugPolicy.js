@@ -1,11 +1,13 @@
 define(
-	["bin/config/netLocalConfig", "bin/util/osUtil"],
-	function(config, osUtil)
+	["config/netLocalConfig", "bin/util/osUtil", "bin/common/extend"],
+	function(config, osUtil, extend)
 	{
 		var NetDebugPolicy = function(netManager)
 		{
 			this._netManager = netManager;
 		}
+
+		NetDebugPolicy.extend = extend;
 
 		var Class = NetDebugPolicy.prototype;
 

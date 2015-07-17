@@ -1,13 +1,11 @@
 define([
-		"underscore", 
-		"backbone", 	
 		"bin/common/extend",
 		"bin/core/netManager", 
 		"bin/core/navigationController", 
 		"bin/core/debugManager",
 		"bin/core/hudManager"
 		], 
-	function(_, Backbone, extend, NetManager, NavigationController, DebugManager, HUDManager)
+	function(extend, NetManager, NavigationController, DebugManager, HUDManager)
 	{
 		var Application = function()
 		{

@@ -1,11 +1,10 @@
 define(
     [
-        "underscore", 
         "bin/common/extend", 
         "bin/util/osUtil",
         "text!bin/debug/debugFloatingView.html"
     ],
-    function (_, extend, osUtil, floatingHtml)
+    function (extend, osUtil, floatingHtml)
     {
     	var DebugManager = function()
     	{

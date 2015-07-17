@@ -1,4 +1,4 @@
-define(["backbone", "bin/util/elemUtil", "bin/util/osUtil"], function(Backbone, elemUtil, osUtil)
+define(["bin/util/elemUtil", "bin/util/osUtil"], function(elemUtil, osUtil)
 {
 	var Base = Backbone.View;
 

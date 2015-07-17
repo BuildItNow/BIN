@@ -1,5 +1,5 @@
 ﻿ 
-define(["bin/config/globalConfig", "bin/config/requireConfig"],
+define(["config/globalConfig", "config/requireConfig"],
 function(globalConfig, requireConfig)
 {
 	// setup require js config

@@ -1,13 +1,13 @@
 (function()
 {
-	var deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy"];
+	var deps = ["bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy"];
 	if(bin.runtimeConfig.useNetLocal)
 	{
-		deps = ["jquery", "underscore", "bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy", "bin/core/netPolicy/netDebugPolicy"];
+		deps = ["bin/util/osUtil", "bin/core/netPolicy/netCallbackPolicy", "bin/core/netPolicy/netCachePolicy", "bin/core/netPolicy/netSendCheckPolicy", "bin/core/netPolicy/netDebugPolicy"];
 	}
 	define(
 	deps,
-	function($, _, osUtil, NetCallbackPolicy, NetCachePolicy, NetSendCheckPolicy, NetDebugPolicy)
+	function(osUtil, NetCallbackPolicy, NetCachePolicy, NetSendCheckPolicy, NetDebugPolicy)
 	{
 		var DEFAULT_NET_OPTIONS = {loading:"MODEL"};
 		var Net  = function()
@@ -19,7 +19,6 @@
 
 		Class.init = function()
 		{
-
 			if(NetDebugPolicy)
 			{
 				this._debugPolicy = new NetDebugPolicy(this);
@@ -36,6 +35,26 @@
 			this._sendCheckPolicy.init();
 
 			console.info("Net module initialize");
+		}
+
+		Class.setDebugPolicy = function(policy)
+		{
+			this._debugPolicy = policy;
+		}
+
+		Class.setCallbackPolicy = function(policy)
+		{
+			this._callbackPolicy = policy;
+		}
+
+		Class.setCachePolicy = function(policy)
+		{
+			this._cachePolicy = policy;
+		}
+
+		Class.setSendCheckPolicy = function(policy)
+		{
+			this._sendCheckPolicy = policy;
 		}
 
 		Class.doAPI = function(params)

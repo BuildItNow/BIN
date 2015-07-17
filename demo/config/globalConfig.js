@@ -1,10 +1,9 @@
 define(
 {
-	name        : "Hello BIN Framework",		// Name of the application
-	version     : "1.0.0"						// Applicatoin version	
-	application : "application/application",	// Application class
-	pageIOAnim  : "rightIO",					// Default page in/out animation
-	runtime : "DEBUG",							// runtime config
+	name : "Hello BIN Framework",
+	runtime : "DEBUG",
+	application : "application/application",
+	pageIOAnim  : "rightIO",
 	DEBUG : 
 	{
 		debug : true,

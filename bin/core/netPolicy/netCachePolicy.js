@@ -1,6 +1,6 @@
 define(
-["bin/util/osUtil", "bin/core/dataCenter"], 
-function(osUtil, DataCenter)
+["bin/util/osUtil", "bin/core/dataCenter", "bin/common/extend"], 
+function(osUtil, DataCenter, extend)
 {
 	// NORMAL
 
@@ -14,6 +14,8 @@ function(osUtil, DataCenter)
 	{
 		this._netManager = netManager;
 	}
+
+	NetCachePolicy.extend = extend;
 
 	var Class = NetCachePolicy.prototype;
 

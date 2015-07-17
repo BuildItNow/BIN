@@ -1,7 +1,7 @@
 define
 (
-    ["underscore"],
-    function(_)
+    [],
+    function()
     {
         var defaultDelay = 5;
         var Class = 

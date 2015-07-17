@@ -1,11 +1,10 @@
 define(
     [
-        "underscore",
         "bin/core/view",
         "bin/core/pageView-animation",
         "bin/util/osUtil", 
     ],
-    function (_, Base, PageViewAnimation, osUtil)
+    function (Base, PageViewAnimation, osUtil)
     {
         var Class =
         {

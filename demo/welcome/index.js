@@ -1,6 +1,6 @@
 define(
-	["bin/core/naviPageView", "underscore", "welcome/tutorialConfig"],
-	function(Base, _, config)
+	["bin/core/naviPageView", "welcome/tutorialConfig"],
+	function(Base, config)
 	{
 		var Class = {};
 

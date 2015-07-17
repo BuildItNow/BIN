@@ -1,6 +1,6 @@
 define(
-	["bin/core/pageView", "underscore"],
-	function(Base, _)
+	["bin/core/pageView"],
+	function(Base)
 	{
 		var Class = {};
 
