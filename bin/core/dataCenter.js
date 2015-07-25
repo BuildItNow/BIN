@@ -24,6 +24,7 @@ function(extend, lsUtil, ssUtil)
 	{
 		this._userSession = {}
 
+		this._userIdentify = identify;
 		this._uvPrefix = identify+"_UV_";
 	}
 
@@ -31,6 +32,12 @@ function(extend, lsUtil, ssUtil)
 	{
 		delete this._userSession;
 		this._uvPrefix = null;
+		this._userIdentify = null;
+	}
+
+	Class.isUserLogin = function(identify)
+	{
+		return identify ? this._userIdentify === identify : !!this._userSession;
 	}
 	
 	Class.setUserValue = function(key, value)
