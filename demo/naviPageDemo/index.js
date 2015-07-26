@@ -1,7 +1,8 @@
 define(
-	["bin/core/naviPageView"],
-	function(Base)
+	[],
+	function()
 	{
+		var Base  = bin.ui.NaviPageView;
 		var Class = {};
 
 		// Backbone 方式绑定事件

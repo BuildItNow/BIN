@@ -1,0 +1,35 @@
+define(
+{
+	// There is no dependency relation here, it's just a class hierarchy
+	core:
+	{
+		Application:"bin/core/applicatoin",
+		DebugManager: "bin/core/debugManager",
+		NetManager:
+		{
+			_path:"bin/core/netManager",
+			CachePolicy:"bin/core/netPolicy/netCachePolicy",
+			CallbackPolicy:"bin/core/netPolicy/netCallbackPolicy",
+			DebugPolicy:"bin/core/netPolicy/netDebugPolicy",
+			SendCheckPolicy:"bin/core/netPolicy/netSendCheckPolicy",	
+		},
+		DataCenter:"bin/core/dataCenter",
+		HUDManager:"bin/core/hudManager",	
+		NaviController:"bin/core/naviController",
+	},
+	ui:
+	{
+		View:"bin/core/view",
+		PageView:"bin/core/pageView",
+		NaviPageView:"bin/core/naviPageView",
+	},
+	util:
+	{
+		osUtil:"bin/util/osUtil",
+		disUtil:"bin/util/disUtil",
+		elemUtil:"bin/util/elemUtil",
+		lsUtil:"bin/util/lsUtil",
+		ssUtil:"bin/util/ssUtil",
+		pathUtil:"bin/util/pathUtil",
+	},
+})

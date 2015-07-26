@@ -1,7 +1,8 @@
 define(
-	["bin/core/pageView"],
-	function(Base)
+	[],
+	function()
 	{
+		var Base  = bin.ui.PageView; 
 		var Class = {};
 
 		// Backbone 方式绑定事件

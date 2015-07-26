@@ -7,11 +7,6 @@ function(Base, DataCenter)
 	Application.init = function()
 	{
 		Base.prototype.init.call(this);
-
-		this._dataCenter = new DataCenter();
-		this._dataCenter.init();
-
-		bin.dataCenter = this._dataCenter;
 	}
 
 	Application.run = function()

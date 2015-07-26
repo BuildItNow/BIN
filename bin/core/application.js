@@ -1,11 +1,7 @@
 define([
 		"bin/common/extend",
-		"bin/core/netManager", 
-		"bin/core/navigationController", 
-		"bin/core/debugManager",
-		"bin/core/hudManager"
-		], 
-	function(extend, NetManager, NavigationController, DebugManager, HUDManager)
+	  ], 
+	function(extend)
 	{
 		var Application = function()
 		{
@@ -18,23 +14,27 @@ define([
 
 		Class.init = function()
 		{
-			this._debugManager = new DebugManager();
+			this._debugManager = new bin.core.DebugManager();
 			this._debugManager.init();
 
-			this._naviController = new NavigationController();
+			this._naviController = new bin.core.NavigationController();
 			this._naviController.init();
 
-			this._netManager = new NetManager();
+			this._netManager = new bin.core.NetManager();
 			this._netManager.init();
 
-			this._hudManager = new HUDManager();
+			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
+
+			this._dataCenter = new bin.core.DataCenter();
+			this._dataCenter.init();
 			
 			bin.app = this;
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
-			bin.debugManager   = this._debugManager;
-			bin.hudManager   = this._hudManager;
+			bin.debugManager = this._debugManager;
+			bin.hudManager  = this._hudManager;
+			bin.dataCenter  = this._dataCenter;
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);
