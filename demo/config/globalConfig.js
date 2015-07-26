@@ -2,7 +2,6 @@ define(
 {
 	name : "Hello BIN Framework",
 	runtime : "DEBUG",
-	application : "application/application",
 	pageIOAnim  : "rightIO",
 	DEBUG : 
 	{
