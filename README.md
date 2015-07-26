@@ -53,26 +53,45 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
 # Core
 
 ## bin
-bin是整个框架的命名空间，包含了全局的单件实例app,netManager,hudManager,debugManager,naviController,dataCenter。
+bin是整个框架的命名空间，包含了可配置的Class结构(classConfig)，包含了包含了全局的单件实例app,netManager,hudManager,debugManager,naviController,dataCenter。<br/>
+
+## 配置文件
+bin中的配置文件有globalConfig, requireConfig, classConfig, netLocalConfig。在bin/config中包含了这些配置文件的模板，实际应用中使用的是config目录下的。详细信息参见文件。<br/>
+* globalConfig.js <br/>
+对应用的整体配置，包含global和runtime两类配置数据。<br/>
+global : 全局配置，通过bin.globalConfig获取，这里面是整个globalConfig里的内容 <br/>
+runtime : 运行时配置，应用启动后，会根据global中runtime来选择对应的运行时配置，以方便我们不同版本的切换。<br/>
+* requireConfig.js <br/>
+对requirejs的整体配置
+* classConfig.js <br/>
+对bin类结构的配置，在这里面可以修改框架内部实际使用的类，已达到定制自己的类，比如Application，DataCenter... <br/>
+注意 : 该结构定义中不存在没有依赖关系，仅仅是一个结构关系，所以在requirejs的define中不要直接使用，而是在运行时使用。
+* netLocalConfig.js <br/>
+网络API本地数据测试配置
 
 ## Application
-Application是bin的应用基类，提供了init和run接口供重写，需要在globalConfig.js配置应用所采用的Application类。
+Application是bin的应用基类，可通过classConfig中定制。
 * init() <br/>
 应用初始化，可添加自己的初始化操作。bin.Application会自动初始化debugManager,hudManager,netManager,naviController,dataCenter。
-
 * run() <br/>
 应用开始执行，可添加应用显示第一个页面的代码。
+* onDeviceBack() <br/>
+针对Android Device返回键点击回调，在PC上可通过悬浮Debug按钮模拟。
+* onPause() <br/>
+应用进程被Pause回调。
+* onResume() <br/>
+应用进程被Resume回调。
 
-## netManager
+## bin.netManager
 bin中的所有ajax http请求由netManager封装，netManager提供API抽象。netManager中提供四种策略(Policy)来定制网络处理的行为，bin提供了默认实现。<br/>
-netCachePolicy : 网络缓存策略,配置网络请求的数据在客户端如何缓存 <br/>
+CachePolicy : 网络缓存策略,配置网络请求的数据在客户端如何缓存 <br/>
     + NORMAL : 一直缓存在本地,直到超过maxCacheDuration(Config中配置) <br/>
     + DURATION : 指定缓存的时间，过期后无效 <br/>
     + SESSION : APP期间一直有效，关闭后缓存失效 <br/>
     + USER_SESSION : 用户登陆期间有效，退出后失效 <br/>
-netCallbackPolicy : 网络回调策略，可在这里面添加在框架层面对请求的统一处理 <br/>
-netDebugPolicy : 网络本地数据测试策略 <br/>
-netSendCheckPolicy : 网络发送策略，处理网络请求在发送前的过滤逻辑 <br/>
+CallbackPolicy : 网络回调策略，可在这里面添加在框架层面对请求的统一处理 <br/>
+DebugPolicy : 网络本地数据测试策略 <br/>
+SendCheckPolicy : 网络发送策略，处理网络请求在发送前的过滤逻辑 <br/>
     + ABORT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会abort前一次请求 <br/>
     + REJECT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会被reject，不能请求 <br/>
 
@@ -94,6 +113,58 @@ params.options : bin api选项 <br/>
 设置网络发送策略
 * ajax(params) <br/>
 发送ajax请求
+
+## bin.hudManager
+bin中所有hud显示由hudManager提供，比如Alert，Status，Indicator。 <br/>
+
+* startIndicator(options) <br/>
+开始菊花图。<br/>
+options.model : 是否模态 true/false <br/>
+返回本次菊花图ID，供stopIndicator使用 
+* stopIndicator(indicatorID) <br/>
+停止indicatorID指定的菊花图，如果没有指定，则完全取消菊花图。<br/>
+注意 : bin对于菊花图支持计数机制。
+* showStatus(message) <br/>
+显示悬浮信息
+* alert(options) <br/>
+显示对话框
+
+## bin.naviController
+bin中提供了页面栈概念，由naviController完成。<br/>
+
+* push(name, pushData, options) <br/>
+跳转到name指定页面 <br/>
+name : 页面名字
+pushData : 向新页面传递的数据，新页面可通过onViewPush获取 <br/>
+options : 跳转效果参数，可选
+
+* pop(count, popData, options) <br/>
+返回指定级数(count)页面 <br/>
+count : 返回的级数 <br/>
+popData : 向返回的页面传递的数据，返回页面可通过onViewBack获取 <br/>
+options : 跳转效果参数，可选
+
+* popTo(name, popData, options) <br/>
+返回到指定页面 <br/>
+参数参照pop操作
+
+* current() <br/>
+获取当前页面的栈数据，返回为{name, view} <br/>
+name : 页面名字  <br/>
+view : 页面对象
+
+* getView(name) <br/>
+获取指定页面的栈数据，返回结构同current() 
+
+* startWith(name) <br/>
+以name指定的新页面作为根页面，原来的页面栈将被清空 <br/>
+
+## bin.dataCenter
+提供数据中心封装，包含了本地持久化和本地会话，用户持久化和用户会话这几种数据库抽象。提供用户数据分离功能。
+
+## bin.debugManager
+在框架上提供调试功能，可参见应用中悬浮调试按钮，可在应用中直接查看console.log, console.info, console.error信息，方便调试。
+
 
 # UI
 ## View
