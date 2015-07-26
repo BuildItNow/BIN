@@ -32,8 +32,8 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
 在PC上演示demo:</br>
 1. 拷贝bin目录中内容到demo/bin目录。 <br/>
 2. 启动nodejs服务器: <br/>
-        + 启动本地服务器：node server.js，加载资源需要。<br/>
-        + 启动本地API服务器：node server-demo.js，网络API请求需要。<br/>
+    + 启动本地服务器：node server.js，加载资源需要。<br/>
+    + 启动本地API服务器：node server-demo.js，网络API请求需要。<br/>
 3. 打开Chrome浏览器，注意：Chrome需要使用--disable-web-security进行跨域，否则ajax请求会失败。</br>
 4. 使用localhost:8080进行访问。
 5. 右键，点击 审查元素，使用移动模式演示demo。
@@ -66,23 +66,23 @@ Application是bin的应用基类，提供了init和run接口供重写，需要�
 ## netManager
 bin中的所有ajax http请求由netManager封装，netManager提供API抽象。netManager中提供四种策略(Policy)来定制网络处理的行为，bin提供了默认实现。<br/>
 netCachePolicy : 网络缓存策略,配置网络请求的数据在客户端如何缓存 <br/>
-	+ NORMAL : 一直缓存在本地,直到超过maxCacheDuration(Config中配置) <br/>
-    	+ DURATION : 指定缓存的时间，过期后无效 <br/>
-    	+ SESSION : APP期间一直有效，关闭后缓存失效 <br/>
-    	+ USER_SESSION : 用户登陆期间有效，退出后失效 <br/>
+    + NORMAL : 一直缓存在本地,直到超过maxCacheDuration(Config中配置) <br/>
+    + DURATION : 指定缓存的时间，过期后无效 <br/>
+    + SESSION : APP期间一直有效，关闭后缓存失效 <br/>
+    + USER_SESSION : 用户登陆期间有效，退出后失效 <br/>
 netCallbackPolicy : 网络回调策略，可在这里面添加在框架层面对请求的统一处理 <br/>
 netDebugPolicy : 网络本地数据测试策略 <br/>
 netSendCheckPolicy : 网络发送策略，处理网络请求在发送前的过滤逻辑 <br/>
-	+ ABORT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会abort前一次请求 <br/>
-	+ REJECT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会被reject，不能请求 <br/>
+    + ABORT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会abort前一次请求 <br/>
+    + REJECT_ON_REQUESTING : 同一个api请求，当已经存在请求，再次发送将会被reject，不能请求 <br/>
 
 * doAPI(params) <br/>
 进行一次api操作,params为ajax的参数,同时包含bin定义的参数 <br/>
 params.options : bin api选项 <br/>
-	+ loading : 网络加载选项 默认为MODEL, true/false加载效果, MODEL表示同时添加模态效果, 网络请求同时，用户将不能进行UI操作。 <br/>
-	+ cache   : 网络缓存选项 默认无, NORMAL/DURATION/SESSION/USER_SESSION <br/>
-	+ cacheDuration : 指定缓存的时间(ms), 当cache为DURATION时有效 <br/>
-	+ sendCheck : 网络发送选项 默认无, ABORT_ON_REQUESTING/REJECT_ON_REQUESTING <br/>
+    + loading : 网络加载选项 默认为MODEL, true/false加载效果, MODEL表示同时添加模态效果, 网络请求同时，用户将不能进行UI操作。 <br/>
+    + cache   : 网络缓存选项 默认无, NORMAL/DURATION/SESSION/USER_SESSION <br/>
+    + cacheDuration : 指定缓存的时间(ms), 当cache为DURATION时有效 <br/>
+    + sendCheck : 网络发送选项 默认无, ABORT_ON_REQUESTING/REJECT_ON_REQUESTING <br/>
 
 * setDebugPolicy(policy) <br/>
 设置网络本地测试策略
