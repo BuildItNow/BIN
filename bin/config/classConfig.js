@@ -3,7 +3,7 @@ define(
 	// There is no dependency relation here, it's just a class hierarchy
 	core:
 	{
-		Application:"bin/core/applicatoin",
+		Application:"bin/core/application",
 		DebugManager: "bin/core/debugManager",
 		NetManager:
 		{
@@ -15,7 +15,7 @@ define(
 		},
 		DataCenter:"bin/core/dataCenter",
 		HUDManager:"bin/core/hudManager",	
-		NaviController:"bin/core/naviController",
+		NavigationController:"bin/core/navigationController",
 	},
 	ui:
 	{
