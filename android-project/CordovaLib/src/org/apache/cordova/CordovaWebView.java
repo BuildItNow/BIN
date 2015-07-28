@@ -92,6 +92,7 @@ public class CordovaWebView extends XWalkView {
     private CordovaResourceApi resourceApi;
     private Whitelist internalWhitelist;
     private Whitelist externalWhitelist;
+    private boolean   prepareButtonBack = false;
 
     // The URL passed to loadUrl(), not necessarily the URL of the current page.
     String loadedUrl;
@@ -616,6 +617,11 @@ public class CordovaWebView extends XWalkView {
             }
             else
             {
+            	if(keyCode == KeyEvent.KEYCODE_BACK)
+            	{
+            		prepareButtonBack = true;
+            	}
+            	
                 return super.onKeyDown(keyCode, event);
             }
         }
@@ -650,6 +656,9 @@ public class CordovaWebView extends XWalkView {
         int keyCode = event.getKeyCode();
         // If back key
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	boolean prepareButtonBack = this.prepareButtonBack;
+        	this.prepareButtonBack = false;
+        	
             // A custom view is currently displayed  (e.g. playing a video)
             if (this.hasEnteredFullscreen()) {
                 this.leaveFullscreen();
@@ -657,8 +666,12 @@ public class CordovaWebView extends XWalkView {
             } else {
                 // The webview is currently displayed
                 // If back key is bound, then send event to JavaScript
-                if (isButtonPlumbedToJs(KeyEvent.KEYCODE_BACK)) {
-                    this.loadUrl("javascript:cordova.fireDocumentEvent('backbutton');");
+                if (isButtonPlumbedToJs(KeyEvent.KEYCODE_BACK)) 
+                {
+                	if(prepareButtonBack)
+                    {
+                		this.loadUrl("javascript:cordova.fireDocumentEvent('backbutton');");
+                    }
                     return true;
                 } else {
                     // If not bound
