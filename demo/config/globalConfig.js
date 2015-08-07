@@ -3,6 +3,10 @@ define(
 	name : "Hello BIN Framework",
 	runtime : "DEBUG",
 	pageIOAnim  : "rightIO",
+	//left   : 20,
+	//top    : 20,
+	width  : 320,
+	height : 568,
 	DEBUG : 
 	{
 		debug : true,

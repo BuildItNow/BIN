@@ -13,12 +13,22 @@ define(
 	    	return px/cls.rem;
 	    }
 
-	    cls.rem              = parseFloat(document.documentElement.style.fontSize);
-		cls.clientWidth  	 = document.body.offsetWidth;
-	    cls.clientHeight     = document.body.offsetHeight;;
-	    cls.navHeight        = cls.rem2px(1.9);
-	    cls.navClientHeight  = cls.clientHeight-cls.navHeight;
-	    cls.navClientWidth   = cls.clientWidth;
+	    var onDisplayMetricsChanged = function()
+	    {
+	    	cls.rem              = bin.window.rem();
+			cls.clientWidth  	 = bin.window.width();
+		    cls.clientHeight     = bin.window.height();
+		    cls.navHeight        = cls.rem2px(1.9);
+		    cls.navClientHeight  = cls.clientHeight-cls.navHeight;
+		    cls.navClientWidth   = cls.clientWidth;
+	    }
+
+	    if(bin.window)
+	    {
+	    	onDisplayMetricsChanged();
+	   	}
+
+	   	Backbone.on("DISPLAY_METRICS_CHANGED", onDisplayMetricsChanged);
 
 	    return cls;
 	}

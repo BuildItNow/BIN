@@ -125,31 +125,18 @@ define(["bin/util/elemUtil", "bin/util/osUtil"], function(elemUtil, osUtil)
 	
 	Class.onShow = function()
 	{
-		$(window).on('orientationchange', this.onOrientationchange);
-		$(window).on('resize', this.onWindowResize);
-		$(window).on('scroll', this.onWindowScroll);
+
 	}
 
 	Class.onHide = function()
 	{
-		$(window).off('orientationchange', this.onOrientationchange);
-		$(window).off('resize', this.onWindowResize);
-		$(window).off('scroll', this.onWindowScroll);
+
 	}
 
 	Class.onRemove = function()
 	{
 
 	}
-
-	Class.onOrientationchange = function() 
-	{
-
-	}
-
-	Class.onWindowScroll = function() {}
-
-	Class.onWindowResize = function() {}
 
 	Class.$ = function(sel, fromSel)
     {
