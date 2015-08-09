@@ -1,5 +1,6 @@
 # BIN
-BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了对于APP开发的主体框架，通用的UI开发组件，使Web APP开发像Native APP开发一样，但是只需要开发一套代码。
+BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了对于APP开发的主体框架，通用的UI开发组件，使Web APP开发像Native APP开发一样，但是只需要开发一套代码。<br/>
+[演示Demo](http://www,bit-now.com/webAppDemo/index.html)
 ##功能
 * View概念
 * 一般页面 Pageview
