@@ -2,7 +2,7 @@
 BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了对于APP开发的主体框架，通用的UI开发组件，使Web APP开发像Native APP开发一样，但是只需要开发一套代码。<br/>
 [演示Demo](http://www.bit-now.com/webAppDemo/index.html)
 ##功能
-* View概念
+* View抽象，模拟原生开发模式
 * 一般页面 Pageview
 * 导航栏页面 NaviPageView
 * 下拉刷新页面 RefreshView
@@ -14,7 +14,8 @@ BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了�
 * Tab页面 TabView
 * 网络API模块
 * 网络缓存模块
-* 数据中心模块
+* 数据中心模块，支持本地存储和会话存储
+* 本地API测试框架，支持完全无依赖服务器进行开发
 
 ## 安装
 1. 安装nodejs <br/>
