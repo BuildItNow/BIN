@@ -1,6 +1,6 @@
 # BIN
-BIN是一个简单、轻量、易用、跨平台的Web APP框架，BIN提供了对于APP开发的主体框架，通用的UI开发组件，使Web APP开发像Native APP开发一样，但是只需要开发一套代码。<br/>
-[演示Demo](http://www.bit-now.com/webAppDemo/index.html)
+BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提供了对于APP开发的核心框架，通用的UI组件，能够快速的开发移动APP，并表现出和 Native APP 一样的操作体验。BIN采用Cordova和Native进行衔接，在Android端采用CrossWalk WebKit内核，使用JQuery、RequireJS、Backbone、Underscore、FastClick等通用稳定的第三方库。从开发角度来说，BIN是一个纯Web，非Hybrid的APP框架，但是基于框架提供的开发模式，你可以像Native一样开发UI View。当前支持IOS和Android平台，可以通过[Online Demo](http://www.bit-now.com/webAppDemo/index.html)(通过手机访问，效果更逼真)来体验BIN开源框架。<br/>
+
 ##功能
 * View抽象，模拟原生开发模式
 * 一般页面 Pageview
@@ -55,7 +55,7 @@ BIN提供了一个demo APP，包含了BIN框架包含的所有功能的演示和
 # Core
 
 ## bin
-bin是整个框架的命名空间，包含了可配置的Class结构(classConfig)，包含了包含了全局的单件实例app,netManager,hudManager,debugManager,naviController,dataCenter。<br/>
+bin是整个框架的命名空间，包含了可配置的Class结构(classConfig)，包含了全局的单件实例app,netManager,hudManager,debugManager,naviController,dataCenter。<br/>
 
 ## 配置文件
 bin中的配置文件有globalConfig, requireConfig, classConfig, netLocalConfig。在bin/config中包含了这些配置文件的模板，实际应用中使用的是config目录下的。详细信息参见文件。<br/>
