@@ -12,6 +12,7 @@ BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提�
 * Tab栏 TabBarView
 * Swipe页面 Swipeview
 * Tab页面 TabView
+* 图片延迟加载
 * 网络API模块
 * 网络缓存模块
 * 数据中心模块，支持本地存储和会话存储
