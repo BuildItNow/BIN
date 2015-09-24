@@ -18,6 +18,11 @@ define(
             bin.naviController.pop();
         }
 
+        Class.$content = function()
+        {
+            return this.$(".bin-page-content");
+        }
+
         // For performance reason, don't define these function in base class, 
         // You can overwrite these function in your class to get these features.
         

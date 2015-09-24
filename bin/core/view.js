@@ -1,7 +1,8 @@
-define(["bin/util/elemUtil", "bin/util/osUtil"], function(elemUtil, osUtil)
+define(["bin/util/elemUtil", "bin/util/osUtil"], 
+function(elemUtil, osUtil)
 {
 	var Base = Backbone.View;
-
+    var View = undefined;
 	var Class =  
 	{
 		html:null
@@ -84,7 +85,15 @@ define(["bin/util/elemUtil", "bin/util/osUtil"], function(elemUtil, osUtil)
     // called after genHTML(), do some work after the view's dom tree is done. 
     Class.posGenHTML = function()
     {
+        if(this.$().hasClass("bin-lazyload-container"))
+        {
+            this.lazyLoadContainer();
+        }
+    }
 
+    Class.lazyLoadContainer = function()
+    {
+         View.lazyLoadContainer(this.$());
     }
 
 	Class.remove = function()
@@ -188,6 +197,68 @@ define(["bin/util/elemUtil", "bin/util/osUtil"], function(elemUtil, osUtil)
         var elem = this.$(sel, fromSel);
         return elem ? elemUtil.newFragment(elem) : null;
     }
-	
-	return Base.extend(Class);
+
+    View = Base.extend(Class);
+    
+    View.lazyLoadContainer = function(elemContainer)
+    {
+        require(["bin/core/lazyLoadView"], function(LazyLoadView)
+        {
+            var elems = elemContainer.find(".bin-lazyload");
+            var elem  = undefined;
+            var lazyLoadViews = [];
+            for(var i=0,i_sz=elems.length; i<i_sz; ++i)
+            {
+                elem = $(elems[i]);
+                if(elem.data("loaded"))
+                {
+                    continue;
+                }
+
+                lazyLoadViews.push(new LazyLoadView({elem:elem, container:elemContainer}));
+            }
+
+            if(lazyLoadViews.length > 0)
+            {
+                var update = function()
+                {
+                    var os = elemContainer.offset();
+                    var vl = os.left;
+                    var vt = os.top;
+                    var vr = vl+elemContainer.width();
+                    var vb = vt+elemContainer.height();
+                    var views = [];
+                    for(var i=0,i_sz=lazyLoadViews.length; i<i_sz; ++i)
+                    {
+                        if(!lazyLoadViews[i].update(vt, vr, vb, vl))
+                        {
+                            views.push(lazyLoadViews[i]);
+                        }
+                    }
+
+                    lazyLoadViews = views;
+
+                    if(lazyLoadViews.length === 0)
+                    {
+                        osUtil.nextTick(function()
+                        {
+                            elemContainer.unbind("scroll");
+                        });
+                    }
+                };
+
+                // TODO : Only unbind the lazy loading scroll listener
+                elemContainer.unbind("scroll");
+
+                elemContainer.scroll(update);
+
+                osUtil.nextTick(function()
+                {
+                    update();
+                });
+            }
+        });
+    }
+
+    return View;
 });
