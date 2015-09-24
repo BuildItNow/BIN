@@ -199,6 +199,11 @@ function(elemUtil, osUtil)
     }
 
     View = Base.extend(Class);
+
+    var onScroll = function(e)
+    {
+        $(e.currentTarget).trigger("_scroll");
+    }
     
     View.lazyLoadContainer = function(elemContainer)
     {
@@ -215,7 +220,7 @@ function(elemUtil, osUtil)
                     continue;
                 }
 
-                lazyLoadViews.push(new LazyLoadView({elem:elem, container:elemContainer}));
+                lazyLoadViews.push(new LazyLoadView({elem:elem}));
             }
 
             if(lazyLoadViews.length > 0)
@@ -242,15 +247,17 @@ function(elemUtil, osUtil)
                     {
                         osUtil.nextTick(function()
                         {
-                            elemContainer.unbind("scroll");
+                            elemContainer.unbind("_scroll");
+                            elemContainer.unbind("scroll", onScroll);
                         });
                     }
                 };
 
-                // TODO : Only unbind the lazy loading scroll listener
-                elemContainer.unbind("scroll");
+                elemContainer.unbind("_scroll");
+                elemContainer.bind("_scroll", update);
 
-                elemContainer.scroll(update);
+                elemContainer.unbind("scroll", onScroll);
+                elemContainer.scroll(onScroll);
 
                 osUtil.nextTick(function()
                 {

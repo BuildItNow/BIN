@@ -7,13 +7,6 @@ define(
     {
     	var Class = {};
 
-    	Class.constructor = function(options)
-    	{
-    		Base.prototype.constructor.call(this, options);
-
-    		this._container = options.container;
-    	}
-
     	Class.posGenHTML = function()
     	{
     		Base.prototype.posGenHTML.call(this);

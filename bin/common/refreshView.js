@@ -36,11 +36,13 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		this._elemScroller.append(this._refreshHeader.$());
 		this._elemScroller.append(this._elemScrollerContent);
 		this.$().append(this._elemScroller);
+
+		this._lazyLoadEnable = this.$().hasClass("bin-lazyload-container"); 
 	}
 
 	Class.asyncPosGenHTML = function()
 	{
-		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:2, bounce:true, useTransition:false, mouseWheel:false});
+		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable ? 3 : 2, bounce:true, useTransition:false, mouseWheel:false});
 		
 		var self = this;
 		this._scoller.on("userTouchStart", function()
@@ -107,6 +109,11 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 				self._scoller.refresh();
 
 				self._contentDirty = false;
+
+				if(self._lazyLoadEnable)
+				{
+					self.lazyLoadContainer(self.$());		
+				}
 			});
 		}
 	}
@@ -175,6 +182,11 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 	Class._onScrollerScroll = function()
 	{
+		if(this._lazyLoadEnable)
+		{
+			this.$().trigger("_scroll");
+		}
+
 		if(!this._scrollerTouching)
 		{
 			return ;

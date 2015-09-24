@@ -43,10 +43,22 @@
 				}
 
 				ret.data = [];
+
+				var images = ["http://blog.chinaunix.net/attachment/201404/1/26651460_1396326596UZGH.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_1396326599GZ3U.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_1396326608lY8C.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_1396326626Q1rv.jpg"
+        ,"http://img.ruanman.net/files/2014/05/103341335.jpg"
+        ,"http://img5.imgtn.bdimg.com/it/u=1751735675,2912360032&fm=21&gp=0.jpg"
+        ,"http://i2.sinaimg.cn/gm/2014/0917/U10751P115DT20140917110436.png"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_1396326638Uopp.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_13963266245gUx.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_13963266108x09.jpg"
+        ,"http://blog.chinaunix.net/attachment/201404/1/26651460_1396326611Tpn9.jpg"];
 				
 				for(var i=0,i_sz=netParams.data.pageSize; i<i_sz; ++i)
 				{
-					ret.data.push({label:"Hello "+i});
+					ret.data.push({label:"Hello "+i, icon:images[parseInt(Math.random()*1000)%images.length]});
 				}
 
 				return ret;
