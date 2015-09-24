@@ -264,7 +264,7 @@ NaviPageView代表一个具有导航栏的主页面；NaviPageView从Page继承
 4. 在Android手机上，为了避开不同手机在WebKit上的兼容性，BIN使用了Crosswalk内核，优点是：Crosswalk性能更好，不存在兼容性问题；缺点是：编译的APK会大10几MB；Crosswalk有lite版本，但是lite版本不稳定。<br/>
 
 # 谁正在使用
-Waiting ......
+新风系统APP
 
 # LICENSE
 MIT
