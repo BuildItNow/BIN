@@ -1,5 +1,5 @@
 # BIN
-BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提供了对于APP开发的核心框架，通用的UI组件，能够快速的开发移动APP，并表现出和 Native APP 一样的操作体验。BIN采用Cordova和Native进行衔接，在Android端采用CrossWalk WebKit内核，使用JQuery、RequireJS、Backbone、Underscore、FastClick等通用稳定的第三方库。从开发角度来说，BIN是一个纯Web，非Hybrid的APP框架，但是基于框架提供的开发模式，你可以像Native一样开发UI View。当前支持IOS和Android平台，可以通过[Online Demo](http://www.bit-now.com/webAppDemo/index.html)(通过手机访问，效果更逼真)来体验BIN开源框架。<br/>
+BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提供了对于APP开发的核心框架，通用的UI组件，能够快速的开发移动APP，并表现出和 Native APP 一样的操作体验。BIN采用Cordova和Native进行衔接，在Android端采用CrossWalk WebKit内核，使用JQuery、RequireJS、Backbone、Underscore、FastClick等通用稳定的第三方库。从开发角度来说，BIN是一个纯Web，非Hybrid的APP框架，但是基于框架提供的开发模式，你可以像Native一样开发UI View。当前支持IOS和Android平台，可以通过[Online Demo](http://www.bit-now.com/BINTutorials/index.html)(通过手机访问，效果更逼真)来体验BIN开源框架。<br/>
 
 ##功能
 * View抽象，模拟原生开发模式
