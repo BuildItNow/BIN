@@ -1,18 +1,18 @@
 define(["bin/util/elemUtil", "bin/util/osUtil"], 
 function(elemUtil, osUtil)
 {
-	var Base = Backbone.View;
+    var Base = Backbone.View;
     var View = undefined;
-	var Class =  
-	{
-		html:null
+    var Class =  
+    {
+        html:null
     };
 
-	Class.constructor = function(options)
-	{
-		this._show  = null;
-		
-		if(options && options.el)   // Load by BIN, BIN will auto set element by html content
+    Class.constructor = function(options)
+    {
+        this._show  = null;
+        
+        if(options && options.el)   // Load by BIN, BIN will auto set element by html content
         {
             this._html = null;
             
@@ -37,14 +37,14 @@ function(elemUtil, osUtil)
 
         this._html = options && options.html ? options.html : this.html;
 
-       	Backbone.View.call(this, options);
+        Backbone.View.call(this, options);
 
         if(this._html)
         {
             this.render();
             this.show();
         }
-	}
+    }
 
 
     Class.render = function ()
@@ -96,58 +96,58 @@ function(elemUtil, osUtil)
          View.lazyLoadContainer(this.$());
     }
 
-	Class.remove = function()
-	{
-		Backbone.View.prototype.remove.call(this);
+    Class.remove = function()
+    {
+        Backbone.View.prototype.remove.call(this);
 
-		this.onRemove();
-	}
+        this.onRemove();
+    }
 
-	Class.show = function()
-	{
-		if(this._show)
-		{
-			return ;
-		}
+    Class.show = function()
+    {
+        if(this._show)
+        {
+            return ;
+        }
 
-		this._show = true;
-		this.$().show();
-		this.onShow();
-	}
-	
-	Class.hide = function()
-	{
-		if(this._show !== null && !this._show)
-		{
-			return ;
-		}
-		
-		this._show = false;
-		this.$().hide();
-		this.onHide();
-	}
+        this._show = true;
+        this.$().show();
+        this.onShow();
+    }
+    
+    Class.hide = function()
+    {
+        if(this._show !== null && !this._show)
+        {
+            return ;
+        }
+        
+        this._show = false;
+        this.$().hide();
+        this.onHide();
+    }
 
-	Class.isShow = function()
-	{
-		return this._show;
-	}
-	
-	Class.onShow = function()
-	{
+    Class.isShow = function()
+    {
+        return this._show;
+    }
+    
+    Class.onShow = function()
+    {
 
-	}
+    }
 
-	Class.onHide = function()
-	{
+    Class.onHide = function()
+    {
 
-	}
+    }
 
-	Class.onRemove = function()
-	{
+    Class.onRemove = function()
+    {
 
-	}
+    }
 
-	Class.$ = function(sel, fromSel)
+    Class.$ = function(sel, fromSel)
     {
         if(fromSel)
         {
@@ -202,16 +202,82 @@ function(elemUtil, osUtil)
 
     var onScroll = function(e)
     {
-        $(e.currentTarget).trigger("_scroll");
+        e.currentTarget.tryLazyLoad();
     }
-    
+
     View.lazyLoadContainer = function(elemContainer)
     {
         require(["bin/core/lazyLoadView"], function(LazyLoadView)
         {
+            var el = elemContainer[0];
+            
+            if(!el.tryLazyLoad)
+            {
+                el._llDirty = false;
+                el._llViews = undefined;
+                el._update = function()
+                {
+                    console.log("Update");
+                    
+                    this._llDirty = false;
+
+                    var os = elemContainer.offset();
+                    var vl = os.left;
+                    var vt = os.top;
+                    var vr = vl+elemContainer.width();
+                    var vb = vt+elemContainer.height();
+                    var views = this._llViews;
+                    var i = 0;
+                    var i_sz = views.length;
+                    for(; i<i_sz;)
+                    {
+                        if(views[i].update(vt, vr, vb, vl))
+                        {
+                            --i_sz;
+                            views[i] = views[i_sz];
+                            views.pop();
+                        }
+                        else
+                        {
+                            ++i;
+                        }
+                    }
+
+                    if(views.length === 0)
+                    {
+                        osUtil.nextTick(function()
+                        {
+                            console.log("Lazy Load Done");
+                            elemContainer.unbind("scroll", onScroll);
+                        });
+                    }
+                }
+
+                el.tryLazyLoad = function()
+                {
+                    if(this._llViews.length === 0)
+                    {
+                        return ;
+                    }
+
+                    if(this._llDirty)
+                    {    
+                        return ;
+                    }
+
+                    this._llDirty = true;
+
+                    var self = this;
+                    osUtil.delayCall(function()
+                    {
+                        self._update();
+                    }, 500);
+                }
+            }
+
             var elems = elemContainer.find(".bin-lazyload");
             var elem  = undefined;
-            var lazyLoadViews = [];
+            var views = el._llViews = [];
             for(var i=0,i_sz=elems.length; i<i_sz; ++i)
             {
                 elem = $(elems[i]);
@@ -220,48 +286,17 @@ function(elemUtil, osUtil)
                     continue;
                 }
 
-                lazyLoadViews.push(new LazyLoadView({elem:elem}));
+                views.push(new LazyLoadView({elem:elem}));
             }
 
-            if(lazyLoadViews.length > 0)
+            if(views.length > 0)
             {
-                var update = function()
-                {
-                    var os = elemContainer.offset();
-                    var vl = os.left;
-                    var vt = os.top;
-                    var vr = vl+elemContainer.width();
-                    var vb = vt+elemContainer.height();
-                    var views = [];
-                    for(var i=0,i_sz=lazyLoadViews.length; i<i_sz; ++i)
-                    {
-                        if(!lazyLoadViews[i].update(vt, vr, vb, vl))
-                        {
-                            views.push(lazyLoadViews[i]);
-                        }
-                    }
-
-                    lazyLoadViews = views;
-
-                    if(lazyLoadViews.length === 0)
-                    {
-                        osUtil.nextTick(function()
-                        {
-                            elemContainer.unbind("_scroll");
-                            elemContainer.unbind("scroll", onScroll);
-                        });
-                    }
-                };
-
-                elemContainer.unbind("_scroll");
-                elemContainer.bind("_scroll", update);
-
                 elemContainer.unbind("scroll", onScroll);
                 elemContainer.scroll(onScroll);
 
                 osUtil.nextTick(function()
                 {
-                    update();
+                    el._update();
                 });
             }
         });

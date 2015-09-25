@@ -15,11 +15,12 @@ define(
     		this._setPlaceHolder(placeHolder);
     		
     		this._image  = this.$().data("image");
+            this._loaded = this.$().data("loaded");
     	}
 
     	Class.loaded = function()
     	{
-    		return this.$().data("loaded");
+    		return this._loaded;
     	}
 
     	Class.update = function(vt, vr, vb, vl)
@@ -44,6 +45,7 @@ define(
     			return false;
     		}
 
+            this._loaded = true;
     		this.$().attr("data-loaded", true);
     		
     		var img = new Image();

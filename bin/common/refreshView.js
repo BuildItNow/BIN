@@ -184,7 +184,10 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 	{
 		if(this._lazyLoadEnable)
 		{
-			this.$().trigger("_scroll");
+			if(this.$()[0].tryLazyLoad)
+			{
+				this.$()[0].tryLazyLoad();
+			}
 		}
 
 		if(!this._scrollerTouching)
