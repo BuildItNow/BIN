@@ -207,18 +207,17 @@ function(elemUtil, osUtil)
 
     View.lazyLoadContainer = function(elemContainer)
     {
-        require(["bin/core/lazyLoadView"], function(LazyLoadView)
+        require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {
             var el = elemContainer[0];
-            
+            elemContainer.unbind("scroll", onScroll);
+                
             if(!el.tryLazyLoad)
             {
                 el._llDirty = false;
                 el._llViews = undefined;
                 el._update = function()
                 {
-                    console.log("Update");
-                    
                     this._llDirty = false;
 
                     var os = elemContainer.offset();
@@ -291,7 +290,6 @@ function(elemUtil, osUtil)
 
             if(views.length > 0)
             {
-                elemContainer.unbind("scroll", onScroll);
                 elemContainer.scroll(onScroll);
 
                 osUtil.nextTick(function()
