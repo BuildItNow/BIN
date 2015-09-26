@@ -1,5 +1,8 @@
 // bin frame-work namespace
 var bin = {};
+// cordova framw-work namespace
+var cordova = window.cordova;
+
 require.config({baseUrl:'./'});
 
 // load config

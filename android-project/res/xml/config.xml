@@ -56,4 +56,9 @@
       <preference name="InAppBrowserStorageEnabled" value="true" />
       <preference name="disallowOverscroll" value="true" />
     -->
+    
+    <!-- Plugins -->
+    <feature name="Common">
+        <param name="android-package" value="com.bin.plugins.CommonPlugin"/>
+    </feature>
 </widget>

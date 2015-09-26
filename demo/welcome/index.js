@@ -34,6 +34,18 @@ define(
 			}
 		}
 
+		Class.onRight = function()
+		{
+			if(cordova)
+			{
+				cordova.binPlugins.common.openSystemBrowser("https://github.com/BuildItNow/BIN");
+			}
+			else
+			{
+				window.open('https://github.com/BuildItNow/BIN', 'newwindow');
+			}
+		}
+
 		return Base.extend(Class);
 	}
 );

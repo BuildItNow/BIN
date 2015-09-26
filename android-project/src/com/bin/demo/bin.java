@@ -19,6 +19,8 @@
 
 package com.bin.demo;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import org.apache.cordova.*;
 
@@ -31,5 +33,14 @@ public class bin extends CordovaActivity
         super.init();
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
+    }
+    
+    public void openSystemBrowser(String url)
+    {
+    	Intent intent= new Intent();        
+        intent.setAction("android.intent.action.VIEW");    
+        Uri dstUrl = Uri.parse(url);   
+        intent.setData(dstUrl);  
+        startActivity(intent);
     }
 }
