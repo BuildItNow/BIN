@@ -1,6 +1,9 @@
 # BIN
-BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提供了对于APP开发的核心框架，通用的UI组件，能够快速的开发移动APP，并表现出和 Native APP 一样的操作体验。BIN采用Cordova和Native进行衔接，在Android端采用CrossWalk WebKit内核，使用JQuery、RequireJS、Backbone、Underscore、FastClick等通用稳定的第三方库。从开发角度来说，BIN是一个纯Web，非Hybrid的APP框架，但是基于框架提供的开发模式，你可以像Native一样开发UI View。当前支持IOS和Android平台，可以通过[Online Tutorials](http://www.bit-now.com/BINTutorials/index.html) [Online Demo](http://www.bit-now.com/BINDemo/index.html)(通过手机访问，效果更逼真)来体验BIN开源框架。<br/>
-点击[Tutorials APK](https://raw.githubusercontent.com/BuildItNow/BIN_APK/master/bin-tutorials_20150926.apk)下载安装。
+BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提供了对于APP开发的核心框架，通用的UI组件，能够快速的开发移动APP，并表现出和 Native APP 一样的操作体验。BIN采用Cordova和Native进行衔接，在Android端采用CrossWalk WebKit内核，使用JQuery、RequireJS、Backbone、Underscore、FastClick等通用稳定的第三方库。从开发角度来说，BIN是一个纯Web，非Hybrid的APP框架，但是基于框架提供的开发模式，你可以像Native一样开发UI View。当前支持IOS和Android平台。<br/>
+
+[Online Tutorials](http://101.200.215.114:8080/iphone-deamon.html)　　[Tutorials APK](https://raw.githubusercontent.com/BuildItNow/BIN_APK/master/bin-tutorials_20150926.apk)
+<iframe class="iphone-content" frameborder="0" name="i" width="330" height="520" src="http://101.200.215.114:8080/iphone-deamon.html">
+</iframe>
 
 ##功能
 * View抽象，模拟原生开发模式
