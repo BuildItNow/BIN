@@ -21,7 +21,7 @@ BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提�
 * 网络缓存模块
 * 数据中心模块，支持本地存储和会话存储
 * 本地API测试框架，支持完全无依赖服务器进行开发
-* rem自适应机制，框架层面处理1px显示为2px问题[demo](http://101.200.215.114:8080/apps/tutorials/index.html)
+* rem自适应机制，框架层面处理1px显示为2px问题([demo](http://101.200.215.114:8080/apps/tutorials/index.html)，1px请参见TabBarView示例)
 
 ## [安装](https://github.com/BuildItNow/BIN/wiki/install)
 
