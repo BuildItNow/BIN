@@ -16,6 +16,8 @@ define([
 				this.$().css("position","absolute");
 				this.$().css("overflow","hidden");
 				this.$().css("display", "block");
+                this.$().css("transform", "scale(0.5)");
+                this.$().css("transform-origin", "top left");
 					
 				if(bin.globalConfig.width && bin.globalConfig.height)
 				{
@@ -36,45 +38,48 @@ define([
 					{
 						this.$().css("top", "0rem");
 					}
-					
+	
+					this._width  = bin.globalConfig.width*2;
+					this._height = bin.globalConfig.height*2;
 
-					this.$().css("width", bin.globalConfig.width + "px");
-					this.$().css("height", bin.globalConfig.height + "px");
+					this.$().css("width", this._width + "px");
+					this.$().css("height", this._height + "px");
 
-					this._width  = bin.globalConfig.width;
-					this._height = bin.globalConfig.height;
+                    this._fixed = true;
 				}
-				else
-				{
-					this.$().css("left","0rem");
-					this.$().css("right","0rem");
-					this.$().css("top","0rem");
-					this.$().css("bottom","0rem");
-				}
-
-				this._resetFontSize();
+                else
+                {
+                    this.$().css("left","0rem");
+				    this.$().css("top","0rem");
+                }
+                
 				var self = this;
 				$(window).on('resize', function()
 				{
-					self._resetFontSize();
+					self._onResize();
 				});
+				this._onResize();
 			},
-			_resetFontSize:function()
+			_onResize:function()
 			{
 				var elemRoot = document.documentElement;
-				var w = this._width || elemRoot.clientWidth;
-			    if (!w) return;
-				elemRoot.style.fontSize = 20 * (w / 320) + 'px';
-
+                if(!this._fixed)
+                {
+                    this._width  = elemRoot.clientWidth*2;
+                    this._height = elemRoot.clientHeight*2; 
+                    this.$().css("width", this._width+"px");
+                    this.$().css("height", this._height+"px");
+			    }		
+                elemRoot.style.fontSize = this._width/640*40+"px";
 				Backbone.trigger("DISPLAY_METRICS_CHANGED");
 			},
 			width:function()
 			{
-				return this._width || document.documentElement.clientWidth;
+				return this._width;
 			},
 			height:function()
 			{
-				return this._height || document.documentElement.clientHeight;
+				return this._height;
 			},
 			rem:function()
 			{
