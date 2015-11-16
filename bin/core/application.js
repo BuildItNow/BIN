@@ -16,8 +16,8 @@ define([
 				this.$().css("position","absolute");
 				this.$().css("overflow","hidden");
 				this.$().css("display", "block");
-                this.$().css("transform", "scale(0.5)");
-                this.$().css("transform-origin", "top left");
+                //this.$().css("transform", "scale(0.5)");
+                //this.$().css("transform-origin", "top left");
 					
 				if(bin.globalConfig.width && bin.globalConfig.height)
 				{
@@ -65,8 +65,11 @@ define([
 				var elemRoot = document.documentElement;
                 if(!this._fixed)
                 {
-                    this._width  = elemRoot.clientWidth*2;
-                    this._height = elemRoot.clientHeight*2; 
+                    //this._width  = elemRoot.clientWidth*2;
+                    //this._height = elemRoot.clientHeight*2; 
+                    
+                    this._width  = elemRoot.clientWidth;
+                    this._height = elemRoot.clientHeight; 
                     this.$().css("width", this._width+"px");
                     this.$().css("height", this._height+"px");
 			    }		
