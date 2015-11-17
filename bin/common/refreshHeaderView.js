@@ -11,29 +11,50 @@ function(html, Base, disUtil)
 		return disUtil.rem2px(2);
 	}
 
+    Class.posGenHTML = function()
+    {
+        this._elemArrow   = this.$("#arrow");        
+        this._elemLoading = this.$("#loading");
+        this._elemTips    = this.$("#tips");
+    }
+
 	Class.asyncPosGenHTML = function()
 	{
 		this._height    = this.height();
-		this._threshold = this._height+5;
+		this._threshold = disUtil.rem2px(3);
 	}
 
 	Class.onScrollTo = function(y)
 	{
 		var ret = y > this._threshold;
-
-		this.$text("#tips", ret ? "释放刷新" : "下拉刷新");
+        
+        if(ret)
+        {
+            this._elemArrow.addClass("RefreshHeaderView-arrow-up");
+            this._elemTips.text("释放刷新");
+        }
+        else
+        {
+            this._elemArrow.removeClass("RefreshHeaderView-arrow-up");
+            this._elemTips.text("下拉刷新");
+        }
 		
 		return ret;
 	}
 
 	Class.onRefresh = function()
 	{
-		this.$text("#tips", "刷新中...");
+        this._elemArrow.removeClass("RefreshHeaderView-arrow-up");
+        this._elemArrow.hide();
+        this._elemLoading.show();
+        this._elemTips.text("刷新中...");
 	}
 
 	Class.onRefreshDone = function(fail)
 	{
-		this.$text("#tips", fail ? "更新失败" : "更新成功");
+        this._elemLoading.hide();
+        this._elemArrow.show();
+        this._elemTips.text(fail ? "刷新失败" : "刷新成功");
 	}
 
 	return Base.extend(Class);

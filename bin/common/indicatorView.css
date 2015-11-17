@@ -10,7 +10,7 @@
 	top:0px;
 }
 
-@-webkit-keyframes loading 
+@-webkit-keyframes indicator-loading 
 {
     100% 
     {
@@ -18,7 +18,7 @@
     }
 }
 
-@keyframes loading
+@keyframes indicator-loading
 {
     100%
     {
@@ -44,5 +44,5 @@
 
 #indicatorView .IndicatorView-indicator.active
 {
-  	-webkit-animation: loading 1s steps(12, end) infinite;
+  	-webkit-animation: indicator-loading 1s steps(12, end) infinite;
 }
