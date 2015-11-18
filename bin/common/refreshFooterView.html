@@ -1,13 +1,40 @@
 <div id="refreshFooterView" style="height:2rem;width:100%;">
 	<style>
-		#refreshFooterView .RefreshFooterView-tips
+		#refreshFooterView .RefreshFooterView-tips-block
 		{
-			font-size: 0.7rem;
+            position: relative;
 			line-height: 2rem;
 			height:2rem;
 			width: 100%;
-			text-align: center;
 		}
+        
+        #refreshFooterView .RefreshFooterView-loading
+        {
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            width: 1rem;
+            height: 1rem;
+            margin-top: -.5rem;
+            margin-left: -.15rem;
+            background-repeat: no-repeat;
+            background-position: center;
+            -webkit-background-size: 1rem  1rem;
+            background-size: 1rem  1rem;
+        }
+        
+        #refreshFooterView .RefreshFooterView-tips
+        {
+			font-size: 0.7rem;
+			line-height: inherit;
+			height:2rem;
+			width: 100%;
+			text-align: center;
+		
+        }
 	</style>
-	<div id="tips" class="RefreshFooterView-tips">点击加载更多</div>
+    <div class="RefreshFooterView-tips-block">
+    	<div id="loading" class="RefreshFooterView-loading bin-loading-image bin-loading-active"></div>
+        <div id="tips" class="RefreshFooterView-tips">点击加载更多</div>
+    </div>
 </div>

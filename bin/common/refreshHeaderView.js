@@ -16,12 +16,13 @@ function(html, Base, disUtil)
         this._elemArrow   = this.$("#arrow");        
         this._elemLoading = this.$("#loading");
         this._elemTips    = this.$("#tips");
+        this._elemLoading.hide();
     }
 
 	Class.asyncPosGenHTML = function()
 	{
 		this._height    = this.height();
-		this._threshold = disUtil.rem2px(3);
+		this._threshold = disUtil.rem2px(2.5);
 	}
 
 	Class.onScrollTo = function(y)
