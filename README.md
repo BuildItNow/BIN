@@ -21,7 +21,11 @@ BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提�
 * 网络缓存模块
 * 数据中心模块，支持本地存储和会话存储
 * 本地API测试框架，支持完全无依赖服务器进行开发
-* rem自适应机制，框架层面处理1px显示为2px问题([demo](http://101.200.215.114:8080/apps/tutorials/index.html)，1px请参见TabBarView示例)
+* rem自适应机制([demo](http://101.200.215.114:8080/apps/tutorials/index.html))<br/>
+
+## 1px显示问题
+1. 可以使用viewport scales设置为0.5达到整体效果，但是在Chrome上所有height:auto的元素文字可能会scale失败，解决方法是显式设置height为具体的尺寸<br/>
+2. 在viewport scale设置为1情况下，使用transform:scale来达到效果
 
 ## [安装](https://github.com/BuildItNow/BIN/wiki/install)
 
