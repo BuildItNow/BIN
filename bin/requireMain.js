@@ -5,9 +5,13 @@ var cordova = window.cordova;
 
 require.config({baseUrl:'./'});
 
-// load config
-require(["bin/core/setupConfig"], function()
+require(["config/globalConfig"], function(globalConfig)
 {
+	require.config(globalConfig.requireConfig);
+
+	bin.globalConfig  = globalConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
+	bin.classConfig   = globalConfig.classConfig;
 	// load pre-require libs
 	require(["jquery", "underscore", "backbone"], function(jquery, underscore, backbone)	
 	{
