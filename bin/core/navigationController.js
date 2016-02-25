@@ -1,6 +1,6 @@
 define(
-	["bin/common/extend", "bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
-function(extend, osUtil, pathUtil, effecters)
+	["bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
+function(osUtil, pathUtil, effecters)
 {
 	var NavigationRouter = Backbone.Router.extend(
 	{
@@ -87,7 +87,7 @@ function(extend, osUtil, pathUtil, effecters)
 	    //this._stackV   = 0;
 	}
 
-	NavigationController.extend = extend;
+	NavigationController.extend = bin.extend;
 
 	var cls = NavigationController.prototype;
 
@@ -158,6 +158,7 @@ function(extend, osUtil, pathUtil, effecters)
 		}
 
 		this._popData = {data:popData, options:options, count:count, time:now};
+
 		window.history.go(-count);
 
 		return true;
@@ -205,7 +206,15 @@ function(extend, osUtil, pathUtil, effecters)
 
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, time:now, effecter:effecter};
 
-		Backbone.history.navigate(name, options); // ==> route
+
+		//if(options.native)
+		//{
+		//	this._route(path, queryString);
+		//}
+		//else
+		//{
+			Backbone.history.navigate(name, options); // ==> route
+		//}
 
 		return true;
 	}
@@ -388,6 +397,20 @@ function(extend, osUtil, pathUtil, effecters)
 		
 		curView.effecter[1](curView.view, nxtView.view);
 
+		if(popData.count === 1 && curView.native)
+		{
+			cordova.binPlugins.nativeBridge.popNativePageView(function(error, nativeObject)
+    	  			{
+    	  				if(error)
+    	  				{
+    	  					console.error("Pop native view fail ["+pushData.path+"]");
+    	  					return ;
+    	  				}
+    	  			});
+
+			return ;
+		}
+
         var v = null;
         for(var i=popData.count-1; i>0; --i)
         {
@@ -405,42 +428,69 @@ function(extend, osUtil, pathUtil, effecters)
 		require(['view!' + pushData.path], function(ViewClass)
         {
     	  	var newView = ViewClass.create();
-          	newView.$().css("z-index", self.count()+100);
-          	var curView = self.current();
-          	
-          	if(newView.onViewPush)
-          	{
-          		newView.onViewPush(curView ? curView.name : null, pushData.data, pushData.queryParams);
-          	}
-          	
-          	newView.render();
-          	self._container.append(newView.$());
-          
-          	if(curView)
-          	{
-          		if(newView.onInAnimationBeg)
-          		{
-          			osUtil.nextTick(function()
-          			{
-          				newView.onInAnimationBeg();
-          			});
-          		}
 
-          		pushData.effecter[0](newView, curView.view, newView.onInAnimationEnd ? function()
-          		{
-          			osUtil.nextTick(function()
-	          		{
-	          			newView.onInAnimationEnd();
-	          		});
-          		} : null);
-          	}
-          	else
+    	  	var onNewView = function()	
           	{
-          		newView.show();
-          	}
-          
-          	var item = {key:viewKey(pushData.path, pushData.queryParams._queryString), view: newView, name:pushData.path, effecter:pushData.effecter};
-          	self._views.push(item);
+          		newView.$().css("z-index", self.count()+100);
+          		var curView = self.current();
+          	
+	          	if(newView.onViewPush)
+	          	{
+	          		newView.onViewPush(curView ? curView.name : null, pushData.data, pushData.queryParams);
+	          	}
+	          	
+	          	newView.render();
+	          	self._container.append(newView.$());
+	          
+	          	if(curView)
+	          	{
+	          		if(newView.onInAnimationBeg)
+	          		{
+	          			osUtil.nextTick(function()
+	          			{
+	          				newView.onInAnimationBeg();
+	          			});
+	          		}
+
+	          		pushData.effecter[0](newView, curView.view, newView.onInAnimationEnd ? function()
+	          		{
+	          			osUtil.nextTick(function()
+		          		{
+		          			newView.onInAnimationEnd();
+		          		});
+	          		} : null);
+	          	}
+	          	else
+	          	{
+	          		newView.show();
+	          	}
+	          
+	          	var item = {key:viewKey(pushData.path, pushData.queryParams._queryString), view: newView, name:pushData.path, effecter:pushData.effecter, native:ViewClass.native !== undefined};
+	          	self._views.push(item);
+	        };
+
+	        if(ViewClass.native)
+    	  	{
+    	  		pushData.effecter = effecters["nativeIO"];
+    	  		if(cordova)
+    	  		{
+    	  			cordova.binPlugins.nativeBridge.pushNativePageView(pushData.path, newView, pushData.data, pushData.queryParams, function(error, nativeObject)
+    	  			{
+    	  				if(error)
+    	  				{
+    	  					console.error("Push native view fail ["+pushData.path+"]");
+    	  					return ;
+    	  				}
+
+    	  				newView._nativeObject = nativeObject;
+    	  				onNewView();
+    	  			});
+    	  		}
+    	  	}
+    	  	else
+    	  	{
+    	  		onNewView();
+    	  	}
 	    }, 
 	    function(err)
 	    {

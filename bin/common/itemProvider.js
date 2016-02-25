@@ -1,11 +1,11 @@
-define(["bin/common/extend"], function(extend)
+define([], function()
 {
 	var ListItemProvider = function()
 	{
 
 	}
 
-	ListItemProvider.extend = extend;
+	ListItemProvider.extend = bin.extend;
 
 	var Class = ListItemProvider.prototype;
 

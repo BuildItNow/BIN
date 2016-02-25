@@ -1,6 +1,6 @@
 define(
-	["bin/common/extend"],
-function(extend)
+	[],
+function()
 {
 	var ImageSet = function()
 	{
@@ -8,7 +8,7 @@ function(extend)
 		this._loadedImages = {};
 	}
 
-	ImageSet.extend = extend;
+	ImageSet.extend = bin.extend;
 
 	var cls = {};
 

@@ -3,7 +3,7 @@ function(html, Base, disUtil)
 {
 	var Class = 
 	{
-		html:html,
+		
 	};
 
 	Class.height = function()
@@ -58,5 +58,5 @@ function(html, Base, disUtil)
         this._elemTips.text(fail ? "刷新失败" : "刷新成功");
 	}
 
-	return Base.extend(Class);
+	return Base.extend(Class, {html:html});
 });

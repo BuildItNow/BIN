@@ -3,7 +3,7 @@ function(Base, html, disUtil)
 {
 	var Class = 
 	{
-		html:html,
+		
 	};
 
 	Class.height = function()
@@ -30,5 +30,5 @@ function(Base, html, disUtil)
 	}
 
 
-	return Base.extend(Class);
+	return Base.extend(Class, {html:html});
 });

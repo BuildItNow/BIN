@@ -1,7 +1,7 @@
 // bin frame-work namespace
 var bin = {};
 // cordova framw-work namespace
-var cordova = window.cordova;
+var cordova = typeof cordova === "undefined" ? undefined : cordova;
 
 require.config({baseUrl:'./'});
 
@@ -18,6 +18,23 @@ require(["config/globalConfig"], function(globalConfig)
 		$ = jquery;
 		_ = underscore;
 		Backbone = backbone;
+
+		// Re-define extend, support other feature
+		var extend = Backbone.View.extend;
+		bin.extend = function()
+		{
+			var cls = extend.apply(this, arguments);
+			cls.prototype.__$class = cls;
+
+			return cls;
+		}
+
+		var bbClasses = [Backbone.Model, Backbone.Collection, Backbone.Router, Backbone.View, Backbone.History];
+		_.each(bbClasses, function(Class)
+		{
+			Class.extend = bin.extend;
+			Class.prototype.__$class = Class;
+		});
 		
 		// do our job
 		require(['domReady!', 'bin/util/fastclickUtil', 'bin/core/main'],  function(domReady, fastclickUtil, main)

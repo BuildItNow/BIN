@@ -1,17 +1,16 @@
 define(
     [
-        "bin/common/extend", 
         "bin/util/osUtil",
         "text!bin/debug/debugFloatingView.html"
     ],
-    function (extend, osUtil, floatingHtml)
+    function (osUtil, floatingHtml)
     {
     	var DebugManager = function()
     	{
 
     	}
 
-    	DebugManager.extend = extend;
+    	DebugManager.extend = bin.extend;
 
         var Class = 
         {

@@ -4,6 +4,22 @@ function()
 {
 	var effecters = 
 	{
+		"nativeIO" :
+		[
+			// In
+			function(curView, preView)
+			{
+				curView.show();
+				//preView.hide();
+			},
+			// Out
+			function(curView, preView)
+			{
+				preView.show();
+				curView.hide();
+				curView.remove();
+			}
+		],
 		"noIO" :
 		[
 			// In

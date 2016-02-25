@@ -4,7 +4,6 @@ define(
 	{
 		var Class = 
 		{
-			html : html,
 		};
 
 		Class.constructor = function(options)
@@ -127,6 +126,6 @@ define(
 			return this._mc;
 		}
 
-		return Base.extend(Class);
+		return Base.extend(Class, {html:html});
 	}
 );

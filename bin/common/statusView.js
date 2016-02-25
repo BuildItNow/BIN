@@ -3,7 +3,7 @@ function(html, css, Base, osUtil, disUtil)
 {
 	var Class = 
 	{
-		html:html,
+
 	};
 
 	Class.constructor = function(options)
@@ -43,5 +43,5 @@ function(html, css, Base, osUtil, disUtil)
 		this.$().hide().fadeIn(200);
 	}
 
-	return Base.extend(Class);
+	return Base.extend(Class, {html:html});
 });

@@ -1,9 +1,8 @@
 define(
 	[
-		"bin/common/extend", 
-        "bin/util/osUtil"
+		"bin/util/osUtil"
     ],
-    function(extend, osUtil)
+    function(osUtil)
 	{
 
 		var NativeObjectProxy = function(key)
@@ -34,7 +33,7 @@ define(
 
 		}
 
-		NativeManager.extend = extend;
+		NativeManager.extend = bin.extend;
 
 		var Class = NativeManager.prototype;
 
@@ -47,7 +46,6 @@ define(
 
 			// Script objects
 			this._key2References = {};
-			this._obj2References = {};
 			this._nxtKey = 1;
 
 			// Native objects
@@ -85,7 +83,7 @@ define(
 		// Script Objects
 		Class.regScriptObject = function(object)
 		{
-			var ref = this._obj2References[object];
+			var ref = this._key2References[object._so_key];
 			if(ref)
 			{
 				return ref;
@@ -93,11 +91,16 @@ define(
 
 			ref = new ScriptObjectReference(""+this._nxtKey, object);
 			this._key2References[ref.key] = ref;
-			this._obj2References[object]  = ref;
+			object._so_key = ref.key;
 
 			++this._nxtKey;
 
 			return ref;
+		}
+
+		REG_SCRIPT_OBJECT = function(obj)
+		{
+			return bin.nativeManager.regScriptObject(obj);
 		}
 
 		Class.remScriptObjectByKey = function(key)
@@ -107,21 +110,13 @@ define(
 			{
 				return ;
 			}
-
+			delete ref.object._so_key;
 			delete this._key2References[ref.key];
-			delete this._obj2References[ref.object];
 		}
 
 		Class.remScriptObject = function(object)
 		{
-			var ref = this._obj2References[object];
-			if(!ref)
-			{
-				return ;
-			}
-
-			delete this._key2References[ref.key];
-			delete this._obj2References[ref.object];
+			this.remScriptObjectByKey(object._so_key);
 		}
 
 		Class.refScriptObject = function(key)
@@ -144,9 +139,16 @@ define(
 			}
 
 			--ref.ref; 
-			if(ref.ref == 0)
+			if(ref.ref === 0)
 			{
-				this.remScriptObject(key);
+				//var self = this;
+				//osUtil.nextTick(function()
+				//{
+				//	if(ref.ref === 0)
+				//	{
+						this.remScriptObjectByKey(key);
+				//	}
+				//}
 			}
 		}
 
@@ -186,10 +188,12 @@ define(
 
 			args = this.argsFmNative(args);
 
-			var ret = object[name](args);
-			ret = _.isArray(ret) ? ret : [ret];
+			object[name](args, function(ret)
+			{
+				ret = _.isArray(ret) ? ret : [ret];
 
-			cordova.binPlugins.nativeBridge.doCB(cb, ret);
+				cordova.binPlugins.nativeBridge.doCB(cb, ret);
+			});
 		}
 
 		Class.soSet = function(key, name, data)
@@ -232,7 +236,7 @@ define(
 		{
 			if(args === undefined || args === null)
 			{
-				return arg;
+				return args;
 			}
 
 			if(!_.isArray(args))
@@ -288,7 +292,7 @@ define(
 		{
 			if(args === undefined || args === null)
 			{
-				return arg;
+				return args;
 			}
 
 			if(!_.isArray(args))

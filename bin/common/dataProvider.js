@@ -1,4 +1,4 @@
-define(["bin/util/osUtil", "bin/common/extend"], function(osUtil, extend)
+define(["bin/util/osUtil"], function(osUtil)
 {
 	var defLoadAPI = function(params, success, error)
 	{
@@ -19,7 +19,7 @@ define(["bin/util/osUtil", "bin/common/extend"], function(osUtil, extend)
 		this._total = -1;
 	}
 
-	ListDataProvider.extend = extend;
+	ListDataProvider.extend = bin.extend;
 
 	var Class = ListDataProvider.prototype;
 

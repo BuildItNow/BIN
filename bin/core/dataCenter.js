@@ -1,6 +1,6 @@
 define(
-["bin/common/extend", "bin/util/lsUtil", "bin/util/ssUtil"],
-function(extend, lsUtil, ssUtil)
+["bin/util/lsUtil", "bin/util/ssUtil"],
+function(lsUtil, ssUtil)
 {
 	// Global : Always
 	// Global Session : APP Runtime
@@ -11,7 +11,7 @@ function(extend, lsUtil, ssUtil)
 
 	}
 
-	DataCenter.extend = extend;
+	DataCenter.extend = bin.extend;
 
 	var Class = DataCenter.prototype;
 

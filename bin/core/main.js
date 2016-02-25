@@ -20,6 +20,8 @@ function(CHLoader)
 			console.info("-------------------------------");
 				
 			console.info("APP Start up ");
+
+			app.fireReady();
 				
 			app.run();
 		});

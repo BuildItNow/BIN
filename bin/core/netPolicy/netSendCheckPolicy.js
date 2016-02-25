@@ -1,13 +1,13 @@
 define(
-["bin/common/extend"], 
-function(extend)
+[], 
+function()
 {
 	var NetSendCheckPolicy = function(netManager)
 	{
 		this._netManager = netManager;
 	}
 
-	NetSendCheckPolicy.extend = extend;
+	NetSendCheckPolicy.extend = bin.extend;
 
 	var Class = NetSendCheckPolicy.prototype;
 

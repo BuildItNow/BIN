@@ -3,9 +3,14 @@ function(elemUtil, osUtil)
 {
     var Base = Backbone.View;
     var View = undefined;
+
+    // Static Properties
+    //__$html:null, // View from class html string
+    //__$view:null, // View from html file
+    //__$native:{ios:null, android:null},  // View from native
+
     var Class =  
     {
-        html:null
     };
 
     Class.constructor = function(options)
@@ -35,7 +40,7 @@ function(elemUtil, osUtil)
             return ;
         }
 
-        this._html = options && options.html ? options.html : this.html;
+        this._html = options && options.html ? options.html : this.__$class.html;
 
         Backbone.View.call(this, options);
 

@@ -42,6 +42,17 @@ html
 	background-color: white;
 }
 
+.bin-native-page
+{
+	position: absolute;
+	left: 0rem;
+	top: 0rem;
+	right: 0rem;
+	bottom: 0rem;
+	overflow: hidden;
+	background-color: transparent;
+}
+
 .bin-page-navi-bar
 {
 	position: absolute;

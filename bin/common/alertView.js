@@ -5,7 +5,7 @@ function(html, css, Base, osUtil)
 
 	var Class = 
 	{
-		html:html
+		
 	};
 
 	Class.constructor = function(options)
@@ -136,5 +136,5 @@ function(html, css, Base, osUtil)
 		this.$().fadeOut(100, function(){self.remove();});
 	}
 
-	return Base.extend(Class);
+	return Base.extend(Class, {html:html});
 });

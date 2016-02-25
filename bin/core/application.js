@@ -1,7 +1,7 @@
 define([
-		"bin/common/extend", "bin/core/view"
+		"bin/core/view", "bin/util/osUtil"
 	  ], 
-	function(extend, View)
+	function(View, osUtil)
 	{
 		var Window = View.extend(
 		{
@@ -95,7 +95,7 @@ define([
 			bin.app = this;
 		}
 
-		Application.extend = extend;
+		Application.extend = bin.extend;
 
 		var Class = Application.prototype;
 
@@ -117,12 +117,16 @@ define([
 
 			this._dataCenter = new bin.core.DataCenter();
 			this._dataCenter.init();
+
+			this._nativeManager = new bin.core.NativeManager();
+			this._nativeManager.init();
 			
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
 			bin.debugManager = this._debugManager;
 			bin.hudManager  = this._hudManager;
 			bin.dataCenter  = this._dataCenter;
+			bin.nativeManager = this._nativeManager;
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);
@@ -184,6 +188,17 @@ define([
 		Class.run = function()
 		{
 			
+		}
+
+		Class.fireReady = function()
+		{
+			osUtil.nextTick(function()
+			{
+				if(cordova)
+				{
+					cordova.binPlugins.eventEmiter.fire("SCRIPT_EVENT_READY");
+				}
+			});
 		}
 
 		_.extend(Class, Backbone.Events);
