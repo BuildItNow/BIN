@@ -20,6 +20,46 @@ function()
 				curView.remove();
 			}
 		],
+		"nativeSSIO" :
+		[
+			// In
+			function(curView, preView)
+			{
+				
+			},
+			// Out
+			function(curView, preView)
+			{
+				preView.show();
+				preView.animateSlideInLeft(function()
+				{
+					preView.show();
+				});
+				curView.animateSlideOutRight(function()
+				{
+					curView.hide();
+					curView.remove();
+				});
+			}
+		],
+		"nativeSNIO" :
+		[
+			// In
+			function(curView, preView)
+			{
+				
+			},
+			// Out
+			function(curView, preView)
+			{
+				setTimeout(function()
+				{
+					preView.show();
+					curView.hide();
+					curView.remove();
+				}, 500);
+			}
+		],
 		"noIO" :
 		[
 			// In

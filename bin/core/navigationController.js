@@ -202,6 +202,9 @@ function(osUtil, pathUtil, effecters)
 		}
 		
 		path = toNaviName(path);
+
+		queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+
       	name = queryString ? path+"?"+queryString : path;
 
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, time:now, effecter:effecter};
@@ -385,39 +388,69 @@ function(osUtil, pathUtil, effecters)
 
 	cls._doPop = function(popData)
 	{
-		var curView  = this.current();
-		this._views.pop();
-		
-		var nxtView =  this._getView(-popData.count);
+		var curView  = this._views.pop();
+		var nxtView  =  this._getView(-popData.count);
 
 		if(nxtView.view.onViewBack)
 		{
 			nxtView.view.onViewBack(curView.name, popData.data);
 		}
+
+		// s n
+		//		s not change
+		// s s
+		//		n not change
+		// n n 
+		//		
+		// n s
+		//		
 		
-		curView.effecter[1](curView.view, nxtView.view);
-
-		if(popData.count === 1 && curView.native)
-		{
-			cordova.binPlugins.nativeBridge.popNativePageView(function(error, nativeObject)
-    	  			{
-    	  				if(error)
-    	  				{
-    	  					console.error("Pop native view fail ["+pushData.path+"]");
-    	  					return ;
-    	  				}
-    	  			});
-
-			return ;
-		}
-
+		var t = curView.native;
+		var n = 0;
         var v = null;
         for(var i=popData.count-1; i>0; --i)
         {
             v = this._views.pop();
             v.view.hide();
             v.view.remove();
+
+            if(t || v.native)
+            {
+            	++n;
+            }
+           
+            t = v.native;
         }
+
+        if(t || nxtView.native)
+        {
+           	++n;
+        }
+		
+		if(n > 0)
+		{
+			var OEffecter = curView.effecter[1];
+
+			if(!curView.native)
+			{
+				OEffecter = nxtView.native ? effecters["nativeSNIO"][1] : effecters["nativeSSIO"][1];
+			}
+
+			OEffecter(curView.view, nxtView.view);
+
+			cordova.binPlugins.nativeBridge.popNativePageView(n, curView.native || nxtView.native, function(error)
+    	  	{
+    	  		if(error)
+    	  		{
+    	  			console.error("Pop native view fail ["+pushData.path+"]");
+    	  			return ;
+    	  		}
+    	  	});
+
+    	  	return ;
+		}
+
+		curView.effecter[1](curView.view, nxtView.view);
     }
 
 	cls._doPush = function(pushData)
@@ -428,12 +461,12 @@ function(osUtil, pathUtil, effecters)
 		require(['view!' + pushData.path], function(ViewClass)
         {
     	  	var newView = ViewClass.create();
+    	  	var curView = self.current();
 
     	  	var onNewView = function()	
           	{
           		newView.$().css("z-index", self.count()+100);
-          		var curView = self.current();
-          	
+          		
 	          	if(newView.onViewPush)
 	          	{
 	          		newView.onViewPush(curView ? curView.name : null, pushData.data, pushData.queryParams);
@@ -474,7 +507,7 @@ function(osUtil, pathUtil, effecters)
     	  		pushData.effecter = effecters["nativeIO"];
     	  		if(cordova)
     	  		{
-    	  			cordova.binPlugins.nativeBridge.pushNativePageView(pushData.path, newView, pushData.data, pushData.queryParams, function(error, nativeObject)
+    	  			cordova.binPlugins.nativeBridge.pushNativePageView(pushData.path, newView, curView ? curView.name : undefined, pushData.data, pushData.queryParams, function(error, nativeObject)
     	  			{
     	  				if(error)
     	  				{
@@ -487,6 +520,39 @@ function(osUtil, pathUtil, effecters)
     	  			});
     	  		}
     	  	}
+    	  	else if(!curView)
+	        {
+	        	if(cordova)
+    	  		{
+    	  			cordova.binPlugins.nativeBridge.pushStubView(function(error)
+    	  			{
+    	  				if(error)
+    	  				{
+    	  					console.error("Start stub view fail");
+    	  					return ;
+    	  				}
+
+    	  				onNewView();
+    	  			});
+    	  		}
+    	  		else
+    	  		{
+    	  			onNewView();
+    	  		}
+	        }
+	        else if(curView.native)
+	        {
+	        	pushData.effecter = effecters["noIO"];
+	        	cordova.binPlugins.nativeBridge.pushStubView(function(error)
+    	  		{
+    	  			if(error)
+    	  			{
+    	  				console.error("Start stub view fail");
+    	  				return ;
+    	  			}
+    	  			onNewView();
+    	  		});
+	        }
     	  	else
     	  	{
     	  		onNewView();

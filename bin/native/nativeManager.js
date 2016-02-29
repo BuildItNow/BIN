@@ -173,7 +173,10 @@ define(
 				return ;
 			}
 
-			cordova.binPlugins.nativeBridge.doCB(cb, [object[name]]);
+			if(cb)
+			{
+				cordova.binPlugins.nativeBridge.doCB(cb, [object[name]]);
+			}
 		}
 
 		Class.soCall = function(key, name, args, cb)
@@ -192,11 +195,14 @@ define(
 			{
 				ret = _.isArray(ret) ? ret : [ret];
 
-				cordova.binPlugins.nativeBridge.doCB(cb, ret);
+				if(cb)
+				{
+					cordova.binPlugins.nativeBridge.doCB(cb, ret);
+				}
 			});
 		}
 
-		Class.soSet = function(key, name, data)
+		Class.soSet = function(key, name, data, cb)
 		{
 			var object = this.getScriptObject(key);
 			if(!object)
@@ -207,6 +213,11 @@ define(
 			data = JSON.parse(data);
 			// data wraps in array 0
 			object[name] = this.argFmNative(data[0]);
+
+			if(cb)
+			{
+				cordova.binPlugins.nativeBridge.doCB(cb);
+			}
 		}
 
 		Class.argToNative = function(arg)
@@ -308,6 +319,40 @@ define(
 			}
 
 			return ret;
+		}
+
+		// View pop and push
+		Class.push = function(name, data)
+		{
+			if(data)
+			{
+				data = JSON.parse(data);
+				data = this.argsFmNative(data);
+			}
+
+			bin.naviController.push(name, data);
+		}
+
+		Class.pop = function(count, data)
+		{
+			if(data)
+			{
+				data = JSON.parse(data);
+				data = this.argsFmNative(data);
+			}
+
+			bin.naviController.pop(count, data);
+		}
+
+		Class.popTo = function(name, data)
+		{
+			if(data)
+			{
+				data = JSON.parse(data);
+				data = this.argsFmNative(data);
+			}
+
+			bin.naviController.popTo(name, data);
 		}
 
 		return NativeManager;
