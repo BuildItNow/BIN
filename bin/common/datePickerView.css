@@ -45,6 +45,7 @@
 	position: relative;
 	top:-4.55rem;
 	transform: scaleY(0.5);
+    -webkit-transform: scaleY(0.5);
 }
 
 #datePickerView .DatePickerView-pick-block
