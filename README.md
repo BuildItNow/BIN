@@ -8,18 +8,20 @@ BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提�
 ## TODO
 在混合开发中，有的以原生为主导（原生页面内部嵌入Web 页面），有的则以Web为主导（Web单页机制）。而BIN则是属于后者，根据8-2原则，使用BIN可以在Web层完成80%的业务开发，然而仍然不能避免原生页面的引入（原生表现出的体验更好；有的则只能用原生进行开发），以Web为主导过后，Web页面和原生页面的交互则成为了麻烦（Web页面进入原生页面，原生页面在进入Web页面）。如果采用多个Web View，则存在多个JS上下文，Web View是相互独立的JS上下文。那么不妨借鉴一下游戏里面的脚本引擎的思路，始终保持一个JS上下文（也就只有一个Web View），并且JS上下文作为主导，Web View作为JS上下文的附属，在Web页面和原生页面切换时，复用原有的Web View。 <br/>
 
-* IOS ：Native-JavaScript双向交互(Done), H5 Native View 
+* IOS ：Done
 * Android 待验证
-* Codova改造，IOS整合DotC框架
+* Codova改造，IOS整合DotC框架(Done)
 
 ##功能
 * Native-JavaScript双向交互机制 (IOS 支持)
+* IOS 原生页面和H5页面混合开发
 * View抽象，模拟原生开发模式
 * 一般页面 Pageview
 * 导航栏页面 NaviPageView
 * 下拉刷新页面 RefreshView
 * 列表页面 ListView
 * 指示器 IndicatorView
+* 日期时间选择器 DatePickerView
 * Alert框 AlertView
 * Tab栏 TabBarView
 * Swipe页面 Swipeview
