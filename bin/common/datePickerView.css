@@ -42,10 +42,10 @@
 	border-top: solid 1px #0894ec; 
 	margin-left: auto;
 	margin-right: auto;
-	position: relative;
-	top:-4.55rem;
+	position: absolute;
+	top:1.45rem;
 	transform: scaleY(0.5);
-    -webkit-transform: scaleY(0.5);
+	-webkit-transform: scaleY(0.5);
 }
 
 #datePickerView .DatePickerView-pick-block
@@ -80,6 +80,7 @@
 	margin-right: auto;
 	position: relative;
 	top:0.75rem;
+	width:100%;
 }
 
 #datePickerView .DatePickerView-label
