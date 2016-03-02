@@ -1,8 +1,6 @@
 define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/core/view", "bin/util/osUtil"], 
 function(html, css, Base, osUtil)
 {
-	var zIndex = 1;
-
 	var Class = 
 	{
 		
@@ -36,8 +34,6 @@ function(html, css, Base, osUtil)
 	Class.genHTML = function()
 	{
 		Base.prototype.genHTML.call(this);
-		this.$().css("z-index", zIndex);
-		++zIndex;
 	}
 
 	Class.asyncPosGenHTML = function()

@@ -1,5 +1,5 @@
- define(["bin/common/indicatorView", "bin/common/alertView", "bin/common/statusView"], 
-	function(IndicatorView, AlertView, StatusView)
+ define(["bin/common/indicatorView", "bin/common/alertView", "bin/common/statusView", "bin/common/datePickerView"], 
+	function(IndicatorView, AlertView, StatusView, DatePickerView)
 	{
 		var HUDManager = function()
 		{
@@ -26,6 +26,8 @@
 			// Add status
 			this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
 			root.append(this._elemStatusContainer);
+
+			this._alertZIndex = 1;
 		
 			console.info("HUDManager module initialize");
 		}
@@ -49,6 +51,9 @@
 		Class.alert = function(options)
 		{
 			var v = new AlertView(options);
+			v.$().css("z-index", this._alertZIndex);
+			++this._alertZIndex;
+
 			this._elemAlertContainer.append(v.$());
 
 			return v;
@@ -73,6 +78,20 @@
 			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定", onClick:function(v){v.close()}}]};
 
 			return this.alert(options);
+		}
+
+		Class.datePicker = function(options)
+		{
+			if(typeof options === "function")
+			{
+				options = {onPick:options};
+			}
+			
+			var v = new DatePickerView(options);
+			v.$().css("z-index", this._alertZIndex);
+			++this._alertZIndex;
+			
+			this._elemAlertContainer.append(v.$());
 		} 
 
 		Class.onDeviceBack = function()
