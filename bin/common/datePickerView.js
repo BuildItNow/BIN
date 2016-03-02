@@ -327,7 +327,7 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		this.$("#contentBlock").css("top", top+"px");
 		this.$().hide().fadeIn(100).css("top", "0px");
 
-		var scrollOptions = {snap:"li", alwaysScrollY:true, bounce:true, useTransition:false, mouseWheel:false};
+       var scrollOptions = {snap:"li", noFlick:true, alwaysScrollY:true, bounce:true, bounceTime:200,  useTransition:false, mouseWheel:false};
 
 		if(this._options.pickDate)
 		{
