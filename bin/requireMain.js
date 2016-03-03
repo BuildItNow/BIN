@@ -15,7 +15,7 @@ if(cordova)
 else
 {
 	bin.platform.type = "browser";
-	bin.platfrom.browser = true;
+	bin.platform.browser = true;
 }
 
 require.config({baseUrl:'./'});
