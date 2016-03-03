@@ -3,6 +3,21 @@ var bin = {};
 // cordova framw-work namespace
 var cordova = typeof cordova === "undefined" ? undefined : cordova;
 
+// Setup platform info
+bin.platform = {};
+if(cordova)
+{
+	bin.platform.type = cordova.platformId;
+
+	bin.platform.android = bin.platform.type === "android";
+	bin.platform.ios     = bin.platform.type === "ios";
+}
+else
+{
+	bin.platform.type = "browser";
+	bin.platfrom.browser = true;
+}
+
 require.config({baseUrl:'./'});
 
 require(["config/globalConfig"], function(globalConfig)

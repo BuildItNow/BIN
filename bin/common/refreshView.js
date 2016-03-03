@@ -42,7 +42,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 	Class.asyncPosGenHTML = function()
 	{
-		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable ? 3 : 2, bounce:true, useTransition:false, mouseWheel:false});
+		this._scoller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable ? 3 : 2, bounce:true, bounceTime:200, useTransition:false, mouseWheel:false});
 		
 		var self = this;
 		this._scoller.on("userTouchStart", function()
