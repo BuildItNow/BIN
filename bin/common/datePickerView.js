@@ -54,7 +54,7 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		}
 		else
 		{
-			this.$("#title").html("请设置时间");
+			this.$("#title").html("请选择时间");
 			this.$("#dateBlock").hide();
 		}
 
@@ -71,28 +71,32 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 	Class._initDate = function()
 	{
 		var f = this.$fragment("#year");
+		f.append("<li></li>");
 		for(var i=this._options.yearBeg,i_sz=this._options.yearEnd+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+i+"</li>");
 		}
-
+		f.append("<li></li>");
 		f.setup();
 		this._containers.year = f.holder();
 
 		var f = this.$fragment("#month");
+		f.append("<li></li>");
 		for(var i=1,i_sz=12+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+(i < 10 ? "0"+i : i)+"</li>");
 		}
-
+		f.append("<li></li>");
 		f.setup();
 		this._containers.month = f.holder();
 
 		var f = this.$fragment("#day");
+		f.append("<li></li>");
 		for(var i=1,i_sz=31+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+(i < 10 ? "0"+i : i)+"</li>");
 		}
+		f.append("<li></li>");
 
 		f.setup();
 		this._containers.day = f.holder();
@@ -123,28 +127,34 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 	Class._initTime = function()
 	{
 		var f = this.$fragment("#hour");
+		f.append("<li></li>");
 		for(var i=0,i_sz=23+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+(i < 10 ? "0"+i : i)+"</li>");
 		}
+		f.append("<li></li>");
 
 		f.setup();
 		this._containers.hour = f.holder();
 
 		var f = this.$fragment("#minute");
+		f.append("<li></li>");
 		for(var i=0,i_sz=59+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+(i < 10 ? "0"+i : i)+"</li>");
 		}
+		f.append("<li></li>");
 
 		f.setup();
 		this._containers.minute = f.holder();
 
 		var f = this.$fragment("#second");
+		f.append("<li></li>");
 		for(var i=0,i_sz=59+1;i<i_sz; ++i)
 		{
 			f.append("<li id='i"+i+"'>"+(i < 10 ? "0"+i : i)+"</li>");
 		}
+		f.append("<li></li>");
 
 		f.setup();
 		this._containers.second = f.holder();
