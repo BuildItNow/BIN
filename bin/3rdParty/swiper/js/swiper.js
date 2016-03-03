@@ -1180,6 +1180,10 @@
             s.touches.currentY = e.type === 'touchmove' ? e.targetTouches[0].pageY : e.pageY;
         
             if (typeof isScrolling === 'undefined') {
+                if(Math.abs(s.touches.currentX - s.touches.startX) < 1 && Math.abs(s.touches.currentY - s.touches.startY) < 1)
+                {
+                    return ;
+                }
                 var touchAngle = Math.atan2(Math.abs(s.touches.currentY - s.touches.startY), Math.abs(s.touches.currentX - s.touches.startX)) * 180 / Math.PI;
                 isScrolling = isH() ? touchAngle > s.params.touchAngle : (90 - touchAngle > s.params.touchAngle);
             }
