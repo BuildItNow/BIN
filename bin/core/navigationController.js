@@ -136,7 +136,7 @@ function(osUtil, pathUtil, effecters)
 	// NB. Can't call pop many times once, Because Backbone route only once.  
 	cls.pop = function(count, popData, options)
 	{
-		var now = new Date().getTime();
+		var now = _.now();
 		if(this._popData && (now - this._popData.time) < 500)	// Too fast, reject
 		{
 			console.warning("pop too fast");
@@ -167,7 +167,7 @@ function(osUtil, pathUtil, effecters)
 	// NB. Can't call push many time once, Because async require(Load view) will break the calling order.
 	cls.push = function(name, pushData, options)
 	{
-		var now = new Date().getTime();
+		var now = _.now();
 		if(this._pushData && (now - this._pushData.time) < 500)	// Too fast, reject
 		{
 			console.warning("push too fast");
