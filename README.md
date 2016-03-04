@@ -33,6 +33,25 @@ BIN 是一个简单、轻量、易用、跨平台的 Web APP开源框架，提�
 * 本地API测试框架，支持完全无依赖服务器进行开发
 * rem自适应机制([demo](http://101.200.215.114:8080/apps/tutorials/index.html))<br/>
 
+# HYBRID开发(当前只支持IOS)
+每一个原生页面在BIN框架JS层都包含一个View，并且history中保留记录，这保证了原生页面在BIN框架中naviController中页面栈的一致性。
+## H5页面和原生页面相互跳转
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/hybrid.gif)
+## 携带数据从H5页面跳转原生页面
+BIN框架在JS层，View通过onViewPush(onViewBack)来接收前页面(后页面)传递的数据，对于原生页面仍然保持该接口，和H5页面一样接收数据。<br/>
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/hybrid-with-data.gif)
+## 携带数据从原生页面挑战H5页面
+从原生页面到H5页面仍然保持onViewPush和onViewBack接口，对于H5页面并不会察觉View是一个H5实现还是原生实现。<br/>
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/hybrid-with-data-to-h5.gif)
+## 返回多级页面
+BIN框架JS层支持一次回退多级页面，引入原生页面过后，对该特性没有影响，所有原框架接口保持一致。<br/>
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/pop-n.gif)
+## 返回指定页面
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/pop-to.gif)
+## JS-OC通信
+每一个原生页面记录了JS层对象，而JS对象也保留了原生对象的Proxy，使原生代码和JS代码能够交互，保证业务代码在JS开发。<br/>
+![HYBRID跳转](http://101.200.215.114:8080/res/gif/hybrid-js-oc.gif)
+
 ## 1px显示问题
 1. 可以使用viewport scales设置为0.5达到整体效果，但是在Chrome上所有height:auto的元素文字可能会scale失败，解决方法是显式设置height为具体的尺寸<br/>
 2. 在viewport scale设置为1情况下，使用transform:scale来达到效果
