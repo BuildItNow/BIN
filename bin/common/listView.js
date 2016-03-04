@@ -149,6 +149,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		if(this._dataProvider.anyMore())
 		{
 			f.append(this._refreshFooter.$());
+			this._unhookFooterClick();	// Avoid hook too much times
 			this._hookFooterClick();
 		}
 		f.setup();
