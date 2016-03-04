@@ -52,6 +52,40 @@ BIN框架JS层支持一次回退多级页面，引入原生页面过后，对该
 每一个原生页面记录了JS层对象，而JS对象也保留了原生对象的Proxy，使原生代码和JS代码能够交互，保证业务代码在JS开发。<br/>
 ![HYBRID跳转](http://101.200.215.114:8080/res/gif/hybrid-js-oc.gif)
 
+# UI组件
+## DatePickerView
+![UI组件](http://101.200.215.114:8080/res/gif/datePicker.gif)
+
+## RefreshView
+![UI组件](http://101.200.215.114:8080/res/gif/refreshView.gif)
+
+## ListView
+![UI组件](http://101.200.215.114:8080/res/gif/listView.gif)
+
+## AlertView
+![UI组件](http://101.200.215.114:8080/res/gif/alertView.gif)
+
+## IndicatorView
+![UI组件](http://101.200.215.114:8080/res/gif/indicatorView.gif)
+
+## StatusView
+![UI组件](http://101.200.215.114:8080/res/gif/statusView.gif)
+
+## SwipeView
+![UI组件](http://101.200.215.114:8080/res/gif/swipeView.gif)
+
+## TabBarView
+![UI组件](http://101.200.215.114:8080/res/gif/tabbarView.gif)
+
+## TabView
+![UI组件](http://101.200.215.114:8080/res/gif/tabView.gif)
+
+## 延迟加载
+![UI组件](http://101.200.215.114:8080/res/gif/lazyLoad.gif)
+
+## TabView结合RefreshView，ListView
+![UI组件](http://101.200.215.114:8080/res/gif/complexTab.gif)
+
 ## 1px显示问题
 1. 可以使用viewport scales设置为0.5达到整体效果，但是在Chrome上所有height:auto的元素文字可能会scale失败，解决方法是显式设置height为具体的尺寸<br/>
 2. 在viewport scale设置为1情况下，使用transform:scale来达到效果
