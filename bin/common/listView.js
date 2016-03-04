@@ -79,6 +79,21 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		Base.prototype.genHTML.call(this);
 	}
 
+	Class.posGenHTML = function()
+	{
+		Base.prototype.posGenHTML.call(this);
+
+		this._touchTargetHolder = $("<div id='touchTargetHolder'></div>");
+		this._touchTargetHolder.hide();
+		this.$().append(this._touchTargetHolder);
+
+		var self = this;
+		this._elemScrollerContent[0].addEventListener("touchmove", function(e)
+		{
+			self._touchTarget = e.target;
+		});
+	}
+
 	Class.getItem = function(i)
 	{
 		return this._items[i];
@@ -101,6 +116,19 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	Class._onRefreshData = function(beg, end)
 	{
 		this._refreshFooter.$().detach();
+
+		this._touchTargetHolder.empty();
+		if(this._touchTarget)	// Avoid touch target is removed, or the touch event will miss
+		{
+			var elem = $(this._touchTarget);
+			elem.hide();
+
+			// Clear this touch target
+			elem.attr("id", "");
+			elem.removeClass();
+
+			this._touchTargetHolder.append(elem);
+		}
 		
 		this._elemScrollerContent.empty();
 		this._items = [];
