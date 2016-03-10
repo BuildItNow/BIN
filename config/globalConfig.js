@@ -41,6 +41,7 @@ define(
 			i18n: 'bin/3rdParty/requirejs-i18n/i18n',
 			css: 'bin/3rdParty/require-css/css',
 			view: 'bin/requirePlugin/requirejs-view',
+			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
 			jquery: 'bin/3rdParty/jquery/jquery',
