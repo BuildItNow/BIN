@@ -120,6 +120,9 @@ define([
 
 			this._nativeManager = new bin.core.NativeManager();
 			this._nativeManager.init();
+
+			this._mapManager = new bin.core.MapManager();
+			this._mapManager.init();
 			
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
@@ -127,6 +130,7 @@ define([
 			bin.hudManager  = this._hudManager;
 			bin.dataCenter  = this._dataCenter;
 			bin.nativeManager = this._nativeManager;
+			bin.mapManager = this._mapManager;
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);

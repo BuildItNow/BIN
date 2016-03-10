@@ -78,6 +78,8 @@ define(
 			DataCenter:"bin/core/dataCenter",
 			HUDManager:"bin/core/hudManager",	
 			NavigationController:"bin/core/navigationController",
+			NativeManager:"bin/native/nativeManager",
+			MapManager:"bin/core/mapManager",
 		},
 		ui:
 		{
