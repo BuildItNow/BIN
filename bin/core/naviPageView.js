@@ -149,7 +149,7 @@ define(
             {
                 var self = this;
                 // setup navagation
-                var navContainer = this.$fragment("#naviBar");
+                var navContainer = this.$fragment(".bin-page-navi-bar");
                 if(!navContainer)
                 {
                     return ;
