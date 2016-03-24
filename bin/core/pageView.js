@@ -13,9 +13,9 @@ define(
             html:null,          
         };
 
-        Class.goBack = function()
+        Class.goBack = function(backData)
         {
-            bin.naviController.pop();
+            bin.naviController.pop(1, backData);
         }
 
         Class.$content = function()

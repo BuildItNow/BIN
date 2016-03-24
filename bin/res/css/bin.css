@@ -196,3 +196,44 @@ html
 {
   	-webkit-animation: bin-kf-loading 1s steps(12, end) infinite;
 }
+
+.bin-switch 
+{
+  	width: 1.8rem;
+  	height: 0.75rem;
+  	position: relative;
+  	background-color: #7C7C7D;
+  	border-radius: 0.5rem;
+  	background-clip: content-box;
+  	display: inline-block;
+  	-webkit-appearance: none;
+  	user-select: none;
+  	outline: none; 
+  	transition: background-color ease 0.4s; 
+}
+  
+.bin-switch:before 
+{
+    content: '';
+    width: 0.95rem;
+    height: 0.95rem;
+    position: absolute;
+    top: -0.1rem;
+    left:0rem;
+    border-radius: 100%;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); 
+    transition: left 0.3s;
+}
+
+.bin-switch:checked 
+{
+    background-color: #64bd63;
+    transition: border-color 0.4s, background-color ease 0.4s; 
+}
+    
+.bin-switch:checked:before 
+{
+    left: 0.85rem; 
+    transition: left 0.3s; 
+}

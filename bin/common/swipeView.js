@@ -46,14 +46,14 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		}
 		wrapperHtml += '</div>'
 		
-		this.$swiperWrapper = $(wrapperHtml);
-		var slideHolders = this.$swiperWrapper.children();
+		this.$swiperContent = $(wrapperHtml);
+		var slideHolders = this.$swiperContent.children();
 		for(var i=0,i_sz=children.length; i<i_sz; ++i)
 		{
 			slideHolders[i].appendChild(children[i]);
 		}
 		
-		this.$().append(this.$swiperWrapper);
+		this.$().append(this.$swiperContent);
 	}
 
 	Class.appendSlide = function(slide, refresh)
@@ -67,7 +67,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		}
 		else
 		{
-			this.$swiperWrapper.append(elem);
+			this.$swiperContent.append(elem);
 		}
 	}
 
@@ -79,7 +79,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		}
 		else
 		{
-			$(this.$swiperWrapper.children()[index]).remove();
+			$(this.$swiperContent.children()[index]).remove();
 		}
 	}
 
@@ -91,7 +91,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		}
 		else
 		{
-			this.$swiperWrapper.html("");
+			this.$swiperContent.html("");
 		}
 	}
 
@@ -106,7 +106,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.asyncPosGenHTML = function()
 	{
-		this.refresh();
+		this.refreshUI();
 	}
 
 	Class.setCurrent = function(index, noTrigger)
@@ -130,7 +130,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		this.swiper.slidePrev(!noTrigger);
 	}
 
-	Class.refresh = function()
+	Class.refreshUI = function()
 	{
 		this.swiper.update();
 	}
@@ -140,6 +140,8 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		if(this.swiper)
 		{
 			this.swiper.destroy(false);
+
+			delete this.swiper;
 		}
 	}
 

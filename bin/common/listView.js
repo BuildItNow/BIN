@@ -88,7 +88,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		this.$().append(this._touchTargetHolder);
 
 		var self = this;
-		this._elemScrollerContent[0].addEventListener("touchmove", function(e)
+		this.$scrollerContent[0].addEventListener("touchmove", function(e)
 		{
 			self._touchTarget = e.target;
 		});
@@ -130,10 +130,10 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 			this._touchTargetHolder.append(elem);
 		}
 		
-		this._elemScrollerContent.empty();
+		this.$scrollerContent.empty();
 		this._items = [];
 		
-		var f = elemUtil.newFragment(this._elemScrollerContent);
+		var f = elemUtil.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;
@@ -180,7 +180,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	{
 		this._refreshFooter.$().detach();
 
-		var f = elemUtil.newFragment(this._elemScrollerContent);
+		var f = elemUtil.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;
