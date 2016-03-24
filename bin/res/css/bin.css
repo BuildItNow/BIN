@@ -140,18 +140,16 @@ html
 .bin-refresh-view
 {
 	overflow: hidden;
-	height:100%;
 }
 
 .bin-refresh-view-content
 {
-	
+	height: auto;
 }
 
 .bin-list-view
 {
 	overflow: hidden;
-	height:100%;
 }
 
 .bin-list-view-content
