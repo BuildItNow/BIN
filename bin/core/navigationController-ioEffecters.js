@@ -133,6 +133,35 @@ function()
 				});
 			}
 		],
+		"leftIO" :
+		[
+			// In
+			function(curView, preView, aniEnd)
+			{
+				curView.show();
+				curView.animateSlideInLeft(function()
+				{
+					preView.hide();
+					curView.show();
+
+					if(aniEnd)
+					{
+						aniEnd();
+					}
+				});
+			},
+			// Out
+			function(curView, preView)
+			{
+				preView.show();
+				curView.animateSlideOutLeft(function()
+				{
+					curView.hide();
+					curView.remove();
+					preView.show();
+				});
+			}
+		],
 		"rightILeftO" :
 		[
 			// In

@@ -108,6 +108,8 @@ function(osUtil, pathUtil, effecters)
 		Backbone.history.start({pushState: false, silent:true});
 
 		console.info("NavigationController module initialize");
+
+		this._zIndex = 100;
 	}
 
 	cls.popTo = function(name, popData, options)
@@ -263,13 +265,15 @@ function(osUtil, pathUtil, effecters)
 		return null;
 	}
 
-	cls.startWith = function(view)
+	cls.startWith = function(view, data, options)
 	{	
 		// Set backgone to a invalid fragment to clear the old url
 		Backbone.history.fragment = "";
+
+		options = options || {};
+		options.start = true;
 		
-		this._clear();
-		this.push(view);
+		this.push(view, data, options);
 	}
 
 	cls.onDeviceBack = function()
@@ -316,8 +320,6 @@ function(osUtil, pathUtil, effecters)
         this._views = [];
         this._pushData = null;
         this._popData = null;
-
-        //++this._stackV;
     }
 
     cls._route = function(path, queryString)
@@ -389,7 +391,7 @@ function(osUtil, pathUtil, effecters)
 	cls._doPop = function(popData)
 	{
 		var curView  = this._views.pop();
-		var nxtView  =  this._getView(-popData.count);
+		var nxtView  = this._getView(-popData.count);
 
 		if(nxtView.view.onViewBack)
 		{
@@ -465,7 +467,7 @@ function(osUtil, pathUtil, effecters)
 
     	  	var onNewView = function()	
           	{
-          		newView.$().css("z-index", self.count()+100);
+          		newView.$().css("z-index", self._zIndex++);
           		
 	          	if(newView.onViewPush)
 	          	{
@@ -474,9 +476,18 @@ function(osUtil, pathUtil, effecters)
 	          	
 	          	newView.render();
 	          	self._container.append(newView.$());
-	          
+
 	          	if(curView)
 	          	{
+	          		var start = pushData.options && pushData.options.start;
+	          		if(start)
+		          	{
+		          		// Clear previous views except curView
+		          		// TODO: Native views
+		          		self._views.pop();
+				        self._clear();
+		          	}
+
 	          		if(newView.onInAnimationBeg)
 	          		{
 	          			osUtil.nextTick(function()
@@ -485,13 +496,33 @@ function(osUtil, pathUtil, effecters)
 	          			});
 	          		}
 
-	          		pushData.effecter[0](newView, curView.view, newView.onInAnimationEnd ? function()
+	          		var onInAnimationEnd = null;
+	          		if(start)
 	          		{
-	          			osUtil.nextTick(function()
-		          		{
-		          			newView.onInAnimationEnd();
-		          		});
-	          		} : null);
+	          			onInAnimationEnd = function()
+	          			{
+	          				curView.view.remove();
+	          				if(newView.onInAnimationEnd)
+	          				{
+	          					osUtil.nextTick(function()
+				          		{
+				          			newView.onInAnimationEnd();
+				          		});
+	          				}
+	          			}
+	          		}
+	          		else if(newView.onInAnimationEnd)
+	          		{
+	          			onInAnimationEnd = function()
+	          			{
+	          				osUtil.nextTick(function()
+			          		{
+			          			newView.onInAnimationEnd();
+			          		});
+	          			}
+	          		}
+
+	          		pushData.effecter[0](newView, curView.view, onInAnimationEnd);
 	          	}
 	          	else
 	          	{

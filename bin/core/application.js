@@ -38,9 +38,18 @@ define([
 					{
 						this.$().css("top", "0rem");
 					}
-	
-					this._width  = bin.globalConfig.width*2;
-					this._height = bin.globalConfig.height*2;
+
+					if(bin.globalConfig.width === "fixed" || bin.globalConfig.height === "fixed")
+					{
+						var elemRoot = document.documentElement;
+						this._width  = elemRoot.clientWidth;
+                    	this._height = elemRoot.clientHeight;
+					}
+					else
+					{
+						this._width  = bin.globalConfig.width*2;
+						this._height = bin.globalConfig.height*2;
+					}
 
 					this.$().css("width", this._width + "px");
 					this.$().css("height", this._height + "px");
