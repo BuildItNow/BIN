@@ -145,6 +145,7 @@ html
 .bin-refresh-view-content
 {
 	height: auto;
+	overflow-y: hidden;
 }
 
 .bin-list-view
