@@ -73,12 +73,6 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		Base.prototype.constructor.call(this, options);
 	}
 
-	Class.genHTML = function()
-	{
-		this.$html(null, '<div class="bin-list-view-content"></div>');
-		Base.prototype.genHTML.call(this);
-	}
-
 	Class.posGenHTML = function()
 	{
 		Base.prototype.posGenHTML.call(this);

@@ -28,8 +28,8 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 	{
 		Base.prototype.genHTML.call(this);
 
-		this.$scrollerContent = $(this.$()[0].children[0]);
-		this.$scrollerContent.detach();
+		this.$scrollerContent = $('<div class="bin-refresh-view-content">');
+		this.$scrollerContent.append(this.$().children());
 
 		this._elemScroller = $("<div style='position:relative;top:0px;height:auto;'></div>");
 		
@@ -216,7 +216,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 
 		if(this._onRefresh)
 		{
-			this._onRefresh();
+			this._onRefresh(this);
 		}
 	}
 
