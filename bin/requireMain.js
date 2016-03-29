@@ -113,6 +113,13 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 					break;
 				}
 
+				if(newLocalCaches.all)
+				{
+					this.remAllCaches();
+
+					break;
+				}	
+
 				for(var url in localCaches.files)
 				{
 					if(!newLocalCaches.files[url] || localCaches.files[url] !== newLocalCaches.files[url]) 
@@ -143,7 +150,7 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 
     requireLoader.needCache = function(url)
     {
-    	return !!this._localCaches.files[url];
+    	return this._localCaches.all || !!this._localCaches.files[url];
     }
 
     requireLoader.setCache = function(url, data)
