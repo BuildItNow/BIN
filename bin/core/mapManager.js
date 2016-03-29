@@ -28,7 +28,7 @@ define([], function()
 
 	Class.require = function(cb)
 	{
-		require(["map!"], function()
+		require(["map!"+bin.globalConfig.mapSDK], function()
 		{
 			cb(null);
 		}, function(err)

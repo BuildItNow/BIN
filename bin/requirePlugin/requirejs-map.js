@@ -13,7 +13,7 @@ define([], function ()
                   onLoad(null);
               }
 
-              req(["http://api.map.baidu.com/api?v=1.5&ak=r6xCRD3KfUmiDNoAdE7Ec85f&callback=mapLoadDone"], function()
+              req(["http://api.map.baidu.com/api?v="+name+"&ak=r6xCRD3KfUmiDNoAdE7Ec85f&callback=mapLoadDone"], function()
               {
 
               },

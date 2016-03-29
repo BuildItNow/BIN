@@ -127,19 +127,27 @@ define([
 			this._dataCenter = new bin.core.DataCenter();
 			this._dataCenter.init();
 
-			this._nativeManager = new bin.core.NativeManager();
-			this._nativeManager.init();
-
-			this._mapManager = new bin.core.MapManager();
-			this._mapManager.init();
 			
+
 			bin.netManager = this._netManager;
 			bin.naviController = this._naviController;
 			bin.debugManager = this._debugManager;
 			bin.hudManager  = this._hudManager;
 			bin.dataCenter  = this._dataCenter;
-			bin.nativeManager = this._nativeManager;
-			bin.mapManager = this._mapManager;
+
+			if(cordova)
+			{
+				this._nativeManager = new bin.core.NativeManager();
+				this._nativeManager.init();
+				bin.nativeManager = this._nativeManager;
+			}
+			
+			if(bin.globalConfig.mapSDK)
+			{
+				this._mapManager = new bin.core.MapManager();
+				this._mapManager.init();
+				bin.mapManager = this._mapManager;
+			}
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);

@@ -164,9 +164,10 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 
     requireLoader.remAllCaches = function()
     {
+    	var KEY_EXP =  /^r_[0-9]+$/;
     	for(var key in window.localStorage)
     	{
-    		if(key.indexOf("r_") === 0)
+    		if(KEY_EXP.test(key))
     		{
     			delete window.localStorage[key];
     		}
