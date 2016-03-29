@@ -157,8 +157,23 @@ define(function() {
   }
 
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-  cssAPI.load = function(cssId, req, load, config) {
-
+  cssAPI.load = function(cssId, req, load, config) 
+  {
+     if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
+            {
+                var style = document.createElement('style');
+                style.innerHTML = content;
+                style.id = cssId+".css";
+                head.appendChild(style);
+                load(null);
+            },
+            function(error)
+            {
+                load.error(error)
+            }))
+            {
+                return ;
+            }
     (useImportLoad ? importLoad : linkLoad)(req.toUrl(cssId + '.css'), load);
 
   }

@@ -1840,8 +1840,21 @@ var requirejs, require, define;
      * @param {Object} url the URL to the module.
      */
     req.load = function (context, moduleName, url) {
-        var config = (context && context.config) || {},
-            node;
+        var config = (context && context.config) || {};
+
+        if(config.loader && config.loader(url, function()
+            {
+                context.completeLoad(moduleName);
+            },
+            function(error)
+            {
+                context.onError("Error");
+            }))
+        {
+            return ;
+        }
+
+        var node;
         if (isBrowser) {
             //In the browser so use a script tag
             node = req.createNode(config, moduleName, url);

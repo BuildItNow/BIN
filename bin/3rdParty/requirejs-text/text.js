@@ -182,6 +182,18 @@ define(['module'], function (module) {
                 return;
             }
 
+            if(config.loader && config.loader(url, function(content)
+            {
+                onLoad(content);
+            },
+            function(error)
+            {
+                onLoad.error(error)
+            }))
+            {
+                return ;
+            }
+
             //Load the text. Use XHR if possible and in a browser.
             if (!hasLocation || useXhr(url, defaultProtocol, defaultHostName, defaultPort)) {
                 text.get(url, function (content) {
