@@ -175,7 +175,7 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 
     requireLoader.load = function(url, onLoad, onError)
     {
-    	if(bin.runtimeConfig && !bin.runtimeConfig.debug)
+    	if(bin.runtimeConfig && bin.runtimeConfig.debug)
     	{
     		return false;
     	}
