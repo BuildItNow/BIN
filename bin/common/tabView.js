@@ -113,7 +113,7 @@ function(Base, TabBarView, SwipeView)
 		if(this._options.onChange)
 		{
 			this._options.onChange(this, this._options.items[index]);
-		}	
+		}
 	}
 
 	Class._item2index = function(item)

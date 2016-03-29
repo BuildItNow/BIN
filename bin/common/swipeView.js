@@ -26,7 +26,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 		_.defaults(this._swiperOptions, SWIPER_DEFAULT_OPTIONS);
 		var self = this;
-		this._swiperOptions.onSlideChangeEnd = function(swiper){self._onSwiperSwipe(swiper.activeIndex)};
+		this._swiperOptions.onTransitionEnd = function(swiper){self._onSwiperSwipe(swiper.activeIndex)};
 
 		Base.prototype.constructor.call(this, options);
 	}
@@ -132,7 +132,7 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.refreshUI = function()
 	{
-		this.swiper.update();
+		this.swiper.update(true);
 	}
 
 	Class.onRemove = function()

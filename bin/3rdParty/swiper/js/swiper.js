@@ -498,6 +498,16 @@
             else {
                 height = s.container[0].clientHeight;
             }
+
+            if(width === 0 && isH())
+            {
+                width = 1;
+            }
+            else if(height === 0 && !isH())
+            {
+                height = 1;
+            }
+
             if (width === 0 && isH() || height === 0 && !isH()) {
                 return;
             }
@@ -1572,7 +1582,9 @@
             s.snapIndex = Math.floor(slideIndex / s.params.slidesPerGroup);
             if (s.snapIndex >= s.snapGrid.length) s.snapIndex = s.snapGrid.length - 1;
         
+            
             var translate = - s.snapGrid[s.snapIndex];
+            
             
             // Directions locks
             if (!s.params.allowSwipeToNext && translate < s.translate && translate < s.minTranslate()) {
@@ -1602,6 +1614,7 @@
             }
         
             if (typeof speed === 'undefined') speed = s.params.speed;
+
             s.previousIndex = s.activeIndex || 0;
             s.activeIndex = slideIndex;
         
