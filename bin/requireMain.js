@@ -176,11 +176,6 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 
     requireLoader.load = function(url, onLoad, onError)
     {
-    	if(bin.runtimeConfig && bin.runtimeConfig.debug)
-    	{
-    		return false;
-    	}
-
     	if(this.crossDomain(url))
 		{
 			return false;
@@ -210,8 +205,13 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
 		{
 			url:url, 
 			type:'get',
+			dataType:'text',
 			success:function(content)
 			{
+				if(url.lastIndexOf('.js') > 0)
+				{
+					$.globalEval(content);
+				}
 				if(needCache)
 				{
 					self.setCache(url, content);
@@ -275,29 +275,26 @@ require(["jquery", "underscore", "backbone", "lz-string", "text!local-caches.jso
     	console.log("Total(KB) "+this._oriSize*0.001+" Compress(KB) "+this._cmpSize*0.001+" Rate "+this._cmpSize/this._oriSize);
     }
 
-    requireLoader.init();
-    bin.requireLoader = requireLoader;
-
-	require.config(
+	require(["config/globalConfig"], function(globalConfig)
 	{
-		loader:function(url, onLoad, onError)
-		{
-			return requireLoader.load(url, onLoad, onError);
-		}
-	});
-
-	require(["config/globalConfig", ], function(globalConfig)
-	{
-		require.config(globalConfig.requireConfig);
-
 		bin.globalConfig  = globalConfig;
 		bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
 		bin.classConfig   = globalConfig.classConfig;
 
-		if(bin.runtimeConfig.debug)
+		if(!bin.runtimeConfig.debug)
 		{
-			require.config({loader:null});
+			requireLoader.init();
+			require.config(
+			{
+				loader:function(url, onLoad, onError)
+				{
+					return requireLoader.load(url, onLoad, onError);
+				}
+			});
+			bin.requireLoader = requireLoader;
 		}
+		
+		require.config(globalConfig.requireConfig);
 
 		// do our job
 		require(['domReady!', 'bin/util/fastclickUtil', 'bin/core/main'], function(domReady, fastclickUtil, main) 
