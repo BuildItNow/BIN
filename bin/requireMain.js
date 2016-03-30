@@ -129,7 +129,7 @@ require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, under
 			}
 			$.ajax(
 			{
-				url:"/local-caches.json",
+				url:"./local-caches.json",
 				type:"get",
 				dataType:"text",
 				success:function(data)
