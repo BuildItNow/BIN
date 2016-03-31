@@ -76,7 +76,7 @@ html
 	background-size: 1rem 1rem;
 	background-position: 0.5rem 50%;
 
-	background-image: url("../img/back.png");
+	background-image: url(../img/back.png);
 }
 
 .bin-page-navi-right
@@ -101,7 +101,7 @@ html
 	position: relative;
 	font-size: 0.8rem;
 	line-height: inherit;
-	background-image: url("") !important;
+	background-image: url() !important;
 	color: #0894ec;
 	width: auto;
 }

@@ -1,4 +1,4 @@
-define(['require', './normalize'], function(req, normalize) {
+define(['require', 'bin/3rdParty/require-css/normalize'], function(req, normalize) {
   var cssAPI = {};
 
   var isWindows = !!process.platform.match(/^win/);
@@ -125,7 +125,9 @@ define(['require', './normalize'], function(req, normalize) {
 
     //external URLS don't get added (just like JS requires)
     if (name.match(absUrlRegEx))
+    {
       return load();
+    }
 
     var fileUrl = req.toUrl(name + '.css');
     if (isWindows)

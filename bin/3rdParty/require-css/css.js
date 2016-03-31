@@ -30,10 +30,12 @@
  *
  */
 
-define(function() {
+define(["bin/3rdParty/require-css/normalize"], function(normalize) {
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
   if (typeof window == 'undefined')
-    return { load: function(n, r, load){ load() } };
+  {
+      return { load: function(n, r, load){ load() } };
+  }
 
   var head = document.getElementsByTagName('head')[0];
 
@@ -59,7 +61,10 @@ define(function() {
   //main api object
   var cssAPI = {};
 
+//>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
+  pluginBuilder = './bin/3rdParty/require-css/css-builder';
 
+  // <style> @import load method
   var curStyle, curSheet;
   var createStyle = function () {
     curStyle = document.createElement('style');
@@ -154,13 +159,16 @@ define(function() {
   }
 
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-  cssAPI.load = function(cssId, req, load, config) 
+  cssAPI.load = function(cssId, req, load, config)
   {
-     /*if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
+      var url = req.toUrl(cssId + '.css');
+      if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
             {
+              content = normalize(content, url, config.baseUrl);
                 var style = document.createElement('style');
                 style.innerHTML = content;
                 style.id = cssId+".css";
+                style.type="text/css";
                 head.appendChild(style);
                 load(null);
             },
@@ -170,8 +178,8 @@ define(function() {
             }))
             {
                 return ;
-            }*/
-    (useImportLoad ? importLoad : linkLoad)(req.toUrl(cssId + '.css'), load);
+            }
+    (useImportLoad ? importLoad : linkLoad)(url, load);
 
   }
 
