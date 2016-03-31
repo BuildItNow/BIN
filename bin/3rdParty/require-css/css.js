@@ -59,10 +59,7 @@ define(function() {
   //main api object
   var cssAPI = {};
 
-//>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-  cssAPI.pluginBuilder = './css-builder';
 
-  // <style> @import load method
   var curStyle, curSheet;
   var createStyle = function () {
     curStyle = document.createElement('style');
@@ -159,7 +156,7 @@ define(function() {
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
   cssAPI.load = function(cssId, req, load, config) 
   {
-     if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
+     /*if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
             {
                 var style = document.createElement('style');
                 style.innerHTML = content;
@@ -173,7 +170,7 @@ define(function() {
             }))
             {
                 return ;
-            }
+            }*/
     (useImportLoad ? importLoad : linkLoad)(req.toUrl(cssId + '.css'), load);
 
   }
