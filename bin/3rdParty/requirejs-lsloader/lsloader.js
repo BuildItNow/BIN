@@ -1,4 +1,4 @@
-define(function()
+define(["bin/3rdParty/require-css/normalize"], function(normalize)
 {		
 	var LSLoader = function()
 	{
@@ -16,6 +16,7 @@ define(function()
 		this.PROT = this.HREF && this.HREF.protocol && this.HREF.protocol.replace(/\:/, '');
 		this.HOST = this.HREF && this.HREF.hostname;
 		this.PORT = this.HREF && (this.HREF.port || undefined);
+		this.BASE_URL = require.toUrl("./");
 
     	this._oriSize = 0;
     	this._cmpSize = 0;
@@ -145,6 +146,12 @@ define(function()
 				{
 					$.globalEval(content);
 				}
+
+				if(url.lastIndexOf('.css') > 0)
+				{
+					content = normalize(content, url, self.BASE_URL);
+				}
+
 				if(needCache)
 				{
 					self.setCache(url, content);

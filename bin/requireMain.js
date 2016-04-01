@@ -54,8 +54,15 @@ require.config(
 
 (function()
 {
+	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
+		if(onPackageLoadedOnce)
+		{
+			return ;
+		}
+
+		onPackageLoadedOnce = true;
 		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;

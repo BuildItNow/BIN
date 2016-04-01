@@ -30,7 +30,7 @@
  *
  */
 
-define(["bin/3rdParty/require-css/normalize"], function(normalize) {
+define(function() {
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
   if (typeof window == 'undefined')
   {
@@ -164,10 +164,9 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize) {
       var url = req.toUrl(cssId + '.css');
       if(config.loader && config.loader(req.toUrl(cssId + '.css'), function(content)
             {
-              content = normalize(content, url, config.baseUrl);
                 var style = document.createElement('style');
                 style.innerHTML = content;
-                style.id = cssId+".css";
+                style.id = url;
                 style.type="text/css";
                 head.appendChild(style);
                 load(null);
