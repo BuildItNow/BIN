@@ -12,9 +12,9 @@ define(function()
 	pro.init = function()
     {
     	this._current = 0;
-    	this._items  = bin.globalConfig.prloadConfig.files;
+    	this._views  = bin.globalConfig.prloadConfig.views;
 
-    	if(this._items.length > 0)
+    	if(this._views.length > 0)
     	{
     		this.tryLoad();
 	    }
@@ -22,7 +22,7 @@ define(function()
 
     pro.tryLoad = function()
     {
-    	if(this._current >= this._items.length)
+    	if(this._current >= this._views.length)
     	{
     		return ;
     	}
@@ -31,7 +31,7 @@ define(function()
 
     	setTimeout(function()
     	{
-    		require([self._items[self._current]], 
+    		require(["view!"+self._views[self._current]], 
 	    	function()
 	    	{
 	    		self.tryLoad();

@@ -1,5 +1,7 @@
 define(["bin/3rdParty/require-css/normalize"], function(normalize)
 {		
+	var KEY_EXP =  /^r_[0-9]+$/;
+
 	var LSLoader = function()
 	{
 
@@ -17,9 +19,6 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 		this.HOST = this.HREF && this.HREF.hostname;
 		this.PORT = this.HREF && (this.HREF.port || undefined);
 		this.BASE_URL = require.toUrl("./");
-
-    	this._oriSize = 0;
-    	this._cmpSize = 0;
 
     	/*var c;
       	var crcTable = [];
@@ -60,7 +59,6 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 						}
 					}
 				}
-				
 			}
 
 			localCaches = newLocalCaches;
@@ -91,14 +89,10 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
     {
     	var	cmp = LZString.compress(data);
     	window.localStorage[this.url2key(url)] = cmp;
-
-    	this._oriSize += data.length;
-    	this._cmpSize += cmp.length;
     }
 
     pro.remAllCaches = function()
     {
-    	var KEY_EXP =  /^r_[0-9]+$/;
     	for(var key in window.localStorage)
     	{
     		if(KEY_EXP.test(key))
@@ -209,9 +203,47 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
     	return "r_"+this.crc32(url);
     }
 
+    // You'd better don't use the function
+    pro.totalCacheSize = function()
+    {
+    	var ret = 0;
+    	var val = null;
+    	for(var key in window.localStorage)
+    	{
+    		if(KEY_EXP.test(key))
+    		{
+    			val = window.localStorage[key];
+    			ret += val ? val.length : 0;
+    		}
+    	}
+
+    	return ret;
+    }
+
+    // You'd better don't use the function
+    pro.totalOriginalCacheSize = function()
+    {
+    	var ret = 0;
+    	var val = null;
+    	for(var key in window.localStorage)
+    	{
+    		if(KEY_EXP.test(key))
+    		{
+    			val = window.localStorage[key];
+    			val = val ? LZString.decompress(val) : null;
+    			ret += val ? val.length : 0;
+    		}
+    	}
+
+    	return ret;
+    }
+
+	// You'd better don't use the function
     pro.dumpCacheInfo = function()
     {
-    	console.log("Total(KB) "+this._oriSize*0.001+" Compress(KB) "+this._cmpSize*0.001+" Rate "+this._cmpSize/this._oriSize);
+    	var o = this.totalOriginalCacheSize();
+    	var c = this.totalCacheSize();
+    	console.log("Total(KB) "+o*0.001+" Compressed(KB) "+c*0.001+" Rate "+c/o);
     }
 
     return LSLoader;
