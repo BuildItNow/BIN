@@ -25,6 +25,6 @@
 			prloader: "bin/3rdParty/requirejs-prloader/prloader"
 
     },
-    include:['css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
+    include:['i18n', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
     out: "3party.js",
 })

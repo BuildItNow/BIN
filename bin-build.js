@@ -26,7 +26,7 @@
 
     },
     exclude:
-    ['css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
+    ['css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone', 'config/netLocalConfig'],
     include:[
     // core
     'view',
