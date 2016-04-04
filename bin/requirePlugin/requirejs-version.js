@@ -26,8 +26,6 @@ define(['module', "bin/3rdParty/md5/md5"], function (module, md5)
 
     var processDir = function(dirPath)
     {
-        console.log("dir "+dirPath);
-
         var files = fs.readdirSync(dirPath);
         var filePath = null;
         var fileStat = null;
@@ -59,7 +57,8 @@ define(['module', "bin/3rdParty/md5/md5"], function (module, md5)
         {
             return ;
         }
-        console.log("file "+filePath);
+        console.log("处理文件 "+filePath);
+        
         var content = fs.readFileSync(filePath, "utf-8");
         var url     = pathToUrl(filePath);
         newLocalCaches.files[url] = md5.hex_md5(content);
