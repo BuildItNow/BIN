@@ -7,10 +7,15 @@ BIN 是一个简单、易用、跨平台的 Web APP开源框架，提供了对�
 <iframe class="iphone-content" frameborder="0" name="i" width="330" height="520" src="http://101.200.215.114:8080/iphone-deamon.html">
 </iframe>
 
-## Web APP本地化机制
+## Web APP本地化
 * 将CSS、HTML、JS缓存在本地（LocalStorage）
 * 通常LocalStorage有5MB限制，因此文件经过压缩后再缓存，降低对LocalStorage的开销(压缩后在20%-40%)，另一方面业务代码（文本）3MB以内通常是足够的
 * 在文件级别上支持缓存文件的版本更新:使用自动化构建工具生成local-caches.json文件
+
+## 缓存策略
+* 强缓存:第三方库代码、BIN框架代码，经过合并混淆后，文件名加HASH；带ID的资源图片
+* 协商缓存(304):配置文件、带名称的资源图片
+* 本地缓存(LocalStorage):业务代码
 
 ## 混合开发
 在混合开发中，有的以原生为主导（原生页面内部嵌入Web 页面），有的则以Web为主导（Web单页机制）。而BIN则是属于后者，根据8-2原则，使用BIN可以在Web层完成80%的业务开发，然而仍然不能避免原生页面的引入（原生表现出的体验更好；有的则只能用原生进行开发），以Web为主导过后，Web页面和原生页面的交互则成为了麻烦（Web页面进入原生页面，原生页面在进入Web页面）。如果采用多个Web View，则存在多个JS上下文，Web View是相互独立的JS上下文。那么不妨借鉴一下游戏里面的脚本引擎的思路，始终保持一个JS上下文（也就只有一个Web View），并且JS上下文作为主导，Web View作为JS上下文的附属，在Web页面和原生页面切换时，复用原有的Web View。 <br/>
