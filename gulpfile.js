@@ -163,6 +163,7 @@ gulp.task('build-package-bin', function(cb)
 {
 	var n = 0;
 	var f = false;
+	var windows = process.platform === "win32";
 	var onPackaged = function()
 	{
 		++n;
@@ -181,7 +182,7 @@ gulp.task('build-package-bin', function(cb)
 	}
 	
 	
-	exec('r.js -o 3party-build.js', function(error, stdout, stderr) 
+	exec(windows ?'r.js.cmd -o 3party-build.js' :'r.js -o 3party-build.js', function(error, stdout, stderr) 
 	{
 		if(error)
 		{
@@ -196,7 +197,7 @@ gulp.task('build-package-bin', function(cb)
 		onPackaged();
 	});
 
-	exec('r.js -o bin-build.js', function(error, stdout, stderr) 
+	exec(windows ? 'r.js.cmd -o bin-build.js' : 'r.js -o bin-build.js', function(error, stdout, stderr) 
 	{
 		if(error)
 		{
@@ -229,11 +230,16 @@ gulp.task('build-lscaches', ['build-minify'], function(cb)
         oldLocalCaches = {version:0, files:{}};
     }
     var newLocalCaches  = {};
+
+    var toLeftSlash = function(path)
+    {
+    	return path.replace(/\\/g, "/");
+    }
     
     var pathToUrl = function(path)
     {
-
-        return path.replace(basePath, (basePath[basePath.length-1]==="/" || basePath[basePath.length-1]==="\\" ? "./" : '.'));
+        var ret = path.replace(basePath, (basePath[basePath.length-1]==="/" || basePath[basePath.length-1]==="\\" ? "./" : '.'));
+    	return toLeftSlash(ret);
     }
 
     var processDir = function(dirPath)
@@ -335,7 +341,7 @@ gulp.task('build-lscaches', ['build-minify'], function(cb)
 	onLoad();
 });
 
-gulp.task('build-minify', ['build-jshint'],  function(cb)
+gulp.task('build-minify',  function(cb)
 {	
 	rmdirSync(tempPath);
 
@@ -364,7 +370,7 @@ gulp.task('build-jshint', function(cb)
 	.pipe(jshint.reporter());
 });
 
-gulp.task('build', ["build-dest", "build-jshint", "build-minify", "build-lscaches", "build-package-bin", "build-fixref-bin", "build-minify-bin"], function(cb)
+gulp.task('build', ["build-dest"], function(cb)
 {
 	rmdirSync(tempPath);
 });
