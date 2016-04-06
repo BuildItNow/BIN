@@ -26,5 +26,5 @@
 
     },
     include:['i18n', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
-    out: "3party.js",
+    out: "bin/3party.js",
 })

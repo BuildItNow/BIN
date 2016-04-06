@@ -93,5 +93,5 @@
 	'bin/util/pathUtil',
 	'bin/util/ssUtil'
     ],
-    out: "bin.js"
+    out: "bin/bin.js"
 })

@@ -1,0 +1,33 @@
+{
+  "name": "BIN",
+  "description": "BIN Web APP Framework",
+  "version": "0.0.1",
+  "author": {
+    "name": "Yang G",
+    "email": "pinner@mail.ustc.edu.cn"
+  },
+  "homepage": "https://github.com/BuildItNow/BIN",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BuildItNow/BIN.git"
+  },
+  "dependencies": {},
+  "devDependencies": 
+  {
+    "browser-sync": "^2.9.12",
+    "express": "*",
+    "gulp": "^3.9.0",
+    "md5": "*",
+    "glob": "*",
+    "gulp-jshint": "^1.12.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-uglify": "*",
+    "gulp-filter": "*",
+    "gulp-clean-css": "*",
+    "gulp-htmlmin": "*",
+    "http-proxy": "*",
+    "request": "^2.65.0",
+    "through2": "~0.6.1",
+    "yargs": "^3.29.0"
+  }
+}

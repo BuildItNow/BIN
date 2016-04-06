@@ -1,0 +1,370 @@
+var config  = require('./gulpconfig');
+var gulp 	= require('gulp');
+var fs      = require('fs');
+var path    = require('path');
+var glob    = require('glob');
+var filter  = require('gulp-filter');
+var jshint  = require('gulp-jshint');
+var uglify  = require('gulp-uglify');
+var cssMinify = require('gulp-clean-css');
+var htmlMinify = require('gulp-htmlmin');
+var md5     = require("md5");
+var through = require('through2');
+var cp 		= require('child_process');
+var exec    = function(cmd, cb)
+{
+	var r = cp.exec(cmd, function (error, stdout, stderr) 
+	{
+		cb(error, stdout, stderr);
+	});
+	
+	r.stdout.pipe(process.stdout);
+	r.stderr.pipe(process.stderr);
+}
+
+var spawn   = cp.spawn;
+
+var tempPath = config.temp || "dest-temp";
+var destPath = config.dest || "dest";
+
+var IGNORES = ["!bin/**", "!node_modules/**", "!./.*", "!"+destPath+"/**", "!"+tempPath+"/**"];
+
+var getFilePath = function(patthern)
+{
+	var paths = glob.sync(patthern);
+	if(!paths || paths.length === 0)
+	{
+		return null;
+	}
+
+	return paths[0];
+}
+
+var rmdirSync = function(rmPath) 
+{
+    var files = null;
+    if(fs.existsSync(rmPath)) 
+    {
+        files = fs.readdirSync(rmPath);
+        files.forEach(function(file,index)
+        {
+
+            var curPath = path.join(rmPath, file);
+            if(fs.statSync(curPath).isDirectory()) 
+            {
+             	rmdirSync(curPath);
+            } 
+            else 
+            { 
+            	fs.unlinkSync(curPath);
+            }
+        });
+
+        fs.rmdirSync(rmPath);
+    }
+}
+
+gulp.task('default', function() 
+{
+	
+	
+});
+
+gulp.task('build-dest', ['build-fixref-bin', 'build-lscaches'], function(cb)
+{
+	rmdirSync(destPath);
+	return 	gulp.src(path.join(tempPath, "**"))
+			.pipe(gulp.dest(destPath));
+});
+
+gulp.task('build-fixref-bin', ['build-minify-bin'], function(cb)
+{
+	var indexPath = path.join(tempPath, "index.html");
+	var requireMainPath = path.join(tempPath, "bin/requireMain.js");
+	var binPath = path.join(tempPath, "bin/bin.js");
+	var partyPath = path.join(tempPath, "bin/3party.js");
+	var binMD5 = md5(fs.readFileSync(binPath, 'utf-8'));
+	var partyMD5 = md5(fs.readFileSync(partyPath, 'utf-8'));
+
+	var content = fs.readFileSync(requireMainPath, 'utf-8');
+	content = content.replace("bin.js", "bin-"+binMD5+".js");
+	content = content.replace("3party.js", "3party-"+partyMD5+".js");
+	fs.writeFileSync(requireMainPath, content, 'utf-8');
+
+	var name2md5 = {};
+	var paths = 
+	[
+		getFilePath(path.join(tempPath, "**/require.js")), 
+		getFilePath(path.join(tempPath, "**/bin.css")),
+		requireMainPath,
+		binPath,
+		partyPath
+	];
+
+	var noExtName = null;
+	var extName   = null;
+	var dirName   = null;
+	var fileMD5   = null;
+	for(var i=0,i_sz=paths.length; i<i_sz; ++i)
+	{
+		extName   = path.extname(paths[i]);
+		noExtName = path.basename(paths[i], extName);
+		dirName   = path.dirname(paths[i]);
+
+		name2md5[path.basename(paths[i])] = fileMD5 = md5(fs.readFileSync(paths[i], 'utf-8'));
+		fs.renameSync(paths[i], path.join(dirName, noExtName+"-"+fileMD5+extName));
+	}
+	
+	content = fs.readFileSync(indexPath, 'utf-8');
+	content = content.replace("bin.css", "bin-"+name2md5["bin.css"]+".css");
+	content = content.replace("require.js", "require-"+name2md5["require.js"]+".js");
+	content = content.replace("requireMain.js", "requireMain-"+name2md5["requireMain.js"]+".js");
+	fs.writeFileSync(indexPath, content, 'utf-8');
+
+	cb();
+});
+
+gulp.task('build-minify-bin', ["build-package-bin"], function(cb) 
+{
+	var requirejsPath = getFilePath("bin/**/require.js");
+	var binCSSPath    = getFilePath("bin/**/bin.css");
+
+	var filePaths = [requirejsPath, binCSSPath, "index.html", "local-caches.json", "bin/bin.js", "bin/3party.js", "bin/requireMain.js"];
+
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter(["**/*.js", "!bin/bin.js", "!bin/3party.js"], {restore: true});
+
+	return gulp.src(["{"+filePaths.join(",")+"}"])
+			.pipe(htmlFilter)
+			.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+			.pipe(htmlFilter.restore)
+			.pipe(cssFilter)
+			.pipe(cssMinify({compatibility: 'ie8'}))
+			.pipe(cssFilter.restore)
+			.pipe(jsFilter)
+			.pipe(uglify())
+			.pipe(jsFilter.restore)
+			.pipe(gulp.dest(tempPath))
+			.pipe(through.obj({}, 
+			function(chunk, enc, callback)
+			{
+				callback(null, chunk);
+			}, 
+			function(cb)
+			{
+				fs.unlinkSync("bin/bin.js");
+				fs.unlinkSync("bin/3party.js");
+				cb();
+			}));
+});
+
+gulp.task('build-package-bin', function(cb) 
+{
+	var n = 0;
+	var f = false;
+	var onPackaged = function()
+	{
+		++n;
+		if(n !== 2)
+		{
+			return ;
+		}
+		if(f)
+		{
+			cb("build-package fail");
+
+			return ;
+		}
+
+		cb();
+	}
+	
+	
+	exec('r.js -o 3party-build.js', function(error, stdout, stderr) 
+	{
+		if(error)
+		{
+			f = true;
+			console.log("3party-build fail");
+		}
+		else
+		{
+			console.log("3party-build success");
+		}
+
+		onPackaged();
+	});
+
+	exec('r.js -o bin-build.js', function(error, stdout, stderr) 
+	{
+		if(error)
+		{
+			f = true;
+			console.log("bin-build fail");
+		}
+		else
+		{
+			console.log("bin-build success");
+		}
+
+		onPackaged();
+	});
+});
+
+gulp.task('build-lscaches', ['build-minify'], function(cb) 
+{
+	var versionConfig = config.lsCaches;
+
+	var basePath        = path.resolve(tempPath);
+    var nodeRequire     = require;
+    var localCachesPath = path.resolve("local-caches.json"); 
+    var oldLocalCaches  = null;
+    try
+    {
+        oldLocalCaches = nodeRequire(localCachesPath);
+    }
+    catch(e)
+    {
+        oldLocalCaches = {version:0, files:{}};
+    }
+    var newLocalCaches  = {};
+    
+    var pathToUrl = function(path)
+    {
+
+        return path.replace(basePath, (basePath[basePath.length-1]==="/" || basePath[basePath.length-1]==="\\" ? "./" : '.'));
+    }
+
+    var processDir = function(dirPath)
+    {
+        var files = fs.readdirSync(dirPath);
+        var filePath = null;
+        var fileStat = null;
+        for(var i=0,i_sz=files.length; i<i_sz; ++i)
+        {
+            filePath = files[i];
+            if(files[0] === '.')
+            {
+                continue;
+            }
+            filePath = path.join(dirPath, filePath);
+            fileStat = fs.statSync(filePath);
+            if(fileStat.isFile())
+            {
+                processFile(filePath)
+            }
+            else if(fileStat.isDirectory())
+            {
+                processDir(filePath)
+            }
+        }
+    }
+
+    var processFile = function(filePath)
+    {
+        var ext = path.extname(filePath);
+        ext = ext.toLowerCase();
+        if(!(ext === ".css" || ext === ".html" || ext === ".js"))
+        {
+            return ;
+        }
+        console.log("处理文件 "+filePath);
+        
+        var content = fs.readFileSync(filePath, "utf-8");
+        var url     = pathToUrl(filePath);
+        newLocalCaches.files[url] = md5(content);
+    }
+
+    var onLoad = function()
+    {
+		if (versionConfig.all) {
+			newLocalCaches.all = true;
+			newLocalCaches.version = oldLocalCaches.version + 1;
+		} else {
+			var newFiles = newLocalCaches.files;
+			var oldFiles = oldLocalCaches.files;
+			newLocalCaches.version = oldLocalCaches.version;
+			for (var key in newFiles) {
+				if (!oldFiles[key] || oldFiles[key] !== newFiles[key]) {
+					newLocalCaches.version = oldLocalCaches.version + 1;
+					break;
+				}
+			}
+
+			for (var key in oldFiles) {
+				if (!newFiles[key]) {
+					newLocalCaches.version = oldLocalCaches.version + 1;
+					break;
+				}
+			}
+		}
+
+		var content = JSON.stringify(newLocalCaches);
+		fs.writeFileSync(localCachesPath, content, 'utf8');
+
+		cb();
+    }
+
+    newLocalCaches.files = {};
+    if(versionConfig.all)
+	{
+		onLoad();
+
+		return;
+	}
+
+	var dirs = versionConfig.dirs;
+	var dir = null;
+	var dirStat = null;
+	for (var i = 0, i_sz = dirs.length; i < i_sz; ++i) 
+	{
+		dir = dirs[i];
+		dir = path.resolve(path.join(tempPath, dirs[i]));
+		dirStat = fs.statSync(dir);
+		if (dirStat.isFile()) 
+		{
+			processFile(dir)
+		}
+		else if (dirStat.isDirectory()) 
+		{
+			processDir(dir)
+		}
+	}
+
+	onLoad();
+});
+
+gulp.task('build-minify', ['build-jshint'],  function(cb)
+{	
+	rmdirSync(tempPath);
+
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter("**/*.js", {restore: true});
+
+	// html 
+	return gulp.src(["./**", "!./*.*"].concat(IGNORES))
+	.pipe(htmlFilter)
+	.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+	.pipe(htmlFilter.restore)
+	.pipe(cssFilter)
+	.pipe(cssMinify({compatibility: 'ie8'}))
+	.pipe(cssFilter.restore)
+	.pipe(jsFilter)
+	.pipe(uglify())
+	.pipe(jsFilter.restore)
+	.pipe(gulp.dest(tempPath));
+});
+
+gulp.task('build-jshint', function(cb)
+{	
+	return gulp.src(["**/*.js", "!./*.js"].concat(IGNORES))
+	.pipe(jshint())
+	.pipe(jshint.reporter());
+});
+
+gulp.task('build', ["build-dest", "build-jshint", "build-minify", "build-lscaches", "build-package-bin", "build-fixref-bin", "build-minify-bin"], function(cb)
+{
+	rmdirSync(tempPath);
+});
