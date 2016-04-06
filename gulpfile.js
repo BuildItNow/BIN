@@ -126,10 +126,7 @@ gulp.task('build-fixref-bin', ['build-minify-bin'], function(cb)
 
 gulp.task('build-minify-bin', ["build-package-bin"], function(cb) 
 {
-	var requirejsPath = getFilePath("bin/**/require.js");
-	var binCSSPath    = getFilePath("bin/**/bin.css");
-
-	var filePaths = ["bin/**/*.png", "bin/**/*.jpeg", "bin/**/*.jpg", requirejsPath, binCSSPath, "index.html", "local-caches.json", "bin/bin.js", "bin/3party.js", "bin/requireMain.js"];
+	var filePaths = ["bin/**", "index.html", "local-caches.json"];
 
 	var htmlFilter = filter("**/*.html", {restore: true});
 	var cssFilter = filter("**/*.css", {restore: true});
@@ -373,4 +370,12 @@ gulp.task('build-jshint', function(cb)
 gulp.task('build', ["build-dest"], function(cb)
 {
 	rmdirSync(tempPath);
+});
+
+gulp.task('build-clean', function(cb)
+{	
+	rmdirSync(tempPath);
+	rmdirSync(destPath);
+
+	cb();
 });
