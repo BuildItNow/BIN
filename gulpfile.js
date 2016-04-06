@@ -129,7 +129,7 @@ gulp.task('build-minify-bin', ["build-package-bin"], function(cb)
 	var requirejsPath = getFilePath("bin/**/require.js");
 	var binCSSPath    = getFilePath("bin/**/bin.css");
 
-	var filePaths = [requirejsPath, binCSSPath, "index.html", "local-caches.json", "bin/bin.js", "bin/3party.js", "bin/requireMain.js"];
+	var filePaths = ["bin/**/*.png", "bin/**/*.jpeg", "bin/**/*.jpg", requirejsPath, binCSSPath, "index.html", "local-caches.json", "bin/bin.js", "bin/3party.js", "bin/requireMain.js"];
 
 	var htmlFilter = filter("**/*.html", {restore: true});
 	var cssFilter = filter("**/*.css", {restore: true});
