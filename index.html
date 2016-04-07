@@ -20,6 +20,12 @@
             </div>
             <div id="HUDContainer" class="bin-HUD-container">
             </div>
-        </div>   
+        </div>
+        <script>
+            if(typeof __windowLoading === "boolean")
+            {
+                document.write('<div id="windowLoading" class="bin-window-loading bin-loading-image bin-loading-active"></div>'); 
+            }           
+        </script>   
     </body>
 </html>

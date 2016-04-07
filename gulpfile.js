@@ -119,6 +119,11 @@ gulp.task('build-fixref-bin', ['build-minify-bin'], function(cb)
 	content = content.replace("bin.css", "bin-"+name2md5["bin.css"]+".css");
 	content = content.replace("require.js", "require-"+name2md5["require.js"]+".js");
 	content = content.replace("requireMain.js", "requireMain-"+name2md5["requireMain.js"]+".js");
+	if(config.useWindowLoading)
+	{
+		content = content.replace("__windowLoading", "true");
+	}
+
 	fs.writeFileSync(indexPath, content, 'utf-8');
 
 	cb();

@@ -531,6 +531,11 @@ function(osUtil, pathUtil, effecters)
 	          
 	          	var item = {key:viewKey(pushData.path, pushData.queryParams._queryString), view: newView, name:pushData.path, effecter:pushData.effecter, native:ViewClass.native !== undefined};
 	          	self._views.push(item);
+
+	          	if(pushData.options && pushData.options.onPushed)
+	          	{
+	          		pushData.options.onPushed(newView);
+	          	}
 	        };
 
 	        if(ViewClass.native)
