@@ -3,7 +3,7 @@ BIN 是一个简单、易用、跨平台的 Web APP开源框架，提供了对�
 开发Web APP：采用RequireJS管理模块，工程代码易于管理和维护；使用JQuery、Backbone、Underscore、FastClick、Swiper、IScroll等通用稳定第三方库，工程代码依赖库有保障；提供页面本地化和预加载机制，无需复杂的工程化即可获得快速的页面加载效率，特别适用于单页APP开发（微信公众号）;丰富通用的类原生UI控件，APP开发更高效<br/>
 开发原生APP：采用Cordova和Native进行衔接，既保持Web开发模式的高效，又保留原生开发模式的特性；在Android端采用性能更好的CrossWalk WebKit内核，获得性能的同时又尽可能避开Android平台内置浏览器的差异<br/>
 
-[Online Tutorials](http://101.200.215.114:8080/apps/tutorials/index.html)　　[Tutorials APK](https://raw.githubusercontent.com/BuildItNow/BIN_APK/master/bin-tutorials_20150926.apk)
+[Online Tutorials](http://101.200.215.114:8080/apps/tutorials/index.html)　[Online Deamon](http://101.200.215.114:8080/apps/deamon/index.html)　[Tutorials APK](https://raw.githubusercontent.com/BuildItNow/BIN_APK/master/bin-tutorials_20150926.apk)
 <iframe class="iphone-content" frameborder="0" name="i" width="330" height="520" src="http://101.200.215.114:8080/iphone-deamon.html">
 </iframe>
 
