@@ -10,9 +10,9 @@ BIN 是一个简单、易用、跨平台的 Web APP开源框架，提供了对�
 ## Web APP本地化
 * 将CSS、HTML、JS缓存在本地（LocalStorage）
 * 通常LocalStorage有5MB限制，因此文件经过压缩后再缓存，降低对LocalStorage的开销(压缩后在20%-40%)，另一方面业务代码（文本）3MB以内通常是足够的
-* 在文件级别上支持缓存文件的版本更新:使用自动化构建工具生成local-caches.json文件
-[Tutorials LS](http://101.200.215.114:8080/apps/tutorials/index.html) [Tutorials NoLS](http://101.200.215.114:8080/apps/tutorials-nolscache/index.html)<br/>
-[Deamon LS](http://101.200.215.114:8080/apps/deamon/index.html) [Deamon NoLS](http://101.200.215.114:8080/apps/deamon-nolscache/index.html)
+* 在文件级别上支持缓存文件的版本更新:使用自动化构建工具生成local-caches.json文件<br/>
+[Tutorials](http://101.200.215.114:8080/apps/tutorials/index.html) [Tutorials 无本地化](http://101.200.215.114:8080/apps/tutorials-nolscache/index.html)<br/>
+[Deamon LS](http://101.200.215.114:8080/apps/deamon/index.html) [Deamon 无本地化](http://101.200.215.114:8080/apps/deamon-nolscache/index.html)
 
 ## 缓存策略
 * 强缓存:第三方库代码、BIN框架代码，经过合并混淆后，文件名加HASH；带ID的资源图片
@@ -23,7 +23,7 @@ BIN 是一个简单、易用、跨平台的 Web APP开源框架，提供了对�
 BIN框架提供了Gulp的自动化构建：
 * 将第三方库压缩打包在3party.js，将BIN框架代码压缩打包在bin.js，文件名添加MD5
 * 业务代码压缩，并根据gulpconfg.js配置，生产本地化配置local-caches.json
-* 所有代码发布到gulpconfig.js的指定目录
+* 所有代码发布到gulpconfig.js的指定目录<br/>
 gulpconfig：<br/>
 temp : 中间目录，默认dest-temp <br/>
 dest : 目标目录，默认dest <br/>
