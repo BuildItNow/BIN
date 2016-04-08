@@ -30,8 +30,8 @@ dest : 目标目录，默认dest <br/>
 useWindowLoading : 是否使用加载Loading动画，对于web-app建议使用，避免在加载库时页面空白时间过长<br/>
 lsCaches : 本地化配置 <br/>
 依赖：<br/>
-nmp install -g requirejs <br/>
-nmp install -g gulp <br/>
+npm install -g requirejs <br/>
+npm install -g gulp <br/>
 
 
 ## 混合开发
