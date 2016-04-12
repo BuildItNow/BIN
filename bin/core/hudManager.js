@@ -1,5 +1,5 @@
- define(["bin/common/indicatorView", "bin/common/alertView", "bin/common/statusView", "bin/common/datePickerView"], 
-	function(IndicatorView, AlertView, StatusView, DatePickerView)
+ define(["bin/common/indicatorView", "bin/common/alertView", "bin/common/statusView", "bin/common/datePickerView","bin/common/selectView"], 
+	function(IndicatorView, AlertView, StatusView, DatePickerView, SelectView)
 	{
 		var HUDManager = function()
 		{
@@ -21,8 +21,7 @@
 
 			// Add alert
 			this._elemAlertContainer = $("<div id='alertHUD'       style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
-			root.append(this._elemAlertContainer);
-           	
+			root.append(this._elemAlertContainer);	
 			// Add status
 			this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
 			root.append(this._elemStatusContainer);
@@ -47,7 +46,13 @@
 			var v = new StatusView({text:message});
 			this._elemStatusContainer.append(v.$()); 
 		}
-
+		Class.select = function(options){
+			var v = new SelectView(options);
+			v.$().css("z-index", this._alertZIndex);
+			++this._alertZIndex;
+			
+			this._elemAlertContainer.append(v.$());
+		}
 		Class.alert = function(options)
 		{
 			var v = new AlertView(options);

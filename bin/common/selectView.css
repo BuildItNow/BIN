@@ -1,0 +1,158 @@
+.SelectView
+{
+	pointer-events:auto;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 10000rem;
+	overflow: hidden;
+	background-color: rgba(128, 128, 128, 0.6);
+	text-align: left;
+}
+
+#selectView .SelectView-content-block
+{
+	position: absolute;
+	width:100%;
+	height:auto;
+	left: 0px; 
+	margin-left: 0px;
+	background-color: white;
+	text-align: center;
+}
+
+#selectView .SelectView-title-block
+{
+	position: relative;
+	width:100%;
+	height:2rem;
+	font-size:0.8rem;
+	line-height: 2rem;
+	box-sizing : border-box;
+	padding-left: 0.5rem;
+    border-bottom: solid 1px rgba(200, 200, 200, 1.0); 
+}
+
+#selectView .SelectView-lines
+{
+	pointer-events:none;
+	width:100%;
+	height:3rem;
+	border-bottom: solid 1px #0894ec; 
+	border-top: solid 1px #0894ec; 
+	margin-left: auto;
+	margin-right: auto;
+	position: absolute;
+	top:0.95rem;
+	transform: scaleY(0.5);
+	-webkit-transform: scaleY(0.5);
+}
+
+#selectView .SelectView-pick-block
+{
+	position: relative;
+	width:100%;
+	height:6rem;
+	line-height: 6rem;
+	font-size:0px;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	box-sizing: border-box;
+}
+
+#selectView .SelectView-item-block
+{
+	display: inline-block;
+	width: 100%;
+	height:100%;
+	line-height: inherit;
+	font-size: 0px;
+	vertical-align: top;
+	text-align: center;
+	position: relative;
+}
+
+#selectView .SelectView-wrapper
+{
+	height: 4.5rem;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	top:0.25rem;
+	width:100%;
+}
+
+#selectView .SelectView-label
+{
+	font-size: 0.8rem;
+	height: 100%;
+	line-height: inherit;
+	text-align: left;
+	right: 0px;
+	top: 0px;
+	position: absolute;
+	color: #0894ec;
+}
+
+
+#selectView .SelectView-wrapper ul
+{
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+}
+
+#selectView .SelectView-wrapper ul li
+{
+	list-style: none;
+	list-style-type:none;
+	width:100%;
+	height:1.5rem;
+	line-height: 1.5rem;
+	font-size: 0.8rem;
+	text-align: center;
+}
+
+#selectView .SelectView-wrapper .SelectView-picked
+{
+	font-size:1.0rem;
+	color: #0894ec;
+}
+
+#selectView .SelectView-button-block
+{
+	position: relative;
+	width:100%;
+	height:2rem;
+	font-size:0rem;
+    border-bottom: solid 1px rgba(200, 200, 200, 1.0); 
+}
+#selectView .SelectView-button-block #cancel{
+	float: left;
+}
+#selectView .SelectView-button-block #confirm{
+	float: right;
+}
+#selectView .SelectView-button
+{
+	width:3rem;
+	height:2rem;
+	font-size: 0.8rem;
+	line-height:2rem; 
+	background-color: white;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+#selectView .SelectView-v-line
+{
+	height:100%;
+	
+	position:absolute;
+	left:50%;
+	top: 0rem;
+	background-color: rgba(200, 200, 200, 1.0);
+}
