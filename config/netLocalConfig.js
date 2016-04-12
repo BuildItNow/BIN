@@ -16,11 +16,23 @@
 			config[api] = {data:data, options:options};
 		}
 	}
+
+	var NET_DATA_GENERATOR = function(generator)
+	{
+		config._netDataGenerator = generator;
+	}
+
 	define(
 	[],
 	function()
 	{
 		// Start your config here
+
+		//NET_DATA_GENERATOR(function(data)
+		//{
+		//	return {code:200, data:data};
+		//});
+
 		CASE("/api/byFunction", TURN_ON, function(netParams)
 			{
 				return "api/byFunction : Welcome to BIN"
