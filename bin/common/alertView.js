@@ -1,4 +1,4 @@
-define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/core/view", "bin/util/osUtil"], 
+define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/common/hudView", "bin/util/osUtil"], 
 function(html, css, Base, osUtil)
 {
 	var Class = 
@@ -124,12 +124,6 @@ function(html, css, Base, osUtil)
 		elemWrap.append("<div class='AlertView-v-line'></div>");
 		
 		this.$append("#buttons", elemWrap);
-	}
-
-	Class.close = function()
-	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
 	}
 
 	return Base.extend(Class, {html:html});

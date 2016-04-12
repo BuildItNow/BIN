@@ -1,4 +1,4 @@
-define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/core/view", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
+define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
 function(html, css, Base, osUtil, iscroll, disUtil)
 {
 	var Class = {};
@@ -16,27 +16,37 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 	Class.posGenHTML = function()
 	{
 		this._initDate();
+
 		var self = this;
-		this.$("#confirm").on("click", function(){self._onConfirm()});
-		this.$("#cancel").on("click", function(){self._onCancel()});
-		this.$().on("click", function(event){
-			if(event.target.id==="selectView")
-				self._onCancel();
+		this.$().on("click", function(event)
+		{
+			var id = event.target.id;
+			if(id ==="selectView" || id === "cancel")
+			{
+				self.close();
+			}
+			else if(id === "confirm")
+			{
+				self._onConfirm();
+			}
 		});
+
 		_.forEach(this._containers, function(container, key)
 		{
 			container.find("#i"+self._picks[key]).addClass("SelectView-picked");
 		});
 	}
-	Class.valueToindex=function()
+	Class.valueToindex=function(value)
 	{
-		var self=this;
-		var len=this._options.options.length;
-		for(var i=0;i<len;i++){
-			if(this._options.options[i].value===this._options.current){
+		for(var i=0,i_sz=this._options.options.length; i<i_sz; ++i)
+		{
+			if(this._options.options[i].value===value)
+			{
 				return i;
 			}
 		}
+
+		return 0;
 	}
 	Class._initDate = function()
 	{	
@@ -52,28 +62,18 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		f.append("<li></li>");
 		f.setup();
 		this._containers.opt = f.holder();
-		if(this._options.current){
-			this._picks.opt=this.valueToindex() ? this.valueToindex() : 0;
-		}else{
-			this._picks.opt=0;
-		}
+		this._picks.opt = this.valueToindex(this._options.current);
 	}
 	Class._onConfirm = function()
 	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
-
 		if(this._options.callback)
 		{
 			var value=self.$('.SelectView-picked').attr('data-value');
 			var text=self.$('.SelectView-picked').text();
 			this._options.callback({text:text,value:value});
 		}
-	}
-	Class._onCancel = function()
-	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
+
+		this.close();
 	}
 
 	Class._onPick = function(name, val)

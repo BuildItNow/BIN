@@ -1,4 +1,4 @@
-define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/core/view", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
+define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
 function(html, css, Base, osUtil, iscroll, disUtil)
 {
 	var DEFAULT_OPTIONS = 
@@ -61,7 +61,7 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		var self = this;
 
 		this.$("#confirm").on("click", function(){self._onConfirm()});
-		this.$("#cancel").on("click", function(){self._onCancel()});
+		this.$("#cancel").on("click", function(){self.close()});
 		_.forEach(this._containers, function(container, key)
 		{
 			container.find("#i"+self._picks[key]).addClass("DatePickerView-picked");
@@ -166,9 +166,6 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 
 	Class._onConfirm = function()
 	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
-
 		if(this._options.onPick)
 		{
 			var date = new Date();
@@ -189,12 +186,8 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 
 			this._options.onPick(date);
 		}
-	}
 
-	Class._onCancel = function()
-	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
+		this.close();
 	}
 
 	Class._onPick = function(name, val)

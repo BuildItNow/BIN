@@ -37,13 +37,14 @@
 #selectView .SelectView-lines
 {
 	pointer-events:none;
-	width:100%;
 	height:3rem;
 	border-bottom: solid 1px #0894ec; 
 	border-top: solid 1px #0894ec; 
 	margin-left: auto;
 	margin-right: auto;
 	position: absolute;
+	left: 0.5rem;
+	right: 0.5rem;
 	top:0.95rem;
 	transform: scaleY(0.5);
 	-webkit-transform: scaleY(0.5);
