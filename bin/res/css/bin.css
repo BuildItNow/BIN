@@ -246,3 +246,8 @@ html
     left: 0.85rem; 
     transition: left 0.3s; 
 }
+
+.bin-mask-layer
+{
+	background-color : rgba(0, 0, 0, 0.4);
+}
