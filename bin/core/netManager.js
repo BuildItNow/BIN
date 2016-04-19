@@ -1,6 +1,6 @@
 define(function()
 {
-	var DEFAULT_NET_OPTIONS = {loading:"MODEL"};
+	var DEFAULT_NET_OPTIONS = {loading:"MODEL", silent:false};
 	var Net  = function()
 	{
 

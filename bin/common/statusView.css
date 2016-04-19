@@ -11,4 +11,5 @@
 	bottom:10000rem;
 	left: 0rem;
 	border-radius: 0.2rem;
+	box-sizing: border-box;
 }

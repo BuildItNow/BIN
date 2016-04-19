@@ -45,6 +45,8 @@ define(
 				console.error("API["+netParams.api+"] Error "+error.status+" "+error.statusText);
 			}
 
+			var status = "";
+
 			if(error.status === 0)
 			{
 				if(error.statusText === "abort")
@@ -54,16 +56,21 @@ define(
 				else if(error.statusText === "timeout")
 				{
 					netParams.userdatas.timeout = true;
-					bin.hudManager.showStatus("网络连接超时");
+					status = "网络连接超时";
 				}
 				else
 				{
-					bin.hudManager.showStatus("网络连接失败，请检查您的网络");
+					status = "网络连接失败，请检查您的网络";
 				}
 			}
 			else
 			{
-				bin.hudManager.showStatus("网络错误，错误代码 "+error.status);
+				status = "网络错误，错误代码 "+error.status;
+			}
+
+			if(status && !netParams.options.silent)
+			{
+				bin.hudManager.showStatus(status);
 			}
 
 			if(netParams.callbacks.error)
