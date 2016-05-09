@@ -18,7 +18,7 @@
 			var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
 			root.append(elemIndicatorContainer);
 
-			this._indicator = new IndicatorView();
+			this._indicator = new IndicatorView({style:bin.globalConfig.indicator || "dark"});
 			elemIndicatorContainer.append(this._indicator.$());
 
 			// Add alert
