@@ -161,8 +161,6 @@ define([
 
 		Class.onDeviceBack = function()
 		{
-			console.info("onDeviceBack");
-
 			if(this._hudManager.onDeviceBack())
 			{
 				return true;
@@ -173,7 +171,23 @@ define([
 				return true;
 			}
 
-			return false;
+			var self = this;
+
+			bin.hudManager.alert
+			({
+				message:{text:"确定退出程序?"},
+				buttons:
+				[
+					{text:"确定", onClick:function(v)
+					{
+						v.close(); 
+						self.exit();
+					}},
+					{text:"取消", onClick:function(v){v.close()}},	
+				]
+			});
+
+			return true;
 		}
 
 		Class.onDeviceMenu = function()
@@ -209,6 +223,14 @@ define([
 		Class.run = function()
 		{
 			
+		}
+
+		Class.exit = function()
+		{
+			osUtil.delayCall(function()
+			{
+				navigator.app.exitApp();
+			}, 100);
 		}
 
 		Class.fireReady = function()
