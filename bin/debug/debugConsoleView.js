@@ -74,27 +74,9 @@ define(
 
                     globalConfig.runtime = data.value;
                     bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-                
-                    // clear old content
-                    Backbone.history.stop();
-                    $("#navigationContainer").empty();
-                    $("#HUDContainer").empty();
-
-                    require(["bin/core/main"], function(main)
-                    {
-                        bin.util.osUtil.nextTick(function()
-                        {
-                            main();
-
-                            bin.util.osUtil.delayCall(function()
-                            {
-                                bin.hudManager.showStatus("切换到RUMTIME["+data.value+"]");
-                            }, 1000);
-                        });
-                    });   
+                    bin.hudManager.showStatus("切换到RUMTIME["+data.value+"]");
                 }
             });
-
         }
 
         Class.executeScript = function()
