@@ -73,7 +73,8 @@ define(
                     }
 
                     globalConfig.runtime = data.value;
-
+                    bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
+                
                     // clear old content
                     Backbone.history.stop();
                     $("#navigationContainer").empty();
