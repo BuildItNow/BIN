@@ -13,6 +13,8 @@ define(
                 "click #clearDebugInfos" : "clearDebugInfos",
                 "click #prev" : "prevScript",
                 "click #next" : "nextScript",
+                "click #debugFloating" : "switchDebugFloating",
+                "click #runtimeSelect" : "runtimeSelect",
             }
         };
 
@@ -30,7 +32,68 @@ define(
             this.$append("#debugContent", this._debugInfos);
             this._debugInfos.addClass("DebugConsoleView-debug-output");
 
+            this.$html("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");
+
             Base.prototype.genHTML.call(this);
+        }
+
+        Class.switchDebugFloating = function()
+        {
+            bin.debugManager.switchDebugFloating();
+            this.$html("#debugFloating", bin.debugManager.isFloating() ? "关闭悬浮" : "开启悬浮");            
+        }
+
+        Class.runtimeSelect = function()
+        {
+            var options  = [];
+            var globalConfig  = bin.globalConfig;
+            var runtime       = globalConfig.runtime;
+            var runtimeConfig = null;
+
+            for(var key in globalConfig)
+            {
+                runtimeConfig = globalConfig[key];
+                if(runtimeConfig.server)
+                {
+                    runtimeConfig.debug = true;
+
+                    options.push({text:key, value:key});
+                }
+            }
+
+            bin.hudManager.select(
+            {
+                options:options,
+                current:runtime,
+                callback: function(data) 
+                {
+                    if(data.value === runtime)
+                    {
+                        return ;
+                    }
+
+                    globalConfig.runtime = data.value;
+
+                    // clear old content
+                    Backbone.history.stop();
+                    $("#navigationContainer").empty();
+                    $("#HUDContainer").empty();
+
+                    require(["bin/core/main"], function(main)
+                    {
+                        bin.util.osUtil.nextTick(function()
+                        {
+                            main();
+
+                            bin.util.osUtil.delayCall(function()
+                            {
+                                bin.hudManager.showStatus("切换到RUMTIME["+data.value+"]");
+                            }, 1000);
+                        });
+                    });   
+                }
+            });
+
         }
 
         Class.executeScript = function()
@@ -46,6 +109,8 @@ define(
             {
                 eval(script);
                 this.fixScriptBuffer(script);
+
+                bin.hudManager.showStatus("脚本执行成功");
             }
             catch(e)
             {
@@ -66,6 +131,8 @@ define(
             {
                 eval("console.log("+script+")");
                 this.fixScriptBuffer(script);
+
+                bin.hudManager.showStatus("脚本执行成功");
             }
             catch(e)
             {
