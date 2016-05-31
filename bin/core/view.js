@@ -207,7 +207,17 @@ function(elemUtil, osUtil)
 
     var onScroll = function(e)
     {
-        e.currentTarget.tryLazyLoad();
+        if(e.currentTarget._llTimeout)
+        {
+            clearTimeout(e.currentTarget._llTimeout);
+            e.currentTarget._llTimeout = null;
+        }
+
+        e.currentTarget._llTimeout = setTimeout(function()
+        {
+            e.currentTarget._llTimeout = null;
+            e.currentTarget.tryLazyLoad();
+        }, 100);
     }
 
     View.lazyLoadContainer = function(elemContainer)
@@ -272,10 +282,10 @@ function(elemUtil, osUtil)
                     this._llDirty = true;
 
                     var self = this;
-                    osUtil.delayCall(function()
-                    {
+                    //osUtil.delayCall(function()
+                    //{
                         self._update();
-                    }, 500);
+                    //}, 500);
                 }
             }
 

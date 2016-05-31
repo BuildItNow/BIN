@@ -4,7 +4,40 @@ define(
         "bin/util/osUtil", 
     ],
     function (Base, osUtil)
-    {
+    {   
+        var loadingQueue = [];
+        var loadingTimer = null;
+
+        var loadTimer = function()
+        {
+            var view = loadingQueue.shift();
+            if(!view)
+            {
+                clearInterval(loadingTimer);
+                loadingTimer = null;
+
+                return ;
+            }
+
+            var img = new Image();
+            img.src = view._image;
+
+            img.onload = function()
+            {
+                view._setImage(view._image);
+            }
+        }
+
+        var loadLazyImage = function(view)
+        {
+            loadingQueue.push(view);
+
+            if(!loadingTimer)
+            {
+                loadingTimer = setInterval(loadTimer, 100);
+            }
+        }
+
     	var Class = {};
 
     	Class.posGenHTML = function()
@@ -48,14 +81,7 @@ define(
             this._loaded = true;
     		this.$().attr("data-loaded", true);
     		
-    		var img = new Image();
-			img.src = this._image;
-
-			var self = this;
-			img.onload = function()
-        	{
-        		self._setImage(self._image);
-        	}
+    		loadLazyImage(this);
 
         	return true;
 	   	}

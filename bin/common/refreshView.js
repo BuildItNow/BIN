@@ -205,13 +205,30 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 		}
 	}
 
+	Class._lazyLoadOnScroll = function()
+	{
+		var elem = this.$()[0];
+		if(elem._llTimeout)
+        {
+            clearTimeout(elem._llTimeout);
+           elem._llTimeout = null;
+        }
+
+        elem._llTimeout = setTimeout(function()
+        {
+            elem._llTimeout = null;
+            elem.tryLazyLoad();
+        }, 100);
+	}
+	
+
 	Class._onScrollerScroll = function()
 	{
 		if(this._lazyLoadEnable)
 		{
 			if(this.$()[0].tryLazyLoad)
 			{
-				this.$()[0].tryLazyLoad();
+				this._lazyLoadOnScroll();
 			}
 		}
 
