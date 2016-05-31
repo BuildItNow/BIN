@@ -96,6 +96,14 @@ function(elemUtil, osUtil)
         }
     }
 
+    Class.tryLazyLoad = function()
+    {
+        if(this.$()[0].tryLazyLoad)
+        {
+            this.$()[0].tryLazyLoad();
+        }
+    }
+
     Class.lazyLoadContainer = function()
     {
          View.lazyLoadContainer(this.$());

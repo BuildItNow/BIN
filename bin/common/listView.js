@@ -45,8 +45,11 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	{
 		var self = this;
 		options.onRefresh = function(){ self._reload()};
-		options.autoRefresh = "animation";
-
+		if(options.autoRefresh === undefined)
+		{
+			options.autoRefresh = "animation";
+		}
+		
 		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
 		this._dataProvider  = options.dataProvider;
 
