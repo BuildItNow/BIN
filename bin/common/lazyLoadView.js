@@ -24,7 +24,7 @@ define(
 
             img.onload = function()
             {
-                view._setImage(view._image);
+                view._setImage(img);
             }
         }
 
@@ -88,15 +88,62 @@ define(
 
     	Class._setImage = function(image)
     	{
+            if(!image || image.width <= 1 || image.height <= 1)
+            {
+                return ;
+            }
+
     		this._setPlaceHolder("");
 
-    		if (this.$().is("img")) 
-    		{
-                this.$().attr("src", image);
-            } 
-            else 
+            var elem = $(image);
+            elem.addClass("bin-lazyload-content");
+
+            var w = this.$().width();
+            var h = this.$().height();
+            var s = w/h;
+            var is = image.width/image.height;
+
+            var align = this.$().data("align");
+            if(align === "center")
             {
-                this.$().css("background-image", "url('" + image + "')");
+                if(is > s)
+                {
+                    var ih = w/is;
+                    elem.css({left:"0px",top:(h-ih)*0.5+"px", width:"100%",height:ih+"px"});
+                }
+                else
+                {
+                    var iw = h*is;
+                    elem.css({left:(w-iw)*0.5+"px",top:"0px", width:ih+"px",height:"100%"});
+                }
+            }
+            else if(align === "vcenter")
+            {
+                var ih = w/is;
+                elem.css({left:"0px",top:(h-ih)*0.5+"px", width:"100%",height:ih+"px"});
+            }
+            else if(align === "hcenter")
+            {
+                var iw = h*is;
+                elem.css({left:(w-iw)*0.5+"px",top:"0px", width:ih+"px",height:"100%"});
+            }
+            else
+            {
+                elem.css({left:"0px",top:"0px", width:"100%",height:"100%"});
+            }
+
+            elem.hide();
+
+            this.$().append(elem);
+
+            var effect = this.$().data("effect");
+            if(effect === "fadein")
+            {
+                elem.fadeIn();
+            }
+            else
+            {
+                elem.show();
             }
     	}
 

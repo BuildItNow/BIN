@@ -175,8 +175,14 @@ html
 
 .bin-lazyload
 {
+	position: relative;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
+}
+
+.bin-lazyload-content
+{
+	position: absolute;
 }
 
 @-webkit-keyframes bin-kf-loading 
