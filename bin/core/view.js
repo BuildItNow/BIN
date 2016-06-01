@@ -98,9 +98,9 @@ function(elemUtil, osUtil)
 
     Class.tryLazyLoad = function()
     {
-        if(this.$()[0].tryLazyLoad)
+        if(this.$()[0]._tryLazyLoad)
         {
-            this.$()[0].tryLazyLoad();
+            this.$()[0]._tryLazyLoad();
         }
     }
 
@@ -215,17 +215,7 @@ function(elemUtil, osUtil)
 
     var onScroll = function(e)
     {
-        if(e.currentTarget._llTimeout)
-        {
-            clearTimeout(e.currentTarget._llTimeout);
-            e.currentTarget._llTimeout = null;
-        }
-
-        e.currentTarget._llTimeout = setTimeout(function()
-        {
-            e.currentTarget._llTimeout = null;
-            e.currentTarget.tryLazyLoad();
-        }, 100);
+        e.currentTarget._onScroll();
     }
 
     View.lazyLoadContainer = function(elemContainer)
@@ -235,7 +225,7 @@ function(elemUtil, osUtil)
             var el = elemContainer[0];
             elemContainer.unbind("scroll", onScroll);
                 
-            if(!el.tryLazyLoad)
+            if(!el._tryLazyLoad)
             {
                 el._llDirty = false;
                 el._llViews = undefined;
@@ -275,7 +265,7 @@ function(elemUtil, osUtil)
                     }
                 }
 
-                el.tryLazyLoad = function()
+                el._tryLazyLoad = function()
                 {
                     if(this._llViews.length === 0)
                     {
@@ -295,6 +285,33 @@ function(elemUtil, osUtil)
                         self._update();
                     //}, 500);
                 }
+
+                var WAITTING_TIME  = 120;
+                var CHECKING_TIME  = WAITTING_TIME*0.8;
+                el._onScroll = function()
+                {
+                    if(this._llTimeout)
+                    {
+                        if((_.now()-this._llTime) < CHECKING_TIME)
+                        {
+                            return ;
+                        }
+
+                        clearTimeout(this._llTimeout);
+                    }
+
+                    var self = this;
+                    this._llTime    = _.now();  
+                    this._llTimeout = setTimeout(function()
+                    {
+                        self._llTimeout = null;
+                        self._llTime = 0;
+                        self._tryLazyLoad();
+                    }, WAITTING_TIME);
+                }
+
+                el._llTimeout = null;
+                el._llTime    = null;
             }
 
             var elems = elemContainer.find(".bin-lazyload");
