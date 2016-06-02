@@ -1,5 +1,5 @@
-define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/util/disUtil", "bin/common/refreshHeaderView"], 
-function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
+define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/common/refreshHeaderView"], 
+function(Base, iscroll, osUtil, RefreshHeaderView)
 {
 	var Class = {};
 

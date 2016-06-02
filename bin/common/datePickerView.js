@@ -1,5 +1,5 @@
-define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
-function(html, css, Base, osUtil, iscroll, disUtil)
+define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
+function(html, css, Base, osUtil, iscroll)
 {
 	var DEFAULT_OPTIONS = 
 	{

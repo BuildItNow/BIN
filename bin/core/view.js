@@ -211,6 +211,11 @@ function(elemUtil, osUtil)
         return elem ? elemUtil.newFragment(elem) : null;
     }
 
+    Class.$content = function()
+    {
+        return this.$(".bin-page-content");
+    }
+
     View = Base.extend(Class);
 
     var onScroll = function(e)

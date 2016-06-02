@@ -1,5 +1,5 @@
-define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
-function(html, css, Base, osUtil, iscroll, disUtil)
+define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
+function(html, css, Base, osUtil, iscroll)
 {
 	var Class = {};
 
@@ -95,7 +95,7 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 	Class.asyncPosGenHTML = function()
 	{
 		var height = this.$().height();
-		var top = height-disUtil.rem2px(8);
+		var top = height-bin.app.rem2px(8);
 		this.$("#contentBlock").css("top", height+"px");
 		this.$().hide().fadeIn(100).css("top", "0px");
 
@@ -105,8 +105,8 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 			this._scrollers.opt.beg   = 0;
 			
 		var self = this;
-		var ITEM_HEIGHT = disUtil.rem2px(1.5);
-		var WRAPPER_HEIGHT = disUtil.rem2px(4.5);
+		var ITEM_HEIGHT = bin.app.rem2px(1.5);
+		var WRAPPER_HEIGHT = bin.app.rem2px(4.5);
 		_.forEach(this._scrollers, function(scroller, key)
 		{
 			scroller.scrollToElement("#i"+self._picks[key], 0, false, true);

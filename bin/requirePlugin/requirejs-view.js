@@ -1,14 +1,22 @@
-define(["bin/util/pathUtil"], function (pathUtil) 
+define([], function () 
 {
+    var toLeftSlash = function(path)
+    {
+        return path.replace(/\\/g, '/');
+    }
+
     var loadFromNative = function(ViewClass, require, name, success, fail)
     {
         var el = document.createElement('div');
         el.innerHTML = "<div id='"+name+"' class='bin-native-page'></div>";
         el = el.firstElementChild;
             
-        ViewClass.create = function()
+        ViewClass.create = function(options)
         {
-            return new ViewClass({el:el.cloneNode(true)});
+            options = options || {};
+            options.el = el.cloneNode(true);
+
+            return new ViewClass(options);
         }
 
         success(ViewClass);
@@ -25,9 +33,12 @@ define(["bin/util/pathUtil"], function (pathUtil)
         }
         el = el.firstElementChild;
             
-        ViewClass.create = function()
+        ViewClass.create = function(options)
         {
-            return new ViewClass({el:el.cloneNode(true)});
+            options = options || {};
+            options.el = el.cloneNode(true);
+
+            return new ViewClass(options);
         }
 
         var cssName = el.getAttribute('data-css');
@@ -43,7 +54,7 @@ define(["bin/util/pathUtil"], function (pathUtil)
             return ;
         }
 
-        require(["css!"+pathUtil.toLeftSlash(cssName)+".css"], function()
+        require(["css!"+toLeftSlash(cssName)+".css"], function()
         {
             success(ViewClass);
         }, fail);
@@ -84,7 +95,7 @@ define(["bin/util/pathUtil"], function (pathUtil)
     {
         load:function(name, req, onLoad, config)
         {
-            name = pathUtil.toLeftSlash(name);
+            name = toLeftSlash(name);
 
             loadViewClass(req, name, 
                 function(ViewClass)

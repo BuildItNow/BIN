@@ -90,10 +90,8 @@ define(["bin/util/osUtil"], function(osUtil)
 	{
 		var self = this;
 
-		Backbone.on("HIERARCHY_DONE", function()
+		var onDone = function()
 		{
-			Backbone.off("HIERARCHY_DONE");
-			
 			hierarchyDone = true;
 			var cbs = self._cbs;
 			self._cbs = [];
@@ -105,7 +103,7 @@ define(["bin/util/osUtil"], function(osUtil)
 					cbs[i]();
 				}
 			});
-		});
+		}
 
 		if(cb)
 		{
@@ -116,7 +114,7 @@ define(["bin/util/osUtil"], function(osUtil)
 		{
 			_.extend(bin, ret);
 
-			Backbone.trigger("HIERARCHY_DONE");
+			onDone();
 		});
 	}
 

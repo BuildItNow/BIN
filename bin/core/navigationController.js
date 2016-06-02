@@ -1,7 +1,12 @@
 define(
-	["bin/util/osUtil", "bin/util/pathUtil", "bin/core/navigationController-ioEffecters"],
-function(osUtil, pathUtil, effecters)
+	["bin/util/osUtil", "bin/core/navigationController-ioEffecters"],
+function(osUtil, effecters)
 {
+	var toLeftSlash = function(path)
+	{
+		return path.replace(/\\/g, '/');
+	}
+
 	var NavigationRouter = Backbone.Router.extend(
 	{
 		initialize:function(callback)
@@ -27,7 +32,7 @@ function(osUtil, pathUtil, effecters)
 	       return "";
 	    }
 
-	    path = pathUtil.toLeftSlash(path);
+	    path = toLeftSlash(path);
       	var s = path[0] === '/' ? 1 : 0;
       	var e = path.lastIndexOf('.html');
       	if(e>=0)
@@ -68,7 +73,7 @@ function(osUtil, pathUtil, effecters)
 
 	var viewKey = function(path, queryString)
 	{
-		path = pathUtil.toLeftSlash(path);
+		path = toLeftSlash(path);
 		if(path[0] === '/')
       	{
       		path = path.substring(1);

@@ -10,10 +10,14 @@ define(function()
 
 	Class.init = function()
 	{
+		var self = this;
 		if(bin.runtimeConfig.useNetLocal)
 		{
-			this._debugPolicy = new Net.DebugPolicy(this);
-			this._debugPolicy.init();
+			require(["bin/core/netPolicy/netDebugPolicy"], function(NetDebugPolicy)
+			{
+				self._debugPolicy = new NetDebugPolicy(self);
+				self._debugPolicy.init();
+			});
 		}
 		
 		this._callbackPolicy = new Net.CallbackPolicy(this);

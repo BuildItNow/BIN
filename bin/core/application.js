@@ -83,7 +83,7 @@ define([
                     this.$().css("height", this._height+"px");
 			    }		
                 elemRoot.style.fontSize = this._width/640*40+"px";
-				Backbone.trigger("DISPLAY_METRICS_CHANGED");
+				setTimeout(function(){Backbone.trigger("DISPLAY_METRICS_CHANGED");});
 			},
 			width:function()
 			{
@@ -112,8 +112,16 @@ define([
 		{
 			this._window = new Window({elem:$("#window")});
 
-			this._debugManager = new bin.core.DebugManager();
-			this._debugManager.init();
+			if(bin.runtimeConfig.debug)
+	        {
+	        	require(["bin/core/debugManager"], function(DebugManager)
+				{
+					self._debugManager = new DebugManager();
+					self._debugManager.init();
+
+					bin.debugManager = self._debugManager;
+				});
+			}
 
 			this._naviController = new bin.core.NavigationController();
 			this._naviController.init();
@@ -218,6 +226,52 @@ define([
 		Class.onHideKeyboard = function()
 		{
 			console.info("onHideKeyboard");
+		}
+
+		Class.width = function()
+		{
+			return this._window.width();
+		}
+
+		Class.height = function()
+		{
+			return this._window.height();
+		}
+
+		Class.rem = function()
+		{
+			return this._window.rem();
+		}
+
+		Class.rem2px = function(rem)
+	    {
+	    	return rem*this.rem();
+	    }
+
+	    Class.px2rem = function(px)
+	    {
+	    	return px/this.rem();
+	    }
+
+	    Class.clientWidth = function()
+	    {
+	    	return this.width();
+	    }
+		Class.clientHeight = function()
+		{
+			return this.height();
+		}
+		Class.navHeight = function()
+		{
+			return this.rem2px(1.9);
+		}
+		Class.navClientHeight  = function()
+		{
+			return this.clientHeight()-this.navHeight();
+		}
+		Class.navClientWidth = function()
+		{
+			return this.clientWidth();
 		}
 
 		Class.run = function()
