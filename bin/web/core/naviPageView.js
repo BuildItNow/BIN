@@ -23,7 +23,7 @@ define(
 
             Class.onLeft = function()
             {
-                
+                bin.app.back();
             }
             
             Class.onRight = function()

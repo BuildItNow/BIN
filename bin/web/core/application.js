@@ -10,7 +10,7 @@ define([],
 	  		{
 	  			return ret;
 	  		}
-	  		var queryString = window.location.href.substring(i);
+	  		var queryString = window.location.href.substring(i+1);
 	  		i = queryString.lastIndexOf("#");
 	  		if(i>=0)
 	  		{
@@ -163,6 +163,37 @@ define([],
 					bin.globalConfig.onRun();
 				});
 			}
+		}
+
+		Class.goto = function(url, data)
+		{
+			if(data)
+			{
+				var pairs = [];
+				var value = null;
+				for(var key in data)
+            	{
+            		value = data[key];
+            		if(value !== null && value !== undefined)
+            		{
+            			if(typeof value === "object")
+            			{
+            				value = JSON.stringify(value);
+            			}
+            		}
+                	pairs.push(key+"="+value);    
+            	}
+
+            	url = url+(url.indexOf('?')<0 ? "?" : "&")+pairs.join("&");
+            }
+
+            window.location.href = url;
+		}
+
+		Class.back = function(n)
+		{
+
+			window.history.back(n);
 		}
 
 		Class.exit = function()

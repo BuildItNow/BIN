@@ -14,6 +14,7 @@ define(["bin/web/core/application"], function(Application)
 
 		this._hudManager = new bin.core.HUDManager();
 		this._hudManager.init();
+		bin.hudManager = this._hudManager;
 	}
 
 	Class.navHeight = function()
@@ -44,6 +45,12 @@ define(["bin/web/core/application"], function(Application)
 
 	Class.run = function()
 	{
+		var view = bin.queryParams["binView"];
+		if(view)
+		{	
+			$("#binMainView").attr("data-bin-view", view);
+		}
+
 		Application.prototype.run.apply(this);
 	}
 

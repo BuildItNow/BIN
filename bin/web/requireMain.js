@@ -147,7 +147,7 @@ require.config(
 		});
 	};
 
-	require(["bin/3party.js", "bin/bin.js"], function()
+	require(globalConfig.packages || [], function()
 	{
 		console.log("BIN with Package[3party.js, bin.js]!");
 		onPackageLoaded();
