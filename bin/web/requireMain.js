@@ -1,3 +1,6 @@
+// fix size
+document.documentElement.style.fontSize = document.documentElement.clientWidth/640*40+"px";
+
 // bin frame-work namespace
 var bin = {};
 

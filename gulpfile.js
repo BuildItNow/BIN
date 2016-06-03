@@ -384,3 +384,199 @@ gulp.task('build-clean', function(cb)
 
 	cb();
 });
+
+//////////////////////////////////////
+//For web
+
+gulp.task('web-build', ["web-build-dest"], function(cb)
+{
+	rmdirSync(tempPath);
+});
+
+var webpackages = 
+	[	
+		"3party-web-core-build.js", 
+		"3party-web-mobile-build.js", 
+		"3party-web-iscroll-build.js",
+		"3party-web-hammer-build.js",
+		"3party-web-swiper-build.js",
+		"3party-web-md5-build.js",
+
+		"bin-web-core-build.js",
+		"bin-web-mobile-build.js",
+		"bin-web-listView-build.js",
+		"bin-web-refreshView-build.js",
+		"bin-web-swipeView-build.js",
+		"bin-web-tabView-build.js",
+		"bin-web-map-build.js",
+	];
+
+gulp.task('web-build-package-bin', function(cb) 
+{
+	var cmd = process.platform === "win32" ? "r.js.cmd -o " : "r.js -o ";
+	var packages = [].concat(webpackages);
+
+	var doPackage = function(name)
+	{
+		if(!name)
+		{
+			cb();
+			return ;
+		}
+
+		exec(cmd+name, function(error, stdout, stderr) 
+		{
+			if(error)
+			{
+				console.log("package "+name +" fail");
+			}
+			else
+			{
+				console.log("package "+name +" success");
+			}
+
+			doPackage(packages.shift());
+		});
+	}
+
+	doPackage(packages.shift());
+});
+
+gulp.task('web-build-minify-bin', ["web-build-package-bin"], function(cb) 
+{
+	var packages = [].concat(webpackages);
+	var ignores = [];
+	var unlinks = [];
+	for(var i=0, i_sz=packages.length; i<i_sz; ++i)
+	{
+		packages[i] = packages[i].replace("-build", "");
+		ignores.push("!bin/"+packages[i]);
+		unlinks.push("bin/"+packages[i]);
+	}
+
+	var filePaths = ["bin/**", "local-caches.json"];
+
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter(["**/*.js"].concat(ignores), {restore: true});
+
+	return gulp.src(["{"+filePaths.join(",")+"}"])
+			.pipe(htmlFilter)
+			.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+			.pipe(htmlFilter.restore)
+			.pipe(cssFilter)
+			.pipe(cssMinify({compatibility: 'ie8'}))
+			.pipe(cssFilter.restore)
+			.pipe(jsFilter)
+			.pipe(uglify())
+			.pipe(jsFilter.restore)
+			.pipe(gulp.dest(tempPath))
+			.pipe(through.obj({}, 
+			function(chunk, enc, callback)
+			{
+				callback(null, chunk);
+			}, 
+			function(cb)
+			{
+				for(var i=0, i_sz=unlinks.length; i<i_sz; ++i)
+				{
+					fs.unlinkSync(unlinks[i]);
+				}
+
+				cb();
+			}));
+});
+
+gulp.task('web-build-fixref-bin', ['web-build-minify-bin'], function(cb)
+{
+	var indexPath = path.join(tempPath, "index.html");
+	var requireMainPath = path.join(tempPath, "bin/requireMain.js");
+	var binPath = path.join(tempPath, "bin/bin.js");
+	var partyPath = path.join(tempPath, "bin/3party.js");
+	var binMD5 = md5(fs.readFileSync(binPath, 'utf-8'));
+	var partyMD5 = md5(fs.readFileSync(partyPath, 'utf-8'));
+
+	var content = fs.readFileSync(requireMainPath, 'utf-8');
+	content = content.replace("bin.js", "bin-"+binMD5+".js");
+	content = content.replace("3party.js", "3party-"+partyMD5+".js");
+	fs.writeFileSync(requireMainPath, content, 'utf-8');
+
+	var name2md5 = {};
+	var paths = 
+	[
+		getFilePath(path.join(tempPath, "**/require.js")), 
+		getFilePath(path.join(tempPath, "**/bin.css")),
+		requireMainPath,
+		binPath,
+		partyPath
+	];
+
+	var noExtName = null;
+	var extName   = null;
+	var dirName   = null;
+	var fileMD5   = null;
+	for(var i=0,i_sz=paths.length; i<i_sz; ++i)
+	{
+		extName   = path.extname(paths[i]);
+		noExtName = path.basename(paths[i], extName);
+		dirName   = path.dirname(paths[i]);
+
+		name2md5[path.basename(paths[i])] = fileMD5 = md5(fs.readFileSync(paths[i], 'utf-8'));
+		fs.renameSync(paths[i], path.join(dirName, noExtName+"-"+fileMD5+extName));
+	}
+	
+	content = fs.readFileSync(indexPath, 'utf-8');
+	content = content.replace("bin.css", "bin-"+name2md5["bin.css"]+".css");
+	content = content.replace("require.js", "require-"+name2md5["require.js"]+".js");
+	content = content.replace("requireMain.js", "requireMain-"+name2md5["requireMain.js"]+".js");
+	if(config.useWindowLoading)
+	{
+		content = content.replace("__windowLoading", "true");
+	}
+
+	fs.writeFileSync(indexPath, content, 'utf-8');
+
+	cb();
+});
+
+gulp.task('web-build-indexes-minify', ['build-minify'],  function(cb)
+{	
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter("**/*.js", {restore: true});
+
+	// html 
+	return gulp.src(config.webIndexes.files.concat(IGNORES))
+	.pipe(htmlFilter)
+	.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+	.pipe(htmlFilter.restore)
+	.pipe(cssFilter)
+	.pipe(cssMinify({compatibility: 'ie8'}))
+	.pipe(cssFilter.restore)
+	.pipe(jsFilter)
+	.pipe(uglify())
+	.pipe(jsFilter.restore)
+	.pipe(gulp.dest(tempPath));
+});
+
+gulp.task('web-build-dest', ['web-build-fixref-bin', 'build-lscaches'], function(cb)
+{
+	rmdirSync(destPath);
+	return 	gulp.src(path.join(tempPath, "**"))
+			.pipe(gulp.dest(destPath));
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

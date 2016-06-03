@@ -32,6 +32,7 @@
     'view',
     'map',
     'bin/core/application', 
+    'bin/core/spaApplication', 
     'bin/core/main',
     'bin/core/classHierarchyLoader',
     'bin/core/netManager',

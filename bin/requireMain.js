@@ -1,3 +1,6 @@
+// fix size
+document.documentElement.style.fontSize = document.documentElement.clientWidth/640*40+"px";
+
 // bin frame-work namespace
 var bin = {};
 // cordova framw-work namespace
@@ -96,7 +99,7 @@ require.config(
 				{
 					require.config(globalConfig.requireConfig);
 
-					require(['domReady!', 'bin/util/fastclickUtil', 'bin/core/main'], function(domReady, fastclickUtil, main) 
+					require(['domReady!', 'bin/core/main'], function(domReady, main) 
 					{
 						//ios7 issue fix
 						if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) 
@@ -109,8 +112,6 @@ require.config(
 							window.scrollTo(0, 1);
 						}, 0);
 
-						//enable fastclick
-						fastclickUtil.attach(document.body);
 						main();
 
 						if(bin.runtimeConfig.usePRLoader)
