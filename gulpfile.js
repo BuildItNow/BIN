@@ -215,6 +215,11 @@ gulp.task('build-package-bin', function(cb)
 	});
 });
 
+var toLeftSlash = function(path)
+{
+	return path.replace(/\\/g, "/");
+}
+
 gulp.task('build-lscaches', ['build-minify'], function(cb) 
 {
 	var versionConfig = config.lsCaches;
@@ -233,10 +238,7 @@ gulp.task('build-lscaches', ['build-minify'], function(cb)
     }
     var newLocalCaches  = {};
 
-    var toLeftSlash = function(path)
-    {
-    	return path.replace(/\\/g, "/");
-    }
+    
     
     var pathToUrl = function(path)
     {
@@ -507,7 +509,7 @@ gulp.task('web-build-indexes-minify',  function(cb)
 	.pipe(gulp.dest(tempPath));
 });
 
-gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-minify'], function(cb)
+gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-minify', 'build-minify'], function(cb)
 {
 	var packages = [].concat(webpackages);
 	var packagePaths = [];
@@ -519,12 +521,6 @@ gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-mi
 
 	var indexPath = null;
 	var requireMainPath = path.join(tempPath, "bin/web/requireMain.js");
-
-	// var content = fs.readFileSync(requireMainPath, 'utf-8');
-	// content = content.replace("bin.js", "bin-"+binMD5+".js");
-	// content = content.replace("3party.js", "3party-"+partyMD5+".js");
-	// fs.writeFileSync(requireMainPath, content, 'utf-8');
-
 	var name2md5 = {};
 	var paths = 
 	[
@@ -548,6 +544,22 @@ gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-mi
 		fs.renameSync(paths[i], path.join(dirName, noExtName+"-"+fileMD5+extName));
 	}
 
+	var cssMD5FileName = null;
+	if(config.webIndexes.css)
+	{
+		var cssPath = path.join(tempPath, config.webIndexes.css); 
+		var cssContent = fs.readFileSync(cssPath, 'utf-8');
+		var cssMD5  = md5(cssContent);
+
+		noExtName = path.basename(cssPath, ".css");
+		dirName   = path.dirname(cssPath);
+
+		fs.writeFileSync(path.join(dirName, noExtName+"-"+cssMD5+".css"), cssContent);
+
+		cssMD5FileName = config.webIndexes.css;
+		cssMD5FileName = cssMD5FileName.replace(noExtName+".css", noExtName+"-"+cssMD5+".css");
+	}
+
 	var webIndexes = [].concat(config.webIndexes.files); 
 	
 	for(var i=0,i_sz=webIndexes.length; i<i_sz; ++i)
@@ -568,6 +580,11 @@ gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-mi
 		for(var j=0, j_sz=packages.length; j<j_sz; ++j)
 		{
 			content = content.replace(packages[j], packages[j].replace(".js", "")+"-"+name2md5[packages[j]]+".js");
+		}
+
+		if(cssMD5FileName)
+		{
+			content = content.replace(config.webIndexes.css, cssMD5FileName);
 		}
 
 		fs.writeFileSync(indexPath, content, 'utf-8');

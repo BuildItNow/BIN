@@ -390,8 +390,8 @@ function(html, css, Base, osUtil, iscroll)
 		}
 
 		var self = this;
-		var ITEM_HEIGHT = disUtil.rem2px(1.5);
-		var WRAPPER_HEIGHT = disUtil.rem2px(4.5);
+		var ITEM_HEIGHT = bin.app.rem2px(1.5);
+		var WRAPPER_HEIGHT = bin.app.rem2px(4.5);
 		_.forEach(this._scrollers, function(scroller, key)
 		{
 			scroller.scrollToElement("#i"+self._picks[key], 0, false, true);
