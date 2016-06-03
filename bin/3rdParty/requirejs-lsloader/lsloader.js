@@ -60,6 +60,10 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 					}
 				}
 			}
+            else
+            {
+                this.remAllCaches();
+            }
 
 			localCaches = newLocalCaches;
 			this.setCache("local-caches", cachesJSON);
