@@ -8,5 +8,13 @@ module.exports =
     	[
             // directory or files
     	],
+	},
+	webIndexes
+	{
+		css : "css for each index html",
+		files :
+		[
+			// The whole index html pages
+		] 
 	}
 }
