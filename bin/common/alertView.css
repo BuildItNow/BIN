@@ -25,8 +25,8 @@
 {
 	width:100%;
 	height:auto;
-	font-size:1.2rem;
-	line-height: 0.9rem;
+	font-size: 0.9rem;
+    line-height: 1.0rem;
 	text-align: center;
 	word-break:break-all;
 	padding: 0.6rem 0.35rem 0.6rem 0.35rem;

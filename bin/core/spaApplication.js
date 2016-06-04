@@ -100,8 +100,8 @@ define([
 			}
             else
             {
-                this.$().css("left","0rem");
-			    this.$().css("top","0rem");
+                elemWindow.css("left","0rem");
+			    elemWindow.css("top","0rem");
             }
 		}
 
