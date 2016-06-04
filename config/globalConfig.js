@@ -1,10 +1,11 @@
 define(
 {
 	name        : "BIN Framework",		// Name of the application
+	appID       : "com.bin.example",
 	version     : "1.0.0",						// Applicatoin version	
 	pageIOAnim  : "rightIO",					// Default page in/out animation
 	runtime     : "DEBUG",				// runtime config
-	placeholder : "/bin/res/img/placeholder.jpg",					    
+	placeholder : "bin/res/img/placeholder.jpg",					    
 	//left   : 20,
 	//top    : 20,
 	//width  : 320,
