@@ -163,6 +163,30 @@ html
 	overflow-y: hidden;
 }
 
+.bin-scroll-view
+{
+	overflow: hidden;
+}
+
+.bin-scroll-view-content
+{
+	height: auto;
+	overflow-y: hidden;
+}
+
+.bin-scroll-goto-top
+{
+	position:absolute;
+	width:2.0rem;
+	height:2.0rem;
+	bottom:3.5rem;
+	right:0.5rem;
+	background-color:transparent;
+	background-image: url("../img/gototop.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
 .bin-list-view
 {
 	overflow: hidden;

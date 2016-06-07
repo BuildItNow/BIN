@@ -125,7 +125,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 
 				if(self._lazyLoadEnable)
 				{
-					self.lazyLoadContainer(self.$());		
+					self.lazyLoadContainer();		
 				}
 			});
 		}
