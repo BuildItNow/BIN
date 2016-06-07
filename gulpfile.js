@@ -407,6 +407,7 @@ var webpackages =
 		"bin-web-core-build.js",
 		"bin-web-mobile-build.js",
 		"bin-web-listView-build.js",
+		"bin-web-scrollView-build.js",
 		"bin-web-refreshView-build.js",
 		"bin-web-swipeView-build.js",
 		"bin-web-tabView-build.js",

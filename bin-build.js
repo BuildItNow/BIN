@@ -74,6 +74,7 @@
     'text!bin/common/refreshFooterView.html',
 	'bin/common/refreshHeaderView',
 	'text!bin/common/refreshHeaderView.html',
+    'bin/common/scrollView',
 	'bin/common/refreshView',
 	'bin/common/statusView',
 	'text!bin/common/statusView.html',
