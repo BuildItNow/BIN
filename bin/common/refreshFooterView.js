@@ -27,6 +27,8 @@ function(Base, html)
 	{
         this._elemLoading.hide();
         this._elemTips.html("点击加载更多");
+
+        this.$().attr("data-bin-loaded", "");
 	}
 
 

@@ -1,60 +1,34 @@
 define(
     [
-        "bin/core/view",
-        "bin/util/osUtil", 
+        "bin/core/view"
     ],
-    function (Base, osUtil)
+    function (Base)
     {   
-        var loadingQueue = [];
-        var loadingTimer = null;
-
-        var loadTimer = function()
-        {
-            var view = loadingQueue.shift();
-            if(!view)
-            {
-                clearInterval(loadingTimer);
-                loadingTimer = null;
-
-                return ;
-            }
-
-            var img = new Image();
-            img.src = view._image;
-
-            img.onload = function()
-            {
-                view._setImage(img);
-            }
-        }
-
-        var loadLazyImage = function(view)
-        {
-            loadingQueue.push(view);
-
-            if(!loadingTimer)
-            {
-                loadingTimer = setInterval(loadTimer, 100);
-            }
-        }
-
     	var Class = {};
 
     	Class.posGenHTML = function()
     	{
     		Base.prototype.posGenHTML.call(this);
-    		
-    		var placeHolder = this.$().data("placeholder") || bin.globalConfig.placeholder;
-    		this._setPlaceHolder(placeHolder);
-    		
-    		this._image  = this.$().data("image");
-            this._loaded = this.$().data("loaded");
+
+            this._type = this.$().data("bin-type") || "image";
+            this._loaded = this.$().data("bin-loaded") || this.$().data("loaded");
+
+            if(!this._loaded && this._type === "image")
+            {
+                var placeholder = this.$().data("bin-placeholder") || this.$().data("placeholder") || bin.globalConfig.placeholder;
+                this._setPlaceHolder(placeholder);
+            }
     	}
 
     	Class.loaded = function()
     	{
     		return this._loaded;
     	}
+
+        Class.type = function()
+        {
+            return this._type;
+        }
 
     	Class.update = function(vt, vr, vb, vl)
     	{
@@ -79,11 +53,9 @@ define(
     		}
 
             this._loaded = true;
-    		this.$().attr("data-loaded", true);
+    		this.$().attr("data-bin-loaded", true);
     		
-    		loadLazyImage(this);
-
-        	return true;
+    		return true;
 	   	}
 
     	Class._setImage = function(image)
@@ -96,7 +68,7 @@ define(
     		this._setPlaceHolder("");
 
             var elem = $(image);
-            elem.addClass("bin-lazyload-content");
+            elem.css("position", "absolute");
 
             var w = this.$().width();
             var h = this.$().height();
@@ -158,6 +130,13 @@ define(
     			this.$().css("background-image", "");
     		}
     	}
+
+        Class.remove = function()
+        {
+            this._loaded = true;
+
+            this.onRemove();
+        }
 
     	return Base.extend(Class);
     }

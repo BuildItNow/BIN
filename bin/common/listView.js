@@ -91,6 +91,18 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		});
 	}
 
+	Class.onViewLazyLoad = function(view)
+	{
+		if(view.type() === "autoLoadMore")
+		{
+			this._loadMore();
+
+			return ;
+		}
+
+		Base.prototype.onViewLazyLoad.call(this, view);
+	}
+
 	Class.getItem = function(i)
 	{
 		return this._items[i];

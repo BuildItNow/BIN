@@ -104,10 +104,7 @@ function(Base, iscroll, osUtil)
 	{
 		if(this._lazyLoadEnable)
 		{
-			if(this.$()[0]._onScroll)
-			{
-				this.$()[0]._onScroll();
-			}
+			this._llOnScroll();
 		}
 
 		if(this._options.onScroll)

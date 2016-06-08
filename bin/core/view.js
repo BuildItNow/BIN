@@ -96,22 +96,19 @@ function(elemUtil, osUtil)
         }
     }
 
-    Class.tryLazyLoad = function()
-    {
-        if(this.$()[0]._tryLazyLoad)
-        {
-            this.$()[0]._tryLazyLoad();
-        }
-    }
-
-    Class.lazyLoadContainer = function()
-    {
-         View.lazyLoadContainer(this.$());
-    }
-
     Class.remove = function()
     {
         Backbone.View.prototype.remove.call(this);
+
+        if(this._llViews && this._llViews.length > 0)
+        {
+            for(var i=0,i_sz=this._llViews.length; i<i_sz; ++i)
+            {
+                this._llViews[i].remove();
+            }
+
+            delete this._llViews;
+        }
 
         this.onRemove();
     }
@@ -216,134 +213,200 @@ function(elemUtil, osUtil)
         return this.$(".bin-page-content");
     }
 
-    View = Base.extend(Class);
 
-    var onScroll = function(e)
+    // Lazy load feature
+
+    // Lazy load queue for image, avoid load too much image in a short time
+    var loadingQueue = [];
+    var loadingTimer = null;
+
+    var loadTimer = function()
     {
-        e.currentTarget._onScroll();
+        var view = loadingQueue.shift();
+        if(!view)
+        {
+            clearInterval(loadingTimer);
+            loadingTimer = null;
+
+            return ;
+        }
+
+        var img = new Image();
+        img.src = view._image;
+
+        img.onload = function()
+        {
+            view._setImage(img);
+        }
     }
 
-    View.lazyLoadContainer = function(elemContainer)
+    var loadLazyImage = function(view)
     {
+        loadingQueue.push(view);
+
+        if(!loadingTimer)
+        {
+            loadingTimer = setInterval(loadTimer, 100);
+        }
+    }
+
+    var LL_WAITTING_TIME  = 120;
+    var LL_CHECKING_TIME  = LL_WAITTING_TIME*0.8;            
+
+    Class._llOnScroll = function()
+    {
+        if(this._llTimeout)
+        {
+            if((_.now()-this._llTime) < LL_CHECKING_TIME)
+            {
+                return ;
+            }
+
+            clearTimeout(this._llTimeout);
+        }
+
+        var self = this;
+        this._llTime    = _.now();  
+        this._llTimeout = setTimeout(function()
+        {
+            self._llTimeout = null;
+            self._llTime = 0;
+            self._llTryLazyLoad();
+        }, LL_WAITTING_TIME);
+    }
+
+    Class._llUpdate = function()
+    {
+        this._llDirty = false;
+
+        var elemContainer = this.$();
+
+        var os = elemContainer.offset();
+        var vl = os.left;
+        var vt = os.top;
+        var vr = vl+elemContainer.width();
+        var vb = vt+elemContainer.height();
+        var views = this._llViews;
+        var i = 0;
+        var i_sz = views.length;
+        for(; i<i_sz;)
+        {
+            if(views[i].update(vt, vr, vb, vl))
+            {
+                this.onViewLazyLoad(views[i]);
+
+                --i_sz;
+                views[i] = views[i_sz];
+                views.pop();
+            }
+            else
+            {
+                ++i;
+            }
+        }
+
+        if(views.length === 0)
+        {
+            osUtil.nextTick(function()
+            {
+                elemContainer.unbind("scroll", this._llOnScrollListener);
+                this._llOnScrollListener = null;
+            });
+        }
+    }
+
+    Class._llTryLazyLoad = function()
+    {
+        if(this._llViews.length === 0)
+        {
+            return ;
+        }
+
+        if(this._llDirty)
+        {    
+            return ;
+        }
+
+        this._llDirty = true;
+
+        this._llUpdate();
+    }
+
+    Class.tryLazyLoad = function()
+    {
+        this._llTryLazyLoad();
+    }
+
+    Class.lazyLoadContainer = function()
+    {
+        var self = this;
         require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {
-            var el = elemContainer[0];
-            elemContainer.unbind("scroll", onScroll);
-                
-            if(!el._tryLazyLoad)
+            var elemContainer = self.$();
+
+            if(!self._llOnScrollListener)
             {
-                el._llDirty = false;
-                el._llViews = undefined;
-                el._update = function()
+                self._llOnScrollListener = function()
                 {
-                    this._llDirty = false;
-
-                    var os = elemContainer.offset();
-                    var vl = os.left;
-                    var vt = os.top;
-                    var vr = vl+elemContainer.width();
-                    var vb = vt+elemContainer.height();
-                    var views = this._llViews;
-                    var i = 0;
-                    var i_sz = views.length;
-                    for(; i<i_sz;)
-                    {
-                        if(views[i].update(vt, vr, vb, vl))
-                        {
-                            --i_sz;
-                            views[i] = views[i_sz];
-                            views.pop();
-                        }
-                        else
-                        {
-                            ++i;
-                        }
-                    }
-
-                    if(views.length === 0)
-                    {
-                        osUtil.nextTick(function()
-                        {
-                            console.log("Lazy Load Done");
-                            elemContainer.unbind("scroll", onScroll);
-                        });
-                    }
+                    self._llOnScroll();
                 }
-
-                el._tryLazyLoad = function()
-                {
-                    if(this._llViews.length === 0)
-                    {
-                        return ;
-                    }
-
-                    if(this._llDirty)
-                    {    
-                        return ;
-                    }
-
-                    this._llDirty = true;
-
-                    var self = this;
-                    //osUtil.delayCall(function()
-                    //{
-                        self._update();
-                    //}, 500);
-                }
-
-                var WAITTING_TIME  = 120;
-                var CHECKING_TIME  = WAITTING_TIME*0.8;
-                el._onScroll = function()
-                {
-                    if(this._llTimeout)
-                    {
-                        if((_.now()-this._llTime) < CHECKING_TIME)
-                        {
-                            return ;
-                        }
-
-                        clearTimeout(this._llTimeout);
-                    }
-
-                    var self = this;
-                    this._llTime    = _.now();  
-                    this._llTimeout = setTimeout(function()
-                    {
-                        self._llTimeout = null;
-                        self._llTime = 0;
-                        self._tryLazyLoad();
-                    }, WAITTING_TIME);
-                }
-
-                el._llTimeout = null;
-                el._llTime    = null;
             }
+
+            if(self._llTimeout)
+            {
+                clearTimeout(self._llTimeout);
+            }
+
+            if(self._llViews && self._llViews.length > 0)
+            {
+                for(var i=0,i_sz=self._llViews.length; i<i_sz; ++i)
+                {
+                    self._llViews[i].remove();
+                }
+            }
+
+            elemContainer.unbind("scroll", self._llOnScrollListener);
+
+            self._llTimeout = null;
+            self._llTime    = null;
 
             var elems = elemContainer.find(".bin-lazyload");
             var elem  = undefined;
-            var views = el._llViews = [];
+            var views = self._llViews = [];
             for(var i=0,i_sz=elems.length; i<i_sz; ++i)
             {
-                elem = $(elems[i]);
-                if(elem.data("loaded"))
+                elem = elems[i];
+                if(elem.getAttribute("data-loaded") || elem.getAttribute("data-bin-loaded"))
                 {
                     continue;
                 }
-
+            
                 views.push(new LazyLoadView({elem:elem}));
             }
 
             if(views.length > 0)
             {
-                elemContainer.scroll(onScroll);
+                elemContainer.scroll(self._llOnScrollListener);
 
                 osUtil.nextTick(function()
                 {
-                    el._update();
+                    self.tryLazyLoad();
                 });
             }
         });
     }
+
+    Class.onViewLazyLoad = function(view)
+    {
+        if(view.type() === "image")
+        {
+            var image = view.$().data("bin-image") || view.$().data("image");
+            view._image = image;
+            loadLazyImage(view);
+        }
+    }
+
+    View = Base.extend(Class);
 
     return View;
 });

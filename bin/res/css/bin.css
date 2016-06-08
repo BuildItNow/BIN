@@ -204,11 +204,6 @@ html
 	background-repeat: no-repeat;
 }
 
-.bin-lazyload-content
-{
-	position: absolute;
-}
-
 @-webkit-keyframes bin-kf-loading 
 {
     100% 
