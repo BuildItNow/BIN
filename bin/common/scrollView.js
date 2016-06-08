@@ -35,7 +35,7 @@ function(Base, iscroll, osUtil)
 
 	Class.posGenHTML = function()
 	{
-		this.scroller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable ? 3 : 2, bounce:true, bounceTime:200, useTransition:false, mouseWheel:false});
+		this.scroller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable || this._options.gotoTop ? 3 : 2, bounce:true, bounceTime:200, useTransition:false, mouseWheel:false});
 		
 		var self = this;
 		this.scroller.on("scroll", function()
