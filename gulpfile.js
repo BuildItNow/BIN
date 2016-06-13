@@ -390,6 +390,25 @@ gulp.task('build-clean', function(cb)
 //////////////////////////////////////
 //For web
 
+function webIndexFiles()
+{
+	var ret = [];
+	var indexes = config.webIndexes.files;
+	for(var i=0,i_sz=indexes.length; i<i_sz; ++i)
+	{
+		if(typeof indexes[i] === "string")
+		{
+			ret.push(indexes[i]);
+		}
+		else
+		{
+			ret.push(indexes[i].name);
+		}
+	}
+
+	return ret;
+}
+
 gulp.task('web-build', ["web-build-dest"], function(cb)
 {
 	rmdirSync(tempPath);
@@ -497,7 +516,7 @@ gulp.task('web-build-indexes-minify',  function(cb)
 	var jsFilter = filter("**/*.js", {restore: true});
 
 	// html 
-	return gulp.src(config.webIndexes.files.concat(IGNORES))
+	return gulp.src(webIndexFiles().concat(IGNORES))
 	.pipe(htmlFilter)
 	.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
 	.pipe(htmlFilter.restore)
@@ -561,7 +580,7 @@ gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-mi
 		cssMD5FileName = cssMD5FileName.replace(noExtName+".css", noExtName+"-"+cssMD5+".css");
 	}
 
-	var webIndexes = [].concat(config.webIndexes.files); 
+	var webIndexes = [].concat(webIndexFiles()); 
 	
 	for(var i=0,i_sz=webIndexes.length; i<i_sz; ++i)
 	{
@@ -594,7 +613,71 @@ gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-mi
 	cb();
 });
 
-gulp.task('web-build-dest', ['web-build-fixref-bin', 'build-lscaches'], function(cb)
+gulp.task('web-build-inlines-bin', ['web-build-fixref-bin'], function(cb)
+{
+	var webIndexes = config.webIndexes.files;
+	var indexPath  = null;
+	var viewName   = null;
+	var viewPath   = null;
+	var content    = null;
+	var inlineContent = null;
+	var regx = null;
+	var match = null;
+	var attrRegx = /data-bin-[a-zA-Z0-9\-]*=['\"].*['\"]/g;
+	var styleRegx   = /(class|style)=['\"].*['\"]/g;
+	var attrs = null;
+	var styles = null;
+
+
+	for(var i=0,i_sz=webIndexes.length; i<i_sz; ++i)
+	{
+		if(typeof webIndexes[i] === "string")
+		{
+			continue;
+		}
+
+		indexPath = path.join(tempPath, webIndexes[i].name); 
+		content = fs.readFileSync(indexPath, 'utf-8');
+
+		for(var j=0,j_sz=webIndexes[i].inlines.length; j<j_sz; ++j)
+		{
+			viewName = webIndexes[i].inlines[j];
+			viewPath = path.join(tempPath, viewName); 
+
+			regx = new RegExp("<div[^<>]*data-bin-view=['\"]"+viewName+"['\"][^<>]*(/>|></div>)");
+			match = content.match(regx);
+			match = match ? match[0] : null;
+			if(!match)
+			{
+				continue;
+			}
+
+			console.log("Inline "+viewName+" in "+webIndexes[i].name);
+
+			inlineContent = fs.readFileSync(viewPath+".html", 'utf-8');
+
+			attrs = match.match(attrRegx);
+			attrs.push('data-bin-root="true"');
+
+			inlineContent = inlineContent.replace("<div", "<div "+attrs.join(" "));
+
+			if(match.indexOf("class=") > 0 || match.indexOf("style=") > 0)
+			{
+				styles = match.match(styleRegx);
+				inlineContent = "<div "+styles.join(" ")+">"+inlineContent+"</div>";
+			}
+			
+			content = content.replace(match, inlineContent);
+			
+		}
+
+		fs.writeFileSync(indexPath, content, 'utf-8');
+	}
+
+	cb();
+});
+
+gulp.task('web-build-dest', ['web-build-inlines-bin', 'build-lscaches'], function(cb)
 {
 	rmdirSync(destPath);
 	return 	gulp.src(path.join(tempPath, "**"))
