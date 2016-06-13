@@ -45,7 +45,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
+		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -67,6 +67,7 @@ require.config(
 			});
 			
 			bin.globalConfig  = globalConfig;
+			bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
 			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
 			require.config(globalConfig.requireConfig);
 			bin.classConfig = globalConfig.classConfig;
@@ -108,7 +109,8 @@ require.config(
 					{
 						loader:function(url, onLoad, onError)
 						{
-							return lsLoader.load(url, onLoad, onError);							}
+							return lsLoader.load(url, onLoad, onError);							
+						}
 					});
 
 					bin.lsLoader = lsLoader;
@@ -145,13 +147,17 @@ require.config(
 		});
 	};
 
-	require(globalConfig.packages || [], function()
+	var packages = ["config/globalConfig"];
+	if(typeof pageConfig !== "undefined")
 	{
-		console.log("BIN with Package[3party.js, bin.js]!");
+		packages = packages.concat(pageConfig.packages);
+	}
+
+	require(packages, function()
+	{
 		onPackageLoaded();
 	}, function()
 	{
-		console.log("BIN without Package!");
 		onPackageLoaded();
 	});
 })();

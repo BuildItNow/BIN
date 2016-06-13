@@ -52,11 +52,11 @@ define(["bin/core/application"],
 			this._viewManager.init();
 			bin.viewManager = this._viewManager;
 
-			if(bin.globalConfig.onInit)
+			if(bin.globalConfig.pageConfig.onInit)
 			{
 				setTimeout(function()
 				{
-					bin.globalConfig.onInit();
+					bin.globalConfig.pageConfig.onInit();
 				});
 			}
 		}
@@ -80,11 +80,11 @@ define(["bin/core/application"],
 				}
 			}
 
-			if(bin.globalConfig.onRun)
+			if(bin.globalConfig.pageConfig.onRun)
 			{
 				setTimeout(function()
 				{
-					bin.globalConfig.onRun();
+					bin.globalConfig.pageConfig.onRun();
 				});
 			}
 		}

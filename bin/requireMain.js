@@ -63,7 +63,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
+		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -85,105 +85,101 @@ require.config(
 				Class.prototype.__$class = Class;
 			});
 
-			
-			require(["config/globalConfig"], function(globalConfig)
+			bin.globalConfig  = globalConfig;
+			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
+			bin.classConfig   = globalConfig.classConfig;
+
+			var start = function()
 			{
-				bin.globalConfig  = globalConfig;
-				bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-				bin.classConfig   = globalConfig.classConfig;
+				require.config(globalConfig.requireConfig);
 
-				var start = function()
+				require(['domReady!', 'bin/core/main'], function(domReady, main) 
 				{
-					require.config(globalConfig.requireConfig);
-
-					require(['domReady!', 'bin/core/main'], function(domReady, main) 
+					//ios7 issue fix
+					if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) 
 					{
-						//ios7 issue fix
-						if (navigator.userAgent.match(/iPad;.*CPU.*OS 7_\d/i)) 
-						{
-							$('html').addClass('ipad ios7');
-						}
-						//iOS scroll to top
-						setTimeout(function() 
-						{
-							window.scrollTo(0, 1);
-						}, 0);
-
-						main();
-
-						if(bin.runtimeConfig.usePRLoader)
-						{
-							require(["prloader"], function(PRLoader)
-							{
-								var prLoader = new PRLoader();
-								prLoader.init();
-							});
-						}
-					});
-				}
-
-				if(bin.runtimeConfig.useLSCache)
-				{
-					var lsLoader   = null;
-					var cachesJSON = null;
-					var handler = function()
-					{
-						if(!lsLoader || !cachesJSON)
-						{
-							return ;
-						}
-
-						lsLoader.init(cachesJSON);
-						require.config(
-						{
-							loader:function(url, onLoad, onError)
-							{
-								return lsLoader.load(url, onLoad, onError);
-							}
-						});
-
-						bin.lsLoader = lsLoader;
-
-						start();
+						$('html').addClass('ipad ios7');
 					}
-					$.ajax(
+					//iOS scroll to top
+					setTimeout(function() 
 					{
-						url:"./local-caches.json",
-						type:"get",
-						dataType:"text",
-						success:function(data)
-						{
-							cachesJSON = data;
+						window.scrollTo(0, 1);
+					}, 0);
 
-							handler();
-						},
-						error:function()
+					main();
+
+					if(bin.runtimeConfig.usePRLoader)
+					{
+						require(["prloader"], function(PRLoader)
 						{
-							start();
+							var prLoader = new PRLoader();
+							prLoader.init();
+						});
+					}
+				});
+			}
+
+			if(bin.runtimeConfig.useLSCache)
+			{
+				var lsLoader   = null;
+				var cachesJSON = null;
+				var handler = function()
+				{
+					if(!lsLoader || !cachesJSON)
+					{
+						return ;
+					}
+
+					lsLoader.init(cachesJSON);
+					require.config(
+					{
+						loader:function(url, onLoad, onError)
+						{
+							return lsLoader.load(url, onLoad, onError);
 						}
 					});
-					require(["lsloader"], function(LSLoader)
-					{	
-						lsLoader = new LSLoader();
 
-						handler();
-					});
-				}
-				else
-				{
+					bin.lsLoader = lsLoader;
+
 					start();
 				}
-			});
+				$.ajax(
+				{
+					url:"./local-caches.json",
+					type:"get",
+					dataType:"text",
+					success:function(data)
+					{
+						cachesJSON = data;
+
+						handler();
+					},
+					error:function()
+					{
+						start();
+					}
+				});
+				require(["lsloader"], function(LSLoader)
+				{	
+					lsLoader = new LSLoader();
+
+					handler();
+				});
+			}
+			else
+			{
+				start();
+			}
 		});
 	};
 
-	require(["bin/3party.js", "bin/bin.js"], function()
+	var packages = ["bin/3party.js", "bin/bin.js", "config/globalConfig"];
+
+	require(packages, function()
 	{
-		console.log("BIN with Package[3party.js, bin.js]!");
 		onPackageLoaded();
 	}, function()
 	{
-		console.log("BIN without Package!");
 		onPackageLoaded();
 	});
 })();
