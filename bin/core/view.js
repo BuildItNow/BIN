@@ -246,11 +246,11 @@ function(elemUtil, osUtil)
 
         if(!loadingTimer)
         {
-            loadingTimer = setInterval(loadTimer, 100);
+            loadingTimer = setInterval(loadTimer, 200);
         }
     }
 
-    var LL_WAITTING_TIME  = 120;
+    var LL_WAITTING_TIME  = 200;
     var LL_CHECKING_TIME  = LL_WAITTING_TIME*0.8;            
 
     Class._llOnScroll = function()
@@ -265,6 +265,7 @@ function(elemUtil, osUtil)
             clearTimeout(this._llTimeout);
         }
 
+
         var self = this;
         this._llTime    = _.now();  
         this._llTimeout = setTimeout(function()
@@ -272,6 +273,7 @@ function(elemUtil, osUtil)
             self._llTimeout = null;
             self._llTime = 0;
             self._llTryLazyLoad();
+
         }, LL_WAITTING_TIME);
     }
 
