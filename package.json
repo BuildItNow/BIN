@@ -23,6 +23,7 @@
     "gulp-filter": "*",
     "gulp-clean-css": "*",
     "gulp-htmlmin": "*",
+    "gulp-jsdoc3" : "*",
     "through2": "~0.6.1"
   }
 }

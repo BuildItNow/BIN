@@ -684,6 +684,25 @@ gulp.task('web-build-dest', ['web-build-inlines-bin', 'build-lscaches'], functio
 			.pipe(gulp.dest(destPath));
 });
 
+/////////////////////////////////////////////////////////////////////////
+// Doc Generation
+
+var jsdoc = require('gulp-jsdoc3');
+var docPath = "./docs";
+gulp.task('bin-doc', function(cb)
+{
+	rmdirSync(docPath);
+    gulp.src(['./bin/**/*.js', '!./bin/3rdParty/**'], {read:false})
+    .pipe(jsdoc(
+    	{
+    		"opts": 
+    		{
+    			"destination": docPath
+  			}
+  		})
+    );
+});
+
 
 
 

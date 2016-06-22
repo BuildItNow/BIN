@@ -3,6 +3,11 @@ define([
 	  ], 
 	function(View, osUtil, fastclickUtil, Application)
 	{
+		/**
+		 * The SPA(Single-Page Application) base applicaiton class. 
+		 * @class SPAApplication
+		 * @see Application
+		 */
 		var Class = {};
 
 		Class.init = function()

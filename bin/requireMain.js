@@ -1,20 +1,52 @@
-// bin frame-work namespace
+/**
+ * The root namespace of BIN framework.
+ * @namespace 
+ */
 var bin = {};
-// cordova framw-work namespace
+
+/**
+ * The root namespace of cordova framework.
+ * NB: Only available for hybrid app. 
+ * @namespace 
+ * @see {@link http://cordova.apache.org/|Cordova}
+ */
 var cordova = typeof cordova === "undefined" ? undefined : cordova;
 
 // Setup platform info
+/**
+ * Platform information, you can use it to check what system your code is running on, android, ios or browser.
+ * NB: Only available for SPA.
+ * @memberof bin
+ * @namespace
+ */
 bin.platform = {};
 if(cordova)
 {
+	/**
+	 * Platform type, available values are "android","ios","browser"
+	 * @memberof bin.platform
+	 */
 	bin.platform.type = cordova.platformId;
 
+	/**
+	 * Quick type checking for android, equivalent to bin.platform.type === "android"
+	 * @memberof bin.platform
+	 */
 	bin.platform.android = bin.platform.type === "android";
+
+	/**
+	 * Quick type checking for ios, equivalent to bin.platform.type === "ios"
+	 * @memberof bin.platform
+	 */
 	bin.platform.ios     = bin.platform.type === "ios";
 }
 else
 {
 	bin.platform.type = "browser";
+	/**
+	 * Quick type checking for browser, equivalent to bin.platform.type === "browser"
+	 * @memberof bin.platform
+	 */
 	bin.platform.browser = true;
 }
 
