@@ -12,6 +12,9 @@ function(html, css, Base, osUtil, iscroll)
 		this._containers = {};
 		Base.prototype.constructor.call(this, options);
 	}
+	Class.events = {
+		'click #options li':'selectOpt'
+	}
 
 	Class.posGenHTML = function()
 	{
@@ -35,6 +38,29 @@ function(html, css, Base, osUtil, iscroll)
 		{
 			container.find("#i"+self._picks[key]).addClass("SelectView-picked");
 		});
+	}
+	Class.selectOpt = function(event)
+	{
+		var self = this;
+		value = event.currentTarget.getAttribute("data-value");
+		if(value === undefined || value === null)
+		{
+			return ;
+		}
+
+		var index = this.valueToindex(value);
+
+		if(index === this._picks.opt)
+		{
+			return ;
+		}
+
+		var ITEM_HEIGHT = bin.app.rem2px(1.5);
+		var WRAPPER_HEIGHT = bin.app.rem2px(4.5);
+
+		this._scrollers.opt.scrollTo(0, -(index+1+0.5)*ITEM_HEIGHT+WRAPPER_HEIGHT*0.5, 100*Math.abs(index-this._picks.opt));
+		
+
 	}
 	Class.valueToindex=function(value)
 	{
