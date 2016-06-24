@@ -10,8 +10,15 @@
         <meta name="format-detection" content="telephone=no"/>
         <meta http-equiv="X-Frame-Options" content="ALLOW-FROM">
         <meta http-equiv="pragma" content="no-cache"/>
+
+        <script>
+            document.documentElement.style.fontSize = document.documentElement.clientWidth/640*40+"px";
+        </script>
+
         <link href="./bin/res/css/bin.css" rel="stylesheet"/>
         <script type="text/javascript" src="./bin/3rdParty/requirejs/require.js" data-main="./bin/requireMain.js"></script>
+
+        <!-- comment cordova for web app(not hybrid)-->
         <script type="text/javascript" src="./cordova.js"></script>
     </head>
     <body>
@@ -33,7 +40,7 @@
                     var mt = -0.75*r;
                     var ml = mt;
                     var style = "width:"+w+"px;height:"+h+"px;margin-top:"+mt+"px;margin-left:"+ml+"px;";
-                    document.write('<div id="windowLoading" class="bin-window-loading bin-loading-image bin-loading-active" style="'+style+'"></div>'); 
+                    document.write('<div id="windowLoading" class="bin-window-loading bin-loading-dark-image bin-loading-active" style="'+style+'"></div>'); 
                 })();
             }           
         </script>   

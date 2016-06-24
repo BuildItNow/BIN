@@ -45,8 +45,11 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	{
 		var self = this;
 		options.onRefresh = function(){ self._reload()};
-		options.autoRefresh = "animation";
-
+		if(options.autoRefresh === undefined)
+		{
+			options.autoRefresh = "animation";
+		}
+		
 		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
 		this._dataProvider  = options.dataProvider;
 
@@ -86,6 +89,18 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		{
 			self._touchTarget = e.target;
 		});
+	}
+
+	Class.onViewLazyLoad = function(view)
+	{
+		if(view.type() === "autoLoadMore")
+		{
+			this._loadMore();
+
+			return ;
+		}
+
+		Base.prototype.onViewLazyLoad.call(this, view);
 	}
 
 	Class.getItem = function(i)

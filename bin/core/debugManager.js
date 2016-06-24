@@ -36,6 +36,18 @@ define(
                 }
             });
 
+            this._debugHUD.find("#debugConsole").on("click", function()
+            {
+                if(bin.naviController.getView('bin/debug/debugConsoleView'))
+                {
+                    bin.naviController.pop();
+                }
+                else
+                {
+                    bin.naviController.push("bin/debug/debugConsoleView", self._elemInfos);
+                }
+            });
+
             this._debugHUD.find("#deviceBack").on("click", function()
             {
                 bin.app.onDeviceBack();

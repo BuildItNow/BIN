@@ -8,13 +8,20 @@ define(
 
 		Class.constructor = function(options)
 		{
+			this._style = options ? options.style : "dark";
+
 			Base.prototype.constructor.call(this, options);
 
 			this._lc = 0;
 			this._mc  = 0;
 			this._lv = 1;
-
+			
 			this.reset();
+		}
+
+		Class.posGenHTML = function()
+		{
+			this.$("#indicator").addClass(this._style === "dark" ? "bin-loading-dark-image" : "bin-loading-light-image");
 		}
 
 		Class.start = function(options)

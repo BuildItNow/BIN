@@ -101,7 +101,10 @@ function(lsUtil, ssUtil)
 		return ret === null || ret === undefined ? def : ret;
 	}
 	
-	_.extend(Class, Backbone.Events);
+	if(typeof Backbone !== "undefined")
+	{
+		_.extend(Class, Backbone.Events);
+	}
 
 	return DataCenter;
 }

@@ -1,5 +1,5 @@
-define(["bin/core/view", "text!bin/common/refreshFooterView.html", "bin/util/disUtil"], 
-function(Base, html, disUtil)
+define(["bin/core/view", "text!bin/common/refreshFooterView.html"], 
+function(Base, html)
 {
 	var Class = 
 	{
@@ -8,7 +8,7 @@ function(Base, html, disUtil)
 
 	Class.height = function()
 	{
-		return disUtil.rem2px(2);
+		return bin.app.rem2px(2);
 	}
 
     Class.posGenHTML = function()
@@ -27,6 +27,8 @@ function(Base, html, disUtil)
 	{
         this._elemLoading.hide();
         this._elemTips.html("点击加载更多");
+
+        this.$().attr("data-bin-loaded", "");
 	}
 
 

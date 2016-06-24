@@ -215,6 +215,11 @@ gulp.task('build-package-bin', function(cb)
 	});
 });
 
+var toLeftSlash = function(path)
+{
+	return path.replace(/\\/g, "/");
+}
+
 gulp.task('build-lscaches', ['build-minify'], function(cb) 
 {
 	var versionConfig = config.lsCaches;
@@ -233,10 +238,7 @@ gulp.task('build-lscaches', ['build-minify'], function(cb)
     }
     var newLocalCaches  = {};
 
-    var toLeftSlash = function(path)
-    {
-    	return path.replace(/\\/g, "/");
-    }
+    
     
     var pathToUrl = function(path)
     {
@@ -384,3 +386,334 @@ gulp.task('build-clean', function(cb)
 
 	cb();
 });
+
+//////////////////////////////////////
+//For web
+
+function webIndexFiles()
+{
+	var ret = [];
+	var indexes = config.webIndexes.files;
+	for(var i=0,i_sz=indexes.length; i<i_sz; ++i)
+	{
+		if(typeof indexes[i] === "string")
+		{
+			ret.push(indexes[i]);
+		}
+		else
+		{
+			ret.push(indexes[i].name);
+		}
+	}
+
+	return ret;
+}
+
+gulp.task('web-build', ["web-build-dest"], function(cb)
+{
+	rmdirSync(tempPath);
+});
+
+var webpackages = 
+	[	
+		"3party-web-core-build.js", 
+		"3party-web-mobile-build.js", 
+		"3party-web-iscroll-build.js",
+		"3party-web-hammer-build.js",
+		"3party-web-swiper-build.js",
+		"3party-web-md5-build.js",
+
+		"bin-web-core-build.js",
+		"bin-web-mobile-build.js",
+		"bin-web-listView-build.js",
+		"bin-web-scrollView-build.js",
+		"bin-web-refreshView-build.js",
+		"bin-web-swipeView-build.js",
+		"bin-web-tabView-build.js",
+		"bin-web-map-build.js",
+	];
+
+gulp.task('web-build-package-bin', function(cb) 
+{
+	var cmd = process.platform === "win32" ? "r.js.cmd -o " : "r.js -o ";
+	var packages = [].concat(webpackages);
+
+	var doPackage = function(name)
+	{
+		if(!name)
+		{
+			cb();
+			return ;
+		}
+
+		exec(cmd+name, function(error, stdout, stderr) 
+		{
+			if(error)
+			{
+				console.log("package "+name +" fail");
+			}
+			else
+			{
+				console.log("package "+name +" success");
+			}
+
+			doPackage(packages.shift());
+		});
+	}
+
+	doPackage(packages.shift());
+});
+
+gulp.task('web-build-minify-bin', ["web-build-package-bin"], function(cb) 
+{
+	var packages = [].concat(webpackages);
+	var ignores = [];
+	var unlinks = [];
+	for(var i=0, i_sz=packages.length; i<i_sz; ++i)
+	{
+		packages[i] = packages[i].replace("-build", "");
+		ignores.push("!bin/"+packages[i]);
+		unlinks.push("bin/"+packages[i]);
+	}
+
+	var filePaths = ["bin/**", "local-caches.json"];
+
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter(["**/*.js"].concat(ignores), {restore: true});
+
+	return gulp.src(["{"+filePaths.join(",")+"}"])
+			.pipe(htmlFilter)
+			.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+			.pipe(htmlFilter.restore)
+			.pipe(cssFilter)
+			.pipe(cssMinify({compatibility: 'ie8'}))
+			.pipe(cssFilter.restore)
+			.pipe(jsFilter)
+			.pipe(uglify())
+			.pipe(jsFilter.restore)
+			.pipe(gulp.dest(tempPath))
+			.pipe(through.obj({}, 
+			function(chunk, enc, callback)
+			{
+				callback(null, chunk);
+			}, 
+			function(cb)
+			{
+				for(var i=0, i_sz=unlinks.length; i<i_sz; ++i)
+				{
+					fs.unlinkSync(unlinks[i]);
+				}
+
+				cb();
+			}));
+});
+
+gulp.task('web-build-indexes-minify',  function(cb)
+{	
+	var htmlFilter = filter("**/*.html", {restore: true});
+	var cssFilter = filter("**/*.css", {restore: true});
+	var jsFilter = filter("**/*.js", {restore: true});
+
+	// html 
+	return gulp.src(webIndexFiles().concat(IGNORES))
+	.pipe(htmlFilter)
+	.pipe(htmlMinify({collapseWhitespace: true, minifyCSS:true, minifyJS:true}))
+	.pipe(htmlFilter.restore)
+	.pipe(cssFilter)
+	.pipe(cssMinify({compatibility: 'ie8'}))
+	.pipe(cssFilter.restore)
+	.pipe(jsFilter)
+	.pipe(uglify())
+	.pipe(jsFilter.restore)
+	.pipe(gulp.dest(tempPath));
+});
+
+gulp.task('web-build-fixref-bin', ['web-build-minify-bin', 'web-build-indexes-minify', 'build-minify'], function(cb)
+{
+	var packages = [].concat(webpackages);
+	var packagePaths = [];
+	for(var i=0, i_sz=packages.length; i<i_sz; ++i)
+	{
+		packages[i] = packages[i].replace("-build", "");
+		packagePaths.push(path.join(tempPath, "bin/"+packages[i]));
+	}
+
+	var indexPath = null;
+	var requireMainPath = path.join(tempPath, "bin/web/requireMain.js");
+	var name2md5 = {};
+	var paths = 
+	[
+		getFilePath(path.join(tempPath, "**/require.js")), 
+		getFilePath(path.join(tempPath, "**/bin.css")),
+		requireMainPath,
+	];
+	paths = paths.concat(packagePaths);
+
+	var noExtName = null;
+	var extName   = null;
+	var dirName   = null;
+	var fileMD5   = null;
+	for(var i=0,i_sz=paths.length; i<i_sz; ++i)
+	{
+		extName   = path.extname(paths[i]);
+		noExtName = path.basename(paths[i], extName);
+		dirName   = path.dirname(paths[i]);
+
+		name2md5[path.basename(paths[i])] = fileMD5 = md5(fs.readFileSync(paths[i], 'utf-8'));
+		fs.renameSync(paths[i], path.join(dirName, noExtName+"-"+fileMD5+extName));
+	}
+
+	var cssMD5FileName = null;
+	if(config.webIndexes.css)
+	{
+		var cssPath = path.join(tempPath, config.webIndexes.css); 
+		var cssContent = fs.readFileSync(cssPath, 'utf-8');
+		var cssMD5  = md5(cssContent);
+
+		noExtName = path.basename(cssPath, ".css");
+		dirName   = path.dirname(cssPath);
+
+		fs.writeFileSync(path.join(dirName, noExtName+"-"+cssMD5+".css"), cssContent);
+
+		cssMD5FileName = config.webIndexes.css;
+		cssMD5FileName = cssMD5FileName.replace(noExtName+".css", noExtName+"-"+cssMD5+".css");
+	}
+
+	var webIndexes = [].concat(webIndexFiles()); 
+	
+	for(var i=0,i_sz=webIndexes.length; i<i_sz; ++i)
+	{
+		indexPath = path.join(tempPath, webIndexes[i]); 
+
+		console.log(indexPath);
+
+		content = fs.readFileSync(indexPath, 'utf-8');
+		content = content.replace("bin.css", "bin-"+name2md5["bin.css"]+".css");
+		content = content.replace("require.js", "require-"+name2md5["require.js"]+".js");
+		content = content.replace("requireMain.js", "requireMain-"+name2md5["requireMain.js"]+".js");
+		if(config.useWindowLoading)
+		{
+			content = content.replace("__windowLoading", "true");
+		}
+
+		for(var j=0, j_sz=packages.length; j<j_sz; ++j)
+		{
+			content = content.replace(packages[j], packages[j].replace(".js", "")+"-"+name2md5[packages[j]]+".js");
+		}
+
+		if(cssMD5FileName)
+		{
+			content = content.replace(config.webIndexes.css, cssMD5FileName);
+		}
+
+		fs.writeFileSync(indexPath, content, 'utf-8');
+	}
+
+	cb();
+});
+
+gulp.task('web-build-inlines-bin', ['web-build-fixref-bin'], function(cb)
+{
+	var webIndexes = config.webIndexes.files;
+	var indexPath  = null;
+	var viewName   = null;
+	var viewPath   = null;
+	var content    = null;
+	var inlineContent = null;
+	var regx = null;
+	var match = null;
+	var attrRegx = /data-bin-[a-zA-Z0-9\-]*=['\"].*['\"]/g;
+	var styleRegx   = /(class|style)=['\"].*['\"]/g;
+	var attrs = null;
+	var styles = null;
+
+
+	for(var i=0,i_sz=webIndexes.length; i<i_sz; ++i)
+	{
+		if(typeof webIndexes[i] === "string")
+		{
+			continue;
+		}
+
+		indexPath = path.join(tempPath, webIndexes[i].name); 
+		content = fs.readFileSync(indexPath, 'utf-8');
+
+		for(var j=0,j_sz=webIndexes[i].inlines.length; j<j_sz; ++j)
+		{
+			viewName = webIndexes[i].inlines[j];
+			viewPath = path.join(tempPath, viewName); 
+
+			regx = new RegExp("<div[^<>]*data-bin-view=['\"]"+viewName+"['\"][^<>]*(/>|></div>)");
+			match = content.match(regx);
+			match = match ? match[0] : null;
+			if(!match)
+			{
+				continue;
+			}
+
+			console.log("Inline "+viewName+" in "+webIndexes[i].name);
+
+			inlineContent = fs.readFileSync(viewPath+".html", 'utf-8');
+
+			attrs = match.match(attrRegx);
+			attrs.push('data-bin-root="true"');
+
+			inlineContent = inlineContent.replace("<div", "<div "+attrs.join(" "));
+
+			if(match.indexOf("class=") > 0 || match.indexOf("style=") > 0)
+			{
+				styles = match.match(styleRegx);
+				inlineContent = "<div "+styles.join(" ")+">"+inlineContent+"</div>";
+			}
+			
+			content = content.replace(match, inlineContent);
+			
+		}
+
+		fs.writeFileSync(indexPath, content, 'utf-8');
+	}
+
+	cb();
+});
+
+gulp.task('web-build-dest', ['web-build-inlines-bin', 'build-lscaches'], function(cb)
+{
+	rmdirSync(destPath);
+	return 	gulp.src(path.join(tempPath, "**"))
+			.pipe(gulp.dest(destPath));
+});
+
+/////////////////////////////////////////////////////////////////////////
+// Doc Generation
+
+var jsdoc = require('gulp-jsdoc3');
+var docPath = "./docs";
+gulp.task('bin-doc', function(cb)
+{
+	rmdirSync(docPath);
+    gulp.src(['./bin/**/*.js', '!./bin/3rdParty/**'], {read:false})
+    .pipe(jsdoc(
+    	{
+    		"opts": 
+    		{
+    			"destination": docPath
+  			}
+  		})
+    );
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

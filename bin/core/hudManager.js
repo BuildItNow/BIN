@@ -12,11 +12,13 @@
 		{
 			var root = $("#HUDContainer");
 
+			this._hudViews = {};
+
 			// Add net
 			var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
 			root.append(elemIndicatorContainer);
 
-			this._indicator = new IndicatorView();
+			this._indicator = new IndicatorView({style:bin.globalConfig.indicator || "dark"});
 			elemIndicatorContainer.append(this._indicator.$());
 
 			// Add alert
@@ -46,7 +48,8 @@
 			var v = new StatusView({text:message});
 			this._elemStatusContainer.append(v.$()); 
 		}
-		Class.select = function(options){
+		Class.select = function(options)
+		{
 			var v = new SelectView(options);
 			v.$().css("z-index", this._alertZIndex);
 			++this._alertZIndex;
@@ -99,16 +102,41 @@
 			this._elemAlertContainer.append(v.$());
 		} 
 
-		Class.onDeviceBack = function()
+		Class.onCreateHUDView = function(view)
 		{
-			if(this._elemAlertContainer[0].children.length >  0)
-			{ 
-				return true;
+			var hudid = view.hudid;
+			if(this._hudViews[hudid])
+			{
+				return ;
 			}
 
+			this._hudViews[hudid] = view;
+		}
+
+		Class.onRemoveHUDView = function(view)
+		{
+			this._hudViews[view.hudid] = null;
+			delete this._hudViews[view.hudid];
+		}
+
+		Class.onDeviceBack = function()
+		{
 			if(this._indicator.running())
 			{
 				this._indicator.reset();
+
+				return true;
+			}
+
+			if(this._elemAlertContainer[0].children.length >  0)
+			{ 
+				var elem  = this._elemAlertContainer[0].children[this._elemAlertContainer[0].children.length-1];
+				var hudid = elem.getAttribute("data-hudid");
+				var view  = this._hudViews[hudid];
+				if(view)
+				{
+					view.remove();
+				}
 
 				return true;
 			}

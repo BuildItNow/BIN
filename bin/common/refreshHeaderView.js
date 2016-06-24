@@ -1,5 +1,5 @@
-define(["text!bin/common/refreshHeaderView.html", "bin/core/view", "bin/util/disUtil"], 
-function(html, Base, disUtil)
+define(["text!bin/common/refreshHeaderView.html", "bin/core/view"], 
+function(html, Base)
 {
 	var Class = 
 	{
@@ -8,7 +8,7 @@ function(html, Base, disUtil)
 
 	Class.height = function()
 	{
-		return disUtil.rem2px(2);
+		return bin.app.rem2px(2);
 	}
 
     Class.posGenHTML = function()
@@ -22,7 +22,7 @@ function(html, Base, disUtil)
 	Class.asyncPosGenHTML = function()
 	{
 		this._height    = this.height();
-		this._threshold = disUtil.rem2px(2.5);
+		this._threshold = bin.app.rem2px(2.5);
 	}
 
 	Class.onScrollTo = function(y)

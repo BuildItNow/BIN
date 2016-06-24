@@ -1,6 +1,6 @@
 define(["bin/3rdParty/require-css/normalize"], function(normalize)
 {		
-	var KEY_EXP =  /^r_[0-9]+$/;
+	var KEY_EXP =  "";
 
 	var LSLoader = function()
 	{
@@ -19,6 +19,8 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 		this.HOST = this.HREF && this.HREF.hostname;
 		this.PORT = this.HREF && (this.HREF.port || undefined);
 		this.BASE_URL = require.toUrl("./");
+        this.APP_ID = bin.globalConfig.appID || "";
+        KEY_EXP = new RegExp("^"+this.APP_ID.replace(".", "\\.")+"-[0-9]+$");
 
     	/*var c;
       	var crcTable = [];
@@ -60,6 +62,10 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 					}
 				}
 			}
+            else
+            {
+                this.remAllCaches();
+            }
 
 			localCaches = newLocalCaches;
 			this.setCache("local-caches", cachesJSON);
@@ -200,7 +206,7 @@ define(["bin/3rdParty/require-css/normalize"], function(normalize)
 
     pro.url2key = function(url)
     {
-    	return "r_"+this.crc32(url);
+    	return this.APP_ID+"-"+this.crc32(this.APP_ID+url);
     }
 
     // You'd better don't use the function

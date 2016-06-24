@@ -1,27 +1,34 @@
 define(
     [
-        "bin/core/view",
-        "bin/util/osUtil", 
+        "bin/core/view"
     ],
-    function (Base, osUtil)
-    {
+    function (Base)
+    {   
     	var Class = {};
 
     	Class.posGenHTML = function()
     	{
     		Base.prototype.posGenHTML.call(this);
-    		
-    		var placeHolder = this.$().data("placeholder") || bin.globalConfig.placeholder;
-    		this._setPlaceHolder(placeHolder);
-    		
-    		this._image  = this.$().data("image");
-            this._loaded = this.$().data("loaded");
+
+            this._type = this.$().data("bin-type") || "image";
+            this._loaded = this.$().data("bin-loaded") || this.$().data("loaded");
+
+            if(!this._loaded && this._type === "image")
+            {
+                var placeholder = this.$().data("bin-placeholder") || this.$().data("placeholder") || bin.globalConfig.placeholder;
+                this._setPlaceHolder(placeholder);
+            }
     	}
 
     	Class.loaded = function()
     	{
     		return this._loaded;
     	}
+
+        Class.type = function()
+        {
+            return this._type;
+        }
 
     	Class.update = function(vt, vr, vb, vl)
     	{
@@ -46,31 +53,69 @@ define(
     		}
 
             this._loaded = true;
-    		this.$().attr("data-loaded", true);
+    		this.$().attr("data-bin-loaded", true);
     		
-    		var img = new Image();
-			img.src = this._image;
-
-			var self = this;
-			img.onload = function()
-        	{
-        		self._setImage(self._image);
-        	}
-
-        	return true;
+    		return true;
 	   	}
 
     	Class._setImage = function(image)
     	{
+            if(!image || image.width <= 1 || image.height <= 1)
+            {
+                return ;
+            }
+
     		this._setPlaceHolder("");
 
-    		if (this.$().is("img")) 
-    		{
-                this.$().attr("src", image);
-            } 
-            else 
+            var elem = $(image);
+            elem.css("position", "absolute");
+
+            var w = this.$().width();
+            var h = this.$().height();
+            var s = w/h;
+            var is = image.width/image.height;
+
+            var align = this.$().data("align");
+            if(align === "center")
             {
-                this.$().css("background-image", "url('" + image + "')");
+                if(is > s)
+                {
+                    var ih = w/is;
+                    elem.css({left:"0px",top:(h-ih)*0.5+"px", width:"100%",height:ih+"px"});
+                }
+                else
+                {
+                    var iw = h*is;
+                    elem.css({left:(w-iw)*0.5+"px",top:"0px", width:ih+"px",height:"100%"});
+                }
+            }
+            else if(align === "vcenter")
+            {
+                var ih = w/is;
+                elem.css({left:"0px",top:(h-ih)*0.5+"px", width:"100%",height:ih+"px"});
+            }
+            else if(align === "hcenter")
+            {
+                var iw = h*is;
+                elem.css({left:(w-iw)*0.5+"px",top:"0px", width:ih+"px",height:"100%"});
+            }
+            else
+            {
+                elem.css({left:"0px",top:"0px", width:"100%",height:"100%"});
+            }
+
+            elem.hide();
+
+            this.$().append(elem);
+
+            var effect = this.$().data("effect");
+            if(effect === "fadein")
+            {
+                elem.fadeIn();
+            }
+            else
+            {
+                elem.show();
             }
     	}
 
@@ -85,6 +130,13 @@ define(
     			this.$().css("background-image", "");
     		}
     	}
+
+        Class.remove = function()
+        {
+            this._loaded = true;
+
+            this.onRemove();
+        }
 
     	return Base.extend(Class);
     }

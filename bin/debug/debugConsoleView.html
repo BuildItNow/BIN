@@ -1,0 +1,158 @@
+<div id="debugConsoleView" class="bin-page">
+	<style>
+		#debugConsoleView .DebugConsoleView-debug-infos 
+		{
+			width:100%;
+			height:100%;
+			font-size: 0.5rem;
+			line-height: 0.6rem;
+			margin: 0rem;
+			border: none;
+			padding:0px;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-options
+		{
+			position: absolute;
+			bottom: 0rem;
+			width:100%;
+			height:4rem;
+			background-color: rgb(200, 200,200);
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-execute
+		{
+			position: absolute;
+			left: 0.5rem;
+			top:0.5rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-print
+		{
+			position: absolute;
+			left: 3.5rem;
+			top:0.5rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-clear-infos
+		{
+			position: absolute;
+			left: 3.5rem;
+			top:2.0rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-prev
+		{
+			position: absolute;
+			left: 6.5rem;
+			top:0.5rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-next
+		{
+			position: absolute;
+			left: 9.5rem;
+			top:0.5rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-runtime－select
+		{
+			position: absolute;
+			left: 12.5rem;
+			top:0.5rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-content
+		{
+			position: absolute;
+			top:2.2rem;
+			width: 100%;
+			bottom: 4rem;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-output
+		{
+			position: absolute;
+			width: 100%;
+			top: 0rem;
+			bottom: 3rem;
+			box-sizing:border-box;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-input
+		{
+			position: absolute;
+			width: 100%;
+			height: 3rem;
+			bottom: 0rem;
+			border-style: solid;
+			border-width: 1px;
+			border-color: gray;
+			box-sizing:border-box;
+		}
+
+		#debugConsoleView .DebugConsoleView-debug-floating
+		{
+			position: absolute;
+			left: 0.5rem;
+			top:2rem;
+			width: 2.5rem;
+			height: 1rem;
+			font-size: 0.4rem;
+			line-height: 1rem;
+			background-color: gray;
+			text-align: center;
+		}
+	</style>
+
+    <div class="bin-page-content">
+    	<div id="debugOptions" class="DebugConsoleView-debug-options">
+    		<div id="debugExecute" class="DebugConsoleView-debug-execute">执行</div>
+    		<div id="debugPrint" class="DebugConsoleView-debug-print">打印</div>
+    		<div id="clearDebugInfos" class="DebugConsoleView-clear-infos">清空</div>
+    		<div id="prev" class="DebugConsoleView-debug-prev">上一条</div>
+    		<div id="next" class="DebugConsoleView-debug-next">下一条</div>
+    		<div id="runtimeSelect" class="DebugConsoleView-runtime－select">RUNTIME</div>
+    		<div id="debugFloating" class="DebugConsoleView-debug-floating"></div>
+    	</div>
+    	<div id="debugContent" class="DebugConsoleView-debug-content">
+    		<textarea id="input"  class="DebugConsoleView-debug-input"></textarea>
+    	</div>
+    </div>
+</div>

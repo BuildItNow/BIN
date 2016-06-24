@@ -1,5 +1,5 @@
-define(["text!bin/common/statusView.html", "css!bin/common/statusView.css", "bin/core/view", "bin/util/osUtil", "bin/util/disUtil"], 
-function(html, css, Base, osUtil, disUtil)
+define(["text!bin/common/statusView.html", "css!bin/common/statusView.css", "bin/core/view", "bin/util/osUtil"], 
+function(html, css, Base, osUtil)
 {
 	var Class = 
 	{
@@ -15,8 +15,8 @@ function(html, css, Base, osUtil, disUtil)
 
 	Class.asyncPosGenHTML = function()
 	{
-		var max = disUtil.rem2px(12);
-		var min = disUtil.rem2px(6);
+		var max = bin.app.rem2px(12);
+		var min = bin.app.rem2px(6);
 
 		var w = this.$().width();
 		if(w > max)
@@ -31,8 +31,8 @@ function(html, css, Base, osUtil, disUtil)
 			this.$().css("width", w+"px");
 		}
 
-		this.$().css("bottom", (disUtil.rem2px(5)-this.$().height()*0.5)+"px");
-		this.$().css("left", (disUtil.clientWidth-w)*0.5+"px");
+		this.$().css("bottom", (bin.app.rem2px(5)-this.$().height()*0.5)+"px");
+		this.$().css("left", (bin.app.clientWidth()-w)*0.5+"px");
 
 		var self = this;
 		osUtil.delayCall(function()

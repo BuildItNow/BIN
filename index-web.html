@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BIN Framework</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+        <meta name="format-detection" content="telephone=no"/>
+        <meta http-equiv="X-Frame-Options" content="ALLOW-FROM">
+        <meta http-equiv="pragma" content="no-cache"/>
+
+        <!-- bin frame work -->
+        <script>
+            document.documentElement.style.fontSize = document.documentElement.clientWidth/640*40+"px";
+            
+            // config for this page
+            var pageConfig = 
+            {
+                onInit : function(){/* Do some init work here for this web page*/},
+                onRun  : function(){/* Do some work here for this web page when application running*/},
+                packages : // The packages used for this page
+                [
+                    "bin/3party-web-core.js",       // web core component, must used
+                    "bin/3party-web-mobile.js",     // web mobile component, just for mobile device
+                    "bin/3party-web-iscroll.js",    // web iscroll component, required by listView and refreshView
+                    "bin/3party-web-swiper.js",     // web swiper component, required by swipeView 
+                    "bin/3party-web-md5.js",        // web md5 component
+                    "bin/3party-web-hammer.js",     // web hammer component, used for mobile device UI gestures
+                    
+                    "bin/bin-web-core.js",          // bin core component, must used
+                    "bin/bin-web-mobile.js",        // bin mobile component, just for mobile device, include hud part : alert, status, indicator, datePicker, select widgets
+                    "bin/bin-web-listView.js",      // bin list view widget
+                    "bin/bin-web-refreshView.js",   // bin refresh view widget
+                    "bin/bin-web-swipeView.js",     // bin swipe view widget
+                    "bin/bin-web-tabView.js",       // bin tab view widget
+                    "bin/bin-web-map.js",           // bin map component, support baidu map
+                ]
+            }
+             
+        </script>
+        <link href="./bin/res/css/bin.css" rel="stylesheet"/>
+        <!-- app css -->
+        <link href="./app/css/app.css" rel="stylesheet"/>
+        
+        <script type="text/javascript" src="./bin/3rdParty/requirejs/require.js" data-main="./bin/web/requireMain.js"></script>
+    </head>
+    <body>
+        <div id="window">
+            <div data-bin-view="name of view , for example : login/index" style="width:100%;height:100%">
+            </div>
+            <div id="HUDContainer" class="bin-HUD-container">
+            </div>
+        </div>
+    </body>
+</html>

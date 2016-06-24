@@ -1,5 +1,5 @@
-define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/core/view", "bin/util/osUtil", "iscroll", "bin/util/disUtil"], 
-function(html, css, Base, osUtil, iscroll, disUtil)
+define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
+function(html, css, Base, osUtil, iscroll)
 {
 	var DEFAULT_OPTIONS = 
 	{
@@ -10,6 +10,8 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 	};
 
 	var MONTH_DAYS = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	var DATE_REGEX = /(\d{4})-(\d{1,2})-(\d{1,2})/;
+	var TIME_REGEX = /(\d{1,2}):(\d{1,2}):(\d{1,2})/;
 
 	var isLeapYear = function(year)
 	{
@@ -26,6 +28,27 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		if(!options.date)
 		{
 			options.date = new Date();
+		}
+		else if(typeof options.date === "string")
+		{
+			var date = new Date();
+
+			var matches = options.date.match(DATE_REGEX);
+			if(matches && matches.length === 4)
+			{
+				date.setFullYear(parseInt(matches[1]));
+				date.setMonth(parseInt(matches[2])-1);
+				date.setDate(parseInt(matches[3]));
+			}
+
+			var matches = options.date.match(TIME_REGEX);
+			if(matches && matches.length === 4)
+			{
+				date.setHours(parseInt(matches[1]));
+				date.setMinutes(parseInt(matches[2]));
+				date.setSeconds(parseInt(matches[3]));
+			}
+			options.date = date;
 		}
 
 		this._options = options;
@@ -61,7 +84,7 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		var self = this;
 
 		this.$("#confirm").on("click", function(){self._onConfirm()});
-		this.$("#cancel").on("click", function(){self._onCancel()});
+		this.$("#cancel").on("click", function(){self.close()});
 		_.forEach(this._containers, function(container, key)
 		{
 			container.find("#i"+self._picks[key]).addClass("DatePickerView-picked");
@@ -166,18 +189,19 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 
 	Class._onConfirm = function()
 	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
-
 		if(this._options.onPick)
 		{
-			var date = new Date();
+			var date    = new Date();
+			var strDate = ""; 
 
 			if(this._options.pickDate)
 			{
 				date.setFullYear(this._picks.year);
 				date.setMonth(this._picks.month-1);
 				date.setDate(this._picks.day);
+				strDate = 	 this._picks.year
+							+"-"+(this._picks.month<10 ? "0"+this._picks.month : this._picks.month)
+							+"-"+(this._picks.day<10 ? "0"+this._picks.day : this._picks.day);
 			}
 
 			if(this._options.pickTime)
@@ -185,16 +209,21 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 				date.setHours(this._picks.hour);
 				date.setMinutes(this._picks.minute);
 				date.setSeconds(this._picks.second);
+
+				if(strDate)
+				{
+					strDate += " ";
+				}
+				strDate +=  (this._picks.hour<10 ? "0"+this._picks.hour : this._picks.hour)
+							+":"+(this._picks.minute<10 ? "0"+this._picks.minute : this._picks.minute)
+							+":"+(this._picks.second<10 ? "0"+this._picks.second : this._picks.second);
 			}
 
+			date.strDate = strDate;
 			this._options.onPick(date);
 		}
-	}
 
-	Class._onCancel = function()
-	{
-		var self = this;
-		this.$().fadeOut(100, function(){self.remove();});
+		this.close();
 	}
 
 	Class._onPick = function(name, val)
@@ -361,8 +390,8 @@ function(html, css, Base, osUtil, iscroll, disUtil)
 		}
 
 		var self = this;
-		var ITEM_HEIGHT = disUtil.rem2px(1.5);
-		var WRAPPER_HEIGHT = disUtil.rem2px(4.5);
+		var ITEM_HEIGHT = bin.app.rem2px(1.5);
+		var WRAPPER_HEIGHT = bin.app.rem2px(4.5);
 		_.forEach(this._scrollers, function(scroller, key)
 		{
 			scroller.scrollToElement("#i"+self._picks[key], 0, false, true);

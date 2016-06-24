@@ -15,9 +15,9 @@ define(
 
 	    var onDisplayMetricsChanged = function()
 	    {
-	    	cls.rem              = bin.window.rem();
-			cls.clientWidth  	 = bin.window.width();
-		    cls.clientHeight     = bin.window.height();
+	    	cls.rem              = bin.app.rem();
+			cls.clientWidth  	 = bin.app.width();
+		    cls.clientHeight     = bin.app.height();
 		    cls.navHeight        = cls.rem2px(1.9);
 		    cls.navClientHeight  = cls.clientHeight-cls.navHeight;
 		    cls.navClientWidth   = cls.clientWidth;

@@ -13,8 +13,8 @@
 
 		#debugView .DebugView-debug-options
 		{
-			position: relative;
-			top: 0rem;
+			position: absolute;
+			bottom:0rem;
 			width:100%;
 			height:2rem;
 			background-color: rgb(200, 200,200);
@@ -49,18 +49,18 @@
 		#debugView .DebugView-debug-content
 		{
 			position: absolute;
-			top:2rem;
+			top:2.2rem;
 			width: 100%;
-			bottom: 0rem;
+			bottom: 2rem;
 		}
 	</style>
 
     <div class="bin-page-content">
+    	<div id="debugContent" class="DebugView-debug-content">
+    	</div>
     	<div id="debugOptions" class="DebugView-debug-options">
     		<div id="debugFloating" class="DebugView-debug-floating"></div>
     		<div id="clearDebugInfos" class="DebugView-clear-infos">清空</div>
-    	</div>
-    	<div id="debugContent" class="DebugView-debug-content">
     	</div>
     </div>
 </div>

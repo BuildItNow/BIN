@@ -26,7 +26,15 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 		_.defaults(this._swiperOptions, SWIPER_DEFAULT_OPTIONS);
 		var self = this;
-		this._swiperOptions.onTransitionEnd = function(swiper){self._onSwiperSwipe(swiper.activeIndex)};
+		this._swiperOptions.onTransitionEnd = function(swiper)
+		{
+			var index = swiper.activeIndex;
+			if(self._swiperOptions.loop)
+			{
+				index = self.$(".swiper-slide")[index].getAttribute("data-swiper-slide-index");
+			}
+			self._onSwiperSwipe(index);
+		};
 
 		Base.prototype.constructor.call(this, options);
 	}
@@ -56,49 +64,49 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		this.$().append(this.$swiperContent);
 	}
 
-	Class.appendSlide = function(slide, refresh)
-	{
-		var elem = $('<div class="swiper-slide" style="background-color:transparent"></div>');
-		elem.append(slide);
+	// Class.appendSlide = function(slide, refresh)
+	// {
+	// 	var elem = $('<div class="swiper-slide" style="background-color:transparent"></div>');
+	// 	elem.append(slide);
 
-		if(refresh)
-		{
-			this.swiper.appendSlide(elem[0]);
-		}
-		else
-		{
-			this.$swiperContent.append(elem);
-		}
-	}
+	// 	if(refresh)
+	// 	{
+	// 		this.swiper.appendSlide(elem[0]);
+	// 	}
+	// 	else
+	// 	{
+	// 		this.$swiperContent.append(elem);
+	// 	}
+	// }
 
-	Class.removeSlide = function(index, refresh)
-	{
-		if(refresh)
-		{
-			this.swiper.removeSlide(index);
-		}
-		else
-		{
-			$(this.$swiperContent.children()[index]).remove();
-		}
-	}
+	// Class.removeSlide = function(index, refresh)
+	// {
+	// 	if(refresh)
+	// 	{
+	// 		this.swiper.removeSlide(index);
+	// 	}
+	// 	else
+	// 	{
+	// 		$(this.$swiperContent.children()[index]).remove();
+	// 	}
+	// }
 
-	Class.removeAllSlides = function(refresh)
-	{
-		if(refresh)
-		{
-			this.swiper.removeAllSlides();
-		}
-		else
-		{
-			this.$swiperContent.html("");
-		}
-	}
+	// Class.removeAllSlides = function(refresh)
+	// {
+	// 	if(refresh)
+	// 	{
+	// 		this.swiper.removeAllSlides();
+	// 	}
+	// 	else
+	// 	{
+	// 		this.$swiperContent.html("");
+	// 	}
+	// }
 
 	Class.posGenHTML = function()
 	{
 		this.swiper = new Swiper(this.$(), this._swiperOptions);
-		if(this._swiperOptions.initialSlide === 0)	// Swiper don't trigger event when initialSlide is 0
+		if(this._swiperOptions.initialSlide === 0 && !this._swiperOptions.loop)	// Swiper don't trigger event when initialSlide is 0
 		{
 			this._onSwiperSwipe(this._swiperOptions.initialSlide);
 		}
@@ -111,6 +119,10 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.setCurrent = function(index, noTrigger)
 	{
+		if(this._swiperOptions.loop)
+		{
+			index = index + this.swiper.loopedSlides;
+		}
 		this.swiper.slideTo(index, undefined, !noTrigger);
 	}
 

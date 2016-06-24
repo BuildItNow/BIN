@@ -1,5 +1,5 @@
-define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/util/disUtil", "bin/common/refreshHeaderView"], 
-function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
+define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/common/refreshHeaderView"], 
+function(Base, iscroll, osUtil, RefreshHeaderView)
 {
 	var Class = {};
 
@@ -111,36 +111,56 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 			var self = this;
 			osUtil.nextTick(function()
 			{
+
 				self.scroller.refresh();
+
+				if(self._refreshDoneOptions)
+				{
+					self.scroller.scrollTo(0, self._refreshDoneOptions.y, self._refreshDoneOptions.time || 1);
+
+					delete self._refreshDoneOptions; 
+				}
 
 				self._contentDirty = false;
 
 				if(self._lazyLoadEnable)
 				{
-					self.lazyLoadContainer(self.$());		
+					self.lazyLoadContainer();		
 				}
 			});
 		}
 	}
 
-	Class.refreshDone = function(fail)
+	Class.refreshDone = function(fail, options)
 	{
 		this._refreshState = REFRESH_STATE_DONE_WATING;
 		this._refreshHeader.onRefreshDone(fail);
 
 		// refresh the scroller
 		this.refreshUI();
-
+		
 		var self = this;
-		osUtil.delayCall(function()
+		if(!options)
 		{
-			self._refreshState = REFRESH_STATE_DONE;
-			self.scroller.options.pullToRefresh = false;
-			if(/*!self._scrollerTouching &&*/ self.scroller.y > 0)
+			osUtil.delayCall(function()
 			{
-				self.scroller.scrollTo(0, 0, 100);
-			}	
-		}, 500)
+				self._refreshState = REFRESH_STATE_DONE;
+				self.scroller.options.pullToRefresh = false;
+				if(/*!self._scrollerTouching &&*/ self.scroller.y > 0)
+				{
+					self.scroller.scrollTo(0, 0, 100);
+				}	
+			}, 500);
+		}
+		else
+		{
+			this._refreshDoneOptions = options;
+			osUtil.nextTick(function()
+			{
+				self._refreshState = REFRESH_STATE_DONE;
+				self.scroller.options.pullToRefresh = false;
+			});
+		}
 	}
 
 	Class.onRemove = function()
@@ -189,10 +209,7 @@ function(Base, iscroll, osUtil, disUtil, RefreshHeaderView)
 	{
 		if(this._lazyLoadEnable)
 		{
-			if(this.$()[0].tryLazyLoad)
-			{
-				this.$()[0].tryLazyLoad();
-			}
+			this._llOnScroll();
 		}
 
 		if(!this._scrollerTouching)

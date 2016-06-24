@@ -1,106 +1,24 @@
-define([
-		"bin/core/view", "bin/util/osUtil"
-	  ], 
-	function(View, osUtil)
+define([], 
+	function()
 	{
-		var Window = View.extend(
-		{
-			constructor:function(options)
-			{
-				bin.window = this;
-
-				View.prototype.constructor.call(this, options);
-			},
-			posGenHTML:function()
-			{
-				this.$().css("position","absolute");
-				this.$().css("overflow","hidden");
-				this.$().css("display", "block");
-                //this.$().css("transform", "scale(0.5)");
-                //this.$().css("transform-origin", "top left");
-					
-				if(bin.globalConfig.width && bin.globalConfig.height)
-				{
-					if(bin.globalConfig.left)
-					{
-						this.$().css("left", bin.globalConfig.left+"px");
-					}
-					else
-					{
-						this.$().css("left", "0rem");
-					}
-
-					if(bin.globalConfig.top)
-					{
-						this.$().css("top", bin.globalConfig.top+"px");
-					}
-					else
-					{
-						this.$().css("top", "0rem");
-					}
-
-					if(bin.globalConfig.width === "fixed" || bin.globalConfig.height === "fixed")
-					{
-						var elemRoot = document.documentElement;
-						this._width  = elemRoot.clientWidth;
-                    	this._height = elemRoot.clientHeight;
-					}
-					else
-					{
-						this._width  = bin.globalConfig.width*2;
-						this._height = bin.globalConfig.height*2;
-					}
-
-					this.$().css("width", this._width + "px");
-					this.$().css("height", this._height + "px");
-
-                    this._fixed = true;
-				}
-                else
-                {
-                    this.$().css("left","0rem");
-				    this.$().css("top","0rem");
-                }
-                
-				var self = this;
-				$(window).on('resize', function()
-				{
-					self._onResize();
-				});
-				this._onResize();
-			},
-			_onResize:function()
-			{
-				var elemRoot = document.documentElement;
-                if(!this._fixed)
-                {
-                    //this._width  = elemRoot.clientWidth*2;
-                    //this._height = elemRoot.clientHeight*2; 
-                    
-                    this._width  = elemRoot.clientWidth;
-                    this._height = elemRoot.clientHeight; 
-                    this.$().css("width", this._width+"px");
-                    this.$().css("height", this._height+"px");
-			    }		
-                elemRoot.style.fontSize = this._width/640*40+"px";
-				Backbone.trigger("DISPLAY_METRICS_CHANGED");
-			},
-			width:function()
-			{
-				return this._width;
-			},
-			height:function()
-			{
-				return this._height;
-			},
-			rem:function()
-			{
-				return parseFloat(document.documentElement.style.fontSize);
-			}
-		});
-
+		/**
+		 * The base applicaiton class. Every app(or page in MPA) has exactly one instance of Application (or a subclass of Application).
+		 * When an app is launched, BIN will create a singleton object of Application(or subclass of Application), Thereafter you can access the object by bin.app.
+		 * SPAApplication and WEBApplication are subclasses of Application. SPAApplication is aimed for Single-Page Application, WEBApplication is aimed for WEB Application(the traditional web development), and WEBApplication is used for MPAApplicaiton who is aimed for Multi-Page Applicaiton.
+		 * 
+		 * Application is inherit from Backbone.Events, so you can do some Observer-Pattern work on it.
+		 * @class Application
+		 * @see SPAApplication
+		 * @see WEBApplication
+		 * @see MPAApplication
+		 * @see {@link http://backbonejs.org/|Backbone}
+		 */
 		var Application = function()
 		{
+			/**
+			 * The singleton object of Application(or a subclass of Application)
+			 * @memeberof bin
+			 */
 			bin.app = this;
 		}
 
@@ -108,118 +26,201 @@ define([
 
 		var Class = Application.prototype;
 
+		/**
+		 * Initialize operation of application , such as creating netManager,dataCenter and mapManager. you can override it to do your application initialize work.
+		 * NB: Don't forget to call parent init in your code.
+		 * @memberof Application#
+		 * @name init
+		 * @type {Function}
+		 */
 		Class.init = function()
 		{
-			this._window = new Window({elem:$("#window")});
+			var self = this;
 
-			this._debugManager = new bin.core.DebugManager();
-			this._debugManager.init();
+			$(window).on('resize', function()
+			{
+				self.onResize();
 
-			this._naviController = new bin.core.NavigationController();
-			this._naviController.init();
+				Backbone.trigger("DISPLAY_METRICS_CHANGED");
+			});
+			this.onResize();
 
+			// Parse query params
+			/**
+			 * Singleton object of NetManager who do the whole http jobs. 
+			 * @memberof Application#
+			 * @name _netManager
+			 * @type {NetManager}
+			 * @see NetManager
+			 */
 			this._netManager = new bin.core.NetManager();
 			this._netManager.init();
 
-			this._hudManager = new bin.core.HUDManager();
-			this._hudManager.init();
-
+			/**
+			 * Singleton object of DataCenter who do the data persistence jobs,such as session and local storage. 
+			 * @memberof Application#
+			 * @name _dataCenter
+			 * @type {DataCenter}
+			 * @see DataCenter
+			 */
 			this._dataCenter = new bin.core.DataCenter();
 			this._dataCenter.init();
 
-			
-
+			/**
+			 * The singleton object of NetManager
+			 * @memberof bin
+			 * @name netManager
+			 * @type {NetManager}
+			 */
 			bin.netManager = this._netManager;
-			bin.naviController = this._naviController;
-			bin.debugManager = this._debugManager;
-			bin.hudManager  = this._hudManager;
+			/**
+			 * The singleton object of DataCenter
+			 * @memberof bin
+			 * @name dataCenter
+			 * @type {DataCenter}
+			 */
 			bin.dataCenter  = this._dataCenter;
-
-			if(cordova)
-			{
-				this._nativeManager = new bin.core.NativeManager();
-				this._nativeManager.init();
-				bin.nativeManager = this._nativeManager;
-			}
 			
 			if(bin.globalConfig.mapSDK)
 			{
-				this._mapManager = new bin.core.MapManager();
-				this._mapManager.init();
-				bin.mapManager = this._mapManager;
+				require(["bin/core/mapManager"], function(MapManager)
+				{
+					/**
+					 * Singleton object of MapManager. 
+					 * NB: Only available while mapSDK is set in globalConfig
+					 * @memberof Application#
+					 * @name _mapManager
+					 * @type {MapManager}
+					 * @see MapManager
+					 */
+					self._mapManager = new MapManager();
+					self._mapManager.init();
+					/**
+					 * The singleton object of MapManager.
+					 * NB: Only available while mapSDK is set in globalConfig
+					 * @memberof bin
+					 * @name mapManager
+					 * @type {MapManager}
+					 */
+					bin.mapManager = self._mapManager;
+				});
 			}
-
-			var self = this;
-			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);
-			document.addEventListener("menubutton", function(){self.onDeviceMenu()}, false);
-			document.addEventListener("searchbutton", function(){self.onDeviceSearch()}, false);
-			document.addEventListener("pause", function(){self.onPause()}, false);
-			document.addEventListener("resume", function(){self.onResume()}, false);
-			document.addEventListener("hidekeyboard", function(){self.onHideKeyboard()}, false);
-			document.addEventListener("showkeyboard", function(){self.onShowKeyboard()}, false);
 		}
 
-		Class.onDeviceBack = function()
+		/**
+		 * Handler of window resizing event,the default job of the handler is fixing rem. 
+		 * @memberof Application#
+		 * @name onResize
+		 * @type {Function}
+		 */
+		Class.onResize = function()
 		{
-			console.info("onDeviceBack");
-
-			if(this._hudManager.onDeviceBack())
-			{
-				return true;
-			}				
-
-			if(this._naviController.onDeviceBack())
-			{
-				return true;
-			}
-
-			return false;
+			var elemRoot = document.documentElement;
+			this._width  = elemRoot.clientWidth;
+	        this._height = elemRoot.clientHeight; 
+	        elemRoot.style.fontSize = elemRoot.clientWidth/640*40+"px";
 		}
 
-		Class.onDeviceMenu = function()
+		/**
+		 * Get the width of window.
+		 * @memberof Application#
+		 * @name width
+		 * @type {Function}
+		 */
+		Class.width = function()
 		{
-			console.info("onDeviceMenu");
+			return this._width;
 		}
 
-		Class.onDeviceSearch = function()
+		/**
+		 * Get the height of window.
+		 * @memberof Application#
+		 * @name height
+		 * @type {Function}
+		 */
+		Class.height = function()
 		{
-			console.info("onDeviceSearch");
+			return this._height;
 		}
 
-		Class.onPause = function()
+		/**
+		 * Get the rem unit(px).
+		 * @memberof Application#
+		 * @name rem
+		 * @type {Function}
+		 */
+		Class.rem = function()
 		{
-			console.info("onPause");
+			return parseFloat(document.documentElement.style.fontSize);
 		}
 
-		Class.onResume = function()
+		/**
+		 * Transform rem to px
+		 * @memberof Application#
+		 * @name rem2px
+		 * @type {Function}
+		 * @param {number} rem value in rem unit
+		 */
+		Class.rem2px = function(rem)
+	    {
+	    	return rem*this.rem();
+	    }
+
+	    /**
+		 * Transform px to rem
+		 * @memberof Application#
+		 * @name px2rem
+		 * @type {Function}
+		 * @param {number} px value in px unit
+		 */
+	    Class.px2rem = function(px)
+	    {
+	    	return px/this.rem();
+	    }
+
+	    /**
+		 * Get the width of client area. Default as width.
+		 * @memberof Application#
+		 * @name clientWidth
+		 * @type {Function}
+		 */
+	    Class.clientWidth = function()
+	    {
+	    	return this.width();
+	    }
+
+	    /**
+		 * Get the height of client area. Default as height.
+		 * @memberof Application#
+		 * @name clientHeight
+		 * @type {Function}
+		 */
+		Class.clientHeight = function()
 		{
-			console.info("onResume");
+			return this.height();
 		}
 
-		Class.onShowKeyboard = function()
-		{
-			console.info("onShowKeyboard");
-		}
-
-		Class.onHideKeyboard = function()
-		{
-			console.info("onHideKeyboard");
-		}
-
+		/**
+		 * running operation of application, you'd better alwayse override it in SPA so that your application can launch from the right page.
+		 * @memberof Application#
+		 * @name run
+		 * @type {Function}
+		 */
 		Class.run = function()
 		{
 			
 		}
 
-		Class.fireReady = function()
+		/**
+		 * release operation of application, you can override it do your release work.
+		 * NB: Only available for SPA.
+		 * @memberof Application#
+		 * @name exit
+		 * @type {Function}
+		 */
+		Class.exit = function()
 		{
-			osUtil.nextTick(function()
-			{
-				if(cordova)
-				{
-					cordova.binPlugins.eventEmiter.fire("SCRIPT_EVENT_READY");
-				}
-			});
+			
 		}
 
 		_.extend(Class, Backbone.Events);
