@@ -1,9 +1,9 @@
 define(
     [
-        "bin/util/osUtil",
+        "bin/core/util",
         "text!bin/debug/debugFloatingView.html"
     ],
-    function (osUtil, floatingHtml)
+    function (util, floatingHtml)
     {
     	var DebugManager = function()
     	{
@@ -98,7 +98,7 @@ define(
         Class._appendMessage = function(tag, msg)
         {
             tag = tag || "[INFO]";
-            msg = osUtil.dump(msg);
+            msg = util.dump(msg);
             msg = tag+" "+msg;
             this._info(msg);
             if(!this.isDebugable())
@@ -107,7 +107,7 @@ define(
             }
 
             var self = this;
-            osUtil.nextTick(function() // Use async call, these operations cost much time when profile
+            setTimeout(function() // Use async call, these operations cost much time when profile
             {
                 if(self._messages.length > 1024*24)
                 {
@@ -118,7 +118,7 @@ define(
                 self._elemInfos[0].scrollTop = self._elemInfos[0].scrollHeight;
                 self._elemFloatingInfos.text(self._messages);
                 self._elemFloatingInfos[0].scrollTop = self._elemFloatingInfos[0].scrollHeight;
-            });
+            }, 0);
         }
 
         Class.isFloating = function()
@@ -176,20 +176,20 @@ define(
 
         Class.profileBeg = function(name)
         {
-            this._profileStack.push({name:name, time:osUtil.time()});
+            this._profileStack.push({name:name, time:_.now()});
         }
 
         Class.profileEnd = function()
         {
             var item = this._profileStack.pop();
             var len  = Math.min(10, this._profileStack.length);
-            var time = osUtil.time();
+            var time = _.now();
             var self = this;
-            osUtil.nextTick(function()
+            setTimeout(function()
             {
                 var msg = self._profilSpaces[len] + item.name + " "+(time-item.time);
                 console.log(msg);
-            });
+            }, 0);
         }
 
         _.extend(DebugManager.prototype, Class);

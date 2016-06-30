@@ -1,6 +1,6 @@
 define(
-	["bin/util/osUtil", "bin/core/navigationController-ioEffecters"],
-function(osUtil, effecters)
+	["bin/core/navigationController-ioEffecters"],
+function(effecters)
 {
 	var toLeftSlash = function(path)
 	{
@@ -487,10 +487,10 @@ function(osUtil, effecters)
 
 	          		if(newView.onInAnimationBeg)
 	          		{
-	          			osUtil.nextTick(function()
+	          			setTimeout(function()
 	          			{
 	          				newView.onInAnimationBeg();
-	          			});
+	          			}, 0);
 	          		}
 
 	          		var onInAnimationEnd = null;
@@ -501,10 +501,10 @@ function(osUtil, effecters)
 	          				curView.view.remove();
 	          				if(newView.onInAnimationEnd)
 	          				{
-	          					osUtil.nextTick(function()
+	          					setTimeout(function()
 				          		{
 				          			newView.onInAnimationEnd();
-				          		});
+				          		}, 0);
 	          				}
 	          			}
 	          		}
@@ -512,10 +512,10 @@ function(osUtil, effecters)
 	          		{
 	          			onInAnimationEnd = function()
 	          			{
-	          				osUtil.nextTick(function()
+	          				setTimeout(function()
 			          		{
 			          			newView.onInAnimationEnd();
-			          		});
+			          		}, 0);
 	          			}
 	          		}
 

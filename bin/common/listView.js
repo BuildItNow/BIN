@@ -1,13 +1,12 @@
 define([
 "bin/common/refreshView", 
-"bin/util/osUtil", 
 "bin/common/refreshFooterView", 
-"bin/util/elemUtil", 
+"bin/core/util", 
 "bin/common/itemProvider",
 "bin/common/dataProvider",
 "bin/core/view"
 ], 
-function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, View)
+function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 {
 	var TemplateItemProvider = ItemProvider.extend(
 	{
@@ -142,7 +141,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		this.$scrollerContent.empty();
 		this._items = [];
 		
-		var f = elemUtil.newFragment(this.$scrollerContent);
+		var f = util.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;
@@ -189,7 +188,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	{
 		this._refreshFooter.$().detach();
 
-		var f = elemUtil.newFragment(this.$scrollerContent);
+		var f = util.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;

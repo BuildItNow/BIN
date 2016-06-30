@@ -1,5 +1,5 @@
-define(["bin/core/view", "iscroll", "bin/util/osUtil", "bin/common/refreshHeaderView"], 
-function(Base, iscroll, osUtil, RefreshHeaderView)
+define(["bin/core/view", "iscroll", "bin/common/refreshHeaderView"], 
+function(Base, iscroll, RefreshHeaderView)
 {
 	var Class = {};
 
@@ -79,7 +79,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		}
 
 		var self = this;
-		osUtil.nextTick(function()
+		setTimeout(function()
 		{
 			// Check again
 			if(self._refreshState !== REFRESH_STATE_NONE && self._refreshState !== REFRESH_STATE_DONE)
@@ -94,7 +94,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 			}
 			
 			self._refresh();
-		})
+		}, 0);
 	}
 
 	Class.refreshUI = function()
@@ -109,7 +109,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 			this._contentDirty = true;
 
 			var self = this;
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 
 				self.scroller.refresh();
@@ -127,7 +127,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 				{
 					self.lazyLoadContainer();		
 				}
-			});
+			}, 0);
 		}
 	}
 
@@ -142,7 +142,7 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		var self = this;
 		if(!options)
 		{
-			osUtil.delayCall(function()
+			setTimeout(function()
 			{
 				self._refreshState = REFRESH_STATE_DONE;
 				self.scroller.options.pullToRefresh = false;
@@ -155,11 +155,11 @@ function(Base, iscroll, osUtil, RefreshHeaderView)
 		else
 		{
 			this._refreshDoneOptions = options;
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 				self._refreshState = REFRESH_STATE_DONE;
 				self.scroller.options.pullToRefresh = false;
-			});
+			}, 0);
 		}
 	}
 

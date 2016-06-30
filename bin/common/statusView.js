@@ -1,5 +1,5 @@
-define(["text!bin/common/statusView.html", "css!bin/common/statusView.css", "bin/core/view", "bin/util/osUtil"], 
-function(html, css, Base, osUtil)
+define(["text!bin/common/statusView.html", "css!bin/common/statusView.css", "bin/core/view"], 
+function(html, css, Base)
 {
 	var Class = 
 	{
@@ -35,7 +35,7 @@ function(html, css, Base, osUtil)
 		this.$().css("left", (bin.app.clientWidth()-w)*0.5+"px");
 
 		var self = this;
-		osUtil.delayCall(function()
+		setTimeout(function()
 		{
 			self.$().fadeOut(200, function(){self.remove()});
 		}, 2000);

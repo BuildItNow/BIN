@@ -1,4 +1,4 @@
-define(["bin/util/osUtil"], function(osUtil)
+define([], function()
 {
 	var hierarchyDone = false;
 
@@ -96,13 +96,13 @@ define(["bin/util/osUtil"], function(osUtil)
 			var cbs = self._cbs;
 			self._cbs = [];
 
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 				for(var i=0,i_sz=cbs.length; i<i_sz; ++i)
 				{
 					cbs[i]();
 				}
-			});
+			}, 0);
 		}
 
 		if(cb)
@@ -122,7 +122,7 @@ define(["bin/util/osUtil"], function(osUtil)
 	{
 		if(hierarchyDone)
 		{
-			osUtil.nextTick(cb);
+			setTimeout(cb, 0);
 		}
 		else
 		{

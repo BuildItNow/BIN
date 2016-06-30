@@ -1,8 +1,63 @@
 define([
-		"bin/core/view", "bin/util/osUtil", "bin/util/fastclickUtil", "bin/core/application"
+		"bin/core/view", "fastclick", "bin/core/application"
 	  ], 
-	function(View, osUtil, fastclickUtil, Application)
+	function(View, fastclick, Application)
 	{
+		fastclick.notNeeded = function(layer) 
+		{
+			'use strict';
+			var metaViewport;
+			var chromeVersion;
+
+			// Devices that don't support touch don't need FastClick
+			if (typeof window.ontouchstart === 'undefined') 
+			{
+				return true;
+			}
+
+			// Chrome version - zero for other browsers
+			chromeVersion = +(/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [, 0])[1];
+
+			if (chromeVersion) 
+			{
+				if (deviceIsAndroid) 
+				{
+					metaViewport = document.querySelector('meta[name=viewport]');
+
+					if (metaViewport)
+					{
+						// Chrome on Android with user-scalable="no" doesn't need FastClick (issue #89)
+						if (metaViewport.content.indexOf('user-scalable=no') !== -1) 
+						{
+							//patch here
+							return false;
+						}
+						// Chrome 32 and above with width=device-width or less don't need FastClick
+						if (chromeVersion > 31 && document.documentElement.scrollWidth <= window.outerWidth) 
+						{
+							//patch here
+							return false;
+						}
+					}
+
+					// Chrome desktop doesn't need FastClick (issue #15)
+				} 
+				else 
+				{
+					//patch here
+					return false;
+				}
+			}
+
+			// IE10 with -ms-touch-action: none, which disables double-tap-to-zoom (issue #97)
+			if (layer.style.msTouchAction === 'none') 
+			{
+				return true;
+			}
+
+			return false;
+		};
+
 		/**
 		 * The SPA(Single-Page Application) base applicaiton class. 
 		 * @class SPAApplication
@@ -12,7 +67,7 @@ define([
 
 		Class.init = function()
 		{
-			fastclickUtil.attach(document.body);
+			fastclick.attach(document.body);
 			
 			this.fixWindow();
 
@@ -190,21 +245,31 @@ define([
 
 		Class.exit = function()
 		{
-			osUtil.delayCall(function()
+			setTimeout(function()
 			{
 				navigator.app.exitApp();
 			}, 100);
 		}
 
+		Class.navHeight = function()
+		{
+			return this.rem2px(2.2);
+		}
+
+		Class.navClientHeight = function()
+		{
+			return this.clientHeight()-this.navHeight();
+		}
+
 		Class.fireReady = function()
 		{
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 				if(cordova)
 				{
 					cordova.binPlugins.eventEmiter.fire("SCRIPT_EVENT_READY");
 				}
-			});
+			}, 0);
 		}
 
 		return Application.extend(Class);

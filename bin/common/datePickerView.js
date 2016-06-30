@@ -1,5 +1,5 @@
-define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
-function(html, css, Base, osUtil, iscroll)
+define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "iscroll"], 
+function(html, css, Base, iscroll)
 {
 	var DEFAULT_OPTIONS = 
 	{
@@ -297,11 +297,11 @@ function(html, css, Base, osUtil, iscroll)
 			day = 28;
 		}
 
-		osUtil.nextTick(function()
+		setTimeout(function()
 		{
 			scroller.refresh();
 			scroller.scrollToElement("#i"+day, 0, false, true);
-		});
+		}, 0);
 	}
 
 	Class._onMonthChange = function(o, n)
@@ -352,11 +352,11 @@ function(html, css, Base, osUtil, iscroll)
 			c.find("#i"+day).addClass("DatePickerView-picked");
 		}
 		var scroller = this._scrollers.day;
-		osUtil.nextTick(function()
+		setTimeout(function()
 		{
 			scroller.refresh();
 			scroller.scrollToElement("#i"+day, 0, false, true);
-		});
+		}, 0);
 
 	}
 

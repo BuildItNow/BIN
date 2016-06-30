@@ -2,9 +2,8 @@ define(
         [
             "text!bin/res/html/defaultNaviBar.html",
             "bin/core/view",
-            "bin/util/elemUtil"
         ],
-        function (defaultNavigationTemplate, View, elemUtil)
+        function (defaultNavigationTemplate, View)
         {
             var Base = View;
             

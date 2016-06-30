@@ -1,8 +1,8 @@
 define(
 	[
-		"bin/util/osUtil"
+		
     ],
-    function(osUtil)
+    function()
 	{
 
 		var NativeObjectProxy = function(key)
@@ -142,13 +142,13 @@ define(
 			if(ref.ref === 0)
 			{
 				//var self = this;
-				//osUtil.nextTick(function()
+				//setTimeout(function()
 				//{
 				//	if(ref.ref === 0)
 				//	{
 						this.remScriptObjectByKey(key);
 				//	}
-				//}
+				//}, 0);
 			}
 		}
 
