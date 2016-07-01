@@ -46,10 +46,7 @@
         'bin/core/netPolicy/netDebugPolicy',
         'bin/core/netPolicy/netSendCheckPolicy',
         'bin/common/lazyLoadView',
-    	'bin/util/elemUtil',
-    	'bin/util/lsUtil',
-    	'bin/util/osUtil',
-    	'bin/util/ssUtil',
+    	'bin/core/util',
         
         // mobile
         'bin/web/core/mpaApplication', 
@@ -72,8 +69,7 @@
         'bin/common/statusView',
     	'text!bin/common/statusView.html',
     	'css!bin/common/statusView.css',
-    	'text!bin/res/html/defaultNaviBar.html',
-    	'bin/util/fastclickUtil',
+    	'text!bin/res/html/defaultNaviBar.html'
     ],
     include:
     [

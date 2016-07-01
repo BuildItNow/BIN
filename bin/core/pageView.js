@@ -1,10 +1,9 @@
 define(
     [
         "bin/core/view",
-        "bin/core/pageView-animation",
-        "bin/util/osUtil", 
+        "bin/core/pageView-animation"
     ],
-    function (Base, PageViewAnimation, osUtil)
+    function (Base, PageViewAnimation)
     {
         var Class =
         {

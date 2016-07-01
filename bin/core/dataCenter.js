@@ -1,7 +1,55 @@
 define(
-["bin/util/lsUtil", "bin/util/ssUtil"],
-function(lsUtil, ssUtil)
+[],
+function()
 {
+	var lsUtil = {};
+	lsUtil.save = function(name, data)
+    {
+        if(data === null || data === undefined)
+        {
+            window.localStorage.removeItem(name);
+            return ;
+        }
+
+        window.localStorage[name] = JSON.stringify(data);
+    }
+        
+    lsUtil.load = function(name)
+    {
+        var ret = window.localStorage[name];
+
+        return ret ? JSON.parse(ret) : null;
+    }
+
+    lsUtil.clear = function(name)
+    {
+        window.localStorage.removeItem(name);
+    }
+
+    var ssUtil = {};
+	ssUtil.save = function(name, data)
+    {
+    	if(data === null || data === undefined)
+        {
+            window.sessionStorage.removeItem(name);
+            return ;
+        }
+        
+        window.sessionStorage[name] = JSON.stringify(data);
+    }
+        
+    ssUtil.load = function(name)
+    {
+    	var ret = window.sessionStorage[name];
+
+    	return ret ? JSON.parse(ret) : null;
+    }
+
+    ssUtil.clear = function(name)
+    {
+    	window.sessionStorage.removeItem(name);
+    }
+
 	// Global : Always
 	// Global Session : APP Runtime
 	// User : Always

@@ -1,5 +1,5 @@
-define(["bin/util/elemUtil", "bin/util/osUtil"], 
-function(elemUtil, osUtil)
+define(["bin/core/util"], 
+function(util)
 {
     var Base = Backbone.View;
     var View = undefined;
@@ -66,7 +66,7 @@ function(elemUtil, osUtil)
         {
             var self = this;
 
-            osUtil.nextTick(function(){self.asyncPosGenHTML();});
+            setTimeout(function(){self.asyncPosGenHTML();}, 0);
         }
 
         return this;
@@ -205,7 +205,7 @@ function(elemUtil, osUtil)
     Class.$fragment = function(sel, fromSel)
     {
         var elem = this.$(sel, fromSel);
-        return elem ? elemUtil.newFragment(elem) : null;
+        return elem ? util.newFragment(elem) : null;
     }
 
     Class.$content = function()
@@ -309,11 +309,11 @@ function(elemUtil, osUtil)
 
         if(views.length === 0)
         {
-            osUtil.nextTick(function()
+            setTimeout(function()
             {
                 elemContainer.unbind("scroll", this._llOnScrollListener);
                 this._llOnScrollListener = null;
-            });
+            }, 0);
         }
     }
 
@@ -390,10 +390,10 @@ function(elemUtil, osUtil)
             {
                 elemContainer.scroll(self._llOnScrollListener);
 
-                osUtil.nextTick(function()
+                setTimeout(function()
                 {
                     self.tryLazyLoad();
-                });
+                }, 0);
             }
         });
     }

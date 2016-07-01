@@ -1,9 +1,8 @@
 define(
 	[
-		"bin/core/pageView",
-        "bin/util/osUtil", 
+		"bin/core/pageView"
     ], 
-	function(View, osUtil)
+	function(View)
 	{
 
 		var Class = 

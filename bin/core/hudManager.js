@@ -1,5 +1,5 @@
  define([], 
-	function(IndicatorView, AlertView, StatusView, DatePickerView, SelectView)
+	function()
 	{
 		var HUDManager = function()
 		{
@@ -109,7 +109,7 @@
 		Class.datePicker = function(options)
 		{
 			var self = this;
-			require(["bin/common/DatePickerView"], function(DatePickerView)
+			require(["bin/common/datePickerView"], function(DatePickerView)
 			{
 				if(typeof options === "function")
 				{

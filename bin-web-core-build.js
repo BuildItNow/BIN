@@ -44,11 +44,7 @@
     'bin/core/netPolicy/netDebugPolicy',
     'bin/core/netPolicy/netSendCheckPolicy',
     'bin/common/lazyLoadView',
-	'bin/util/elemUtil',
-	'bin/util/lsUtil',
-	'bin/util/osUtil',
-	'bin/util/ssUtil',
-
+	'bin/core/util'
     ],
     out: "bin/bin-web-core.js"
 })

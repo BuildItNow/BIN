@@ -60,7 +60,7 @@ require.config(
 				return cls;
 			}
 
-			var bbClasses = [Backbone.Model, Backbone.Collection, Backbone.Router, Backbone.View, Backbone.History];
+			var bbClasses = [Backbone.Router, Backbone.View, Backbone.History];
 			_.each(bbClasses, function(Class) {
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;

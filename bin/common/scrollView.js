@@ -1,5 +1,5 @@
-define(["bin/core/view", "iscroll", "bin/util/osUtil"], 
-function(Base, iscroll, osUtil)
+define(["bin/core/view", "iscroll"], 
+function(Base, iscroll)
 {
 	var Class = {};
 
@@ -77,7 +77,7 @@ function(Base, iscroll, osUtil)
 			this._contentDirty = true;
 
 			var self = this;
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 
 				self.scroller.refresh();
@@ -88,7 +88,7 @@ function(Base, iscroll, osUtil)
 				{
 					self.lazyLoadContainer();		
 				}
-			});
+			}, 0);
 		}
 	}
 
