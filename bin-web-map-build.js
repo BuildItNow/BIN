@@ -13,6 +13,7 @@
 			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
+            //jquery: 'bin/3rdParty/zepto/zepto',
 			jquery: 'bin/3rdParty/jquery/jquery',
 			underscore: 'bin/3rdParty/underscore/underscore',
 			backbone: 'bin/3rdParty/backbone/backbone',
