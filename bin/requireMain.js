@@ -1,3 +1,5 @@
+var __bin__start__time = new Date().getTime();
+
 /**
  * The root namespace of BIN framework.
  * @namespace 
