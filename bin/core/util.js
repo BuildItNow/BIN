@@ -16,13 +16,18 @@ define([], function()
     		holder = holder || this._binDatas.holder;
     		holder.append(this);
     	}
-    	ret.empty = function()
-    	{
-    		if(ret._binDatas.holder)
-    		{
-    			ret._binDatas.holder.empty();
-    		}
-    	}
+        
+        if(!window.Zepto)
+        {
+            ret.empty = function()
+            {
+                if(ret._binDatas.holder)
+                {
+                    ret._binDatas.holder.empty();
+                }
+            }
+        }
+    	
     	ret.holder = function()
     	{
     		return ret._binDatas.holder;
