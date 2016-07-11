@@ -13,6 +13,7 @@
 			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
+            //jquery: 'bin/3rdParty/zepto/zepto',
 			jquery: 'bin/3rdParty/jquery/jquery',
 			underscore: 'bin/3rdParty/underscore/underscore',
 			backbone: 'bin/3rdParty/backbone/backbone',
@@ -50,6 +51,7 @@
     'bin/core/netPolicy/netCallbackPolicy',
     'bin/core/netPolicy/netDebugPolicy',
     'bin/core/netPolicy/netSendCheckPolicy',
+    'bin/core/util',
 
     // common
     'bin/common/hudView',
@@ -93,15 +95,6 @@
 
 	// res
 	'text!bin/res/html/defaultNaviBar.html',
-
-	// util
-	'bin/util/disUtil',
-	'bin/util/elemUtil',
-	'bin/util/fastclickUtil',
-	'bin/util/lsUtil',
-	'bin/util/osUtil',
-	'bin/util/pathUtil',
-	'bin/util/ssUtil'
     ],
     out: "bin/bin.js"
 })

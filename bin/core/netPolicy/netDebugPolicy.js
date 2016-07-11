@@ -1,6 +1,6 @@
 define(
-	["config/netLocalConfig", "bin/util/osUtil"],
-	function(config, osUtil)
+	["config/netLocalConfig", "bin/core/util"],
+	function(config, util)
 	{
 		var NetDebugPolicy = function(netManager)
 		{
@@ -43,7 +43,7 @@ define(
 				}
 				else
 				{
-					osUtil.nextTick(function(){error({status:400, statusText:"Client error"})});
+					setTimeout(function(){error({status:400, statusText:"Client error"})}, 0);
 					
 					return ;
 				}
@@ -99,15 +99,15 @@ define(
 			var netData = null;
 			if(config._netDataGenerator)
 			{
-				netData = config._netDataGenerator(osUtil.clone(data, true), netParams);
+				netData = config._netDataGenerator(util.clone(data, true), netParams);
 			}
 			else
 			{
-				netData = {code:0, data:osUtil.clone(data, true)};
+				netData = {code:0, data:util.clone(data, true)};
 			}
 			var time    = (apiDebugConfig.options && apiDebugConfig.options.costTime) || 500;
 
-			osUtil.delayCall(
+			setTimeout(
 			function()
 			{
 				success(netData);

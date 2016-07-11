@@ -1,5 +1,5 @@
-define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
-function(html, css, Base, osUtil, iscroll)
+define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "iscroll"], 
+function(html, css, Base, iscroll)
 {
 	var Class = {};
 

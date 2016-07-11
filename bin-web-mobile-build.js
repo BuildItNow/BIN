@@ -13,6 +13,7 @@
 			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
+			//jquery: 'bin/3rdParty/zepto/zepto',
 			jquery: 'bin/3rdParty/jquery/jquery',
 			underscore: 'bin/3rdParty/underscore/underscore',
 			backbone: 'bin/3rdParty/backbone/backbone',
@@ -46,10 +47,7 @@
 	    'bin/core/netPolicy/netDebugPolicy',
 	    'bin/core/netPolicy/netSendCheckPolicy',
 	    'bin/common/lazyLoadView',
-		'bin/util/elemUtil',
-		'bin/util/lsUtil',
-		'bin/util/osUtil',
-		'bin/util/ssUtil',
+    	'bin/core/util',
     ],
     include:[
 	    // mobile
@@ -73,8 +71,7 @@
 	    'bin/common/statusView',
 		'text!bin/common/statusView.html',
 		'css!bin/common/statusView.css',
-		'text!bin/res/html/defaultNaviBar.html',
-		'bin/util/fastclickUtil',
+		'text!bin/res/html/defaultNaviBar.html'
 	
     ],
     out: "bin/bin-web-mobile.js"

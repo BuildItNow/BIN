@@ -16,10 +16,6 @@
         </script>
 
         <link href="./bin/res/css/bin.css" rel="stylesheet"/>
-        <script type="text/javascript" src="./bin/3rdParty/requirejs/require.js" data-main="./bin/requireMain.js"></script>
-
-        <!-- comment cordova for web app(not hybrid)-->
-        <script type="text/javascript" src="./cordova.js"></script>
     </head>
     <body>
         <div id="window">
@@ -43,6 +39,10 @@
                     document.write('<div id="windowLoading" class="bin-window-loading bin-loading-dark-image bin-loading-active" style="'+style+'"></div>'); 
                 })();
             }           
-        </script>   
+        </script> 
+        <script type="text/javascript" src="./bin/3rdParty/requirejs/require.js" data-main="./bin/requireMain.js"></script>
+
+        <!-- comment cordova for web app(not hybrid)-->
+        <script type="text/javascript" src="./cordova.js"></script>  
     </body>
 </html>

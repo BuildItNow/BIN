@@ -1,6 +1,6 @@
 define(
-["bin/util/osUtil", "bin/core/dataCenter"], 
-function(osUtil, DataCenter)
+["bin/core/dataCenter"], 
+function(DataCenter)
 {
 	// NORMAL
 
@@ -49,7 +49,7 @@ function(osUtil, DataCenter)
 				return false;
 			}
 
-			if((osUtil.time()-ret.time) > ret.duration)
+			if((_.now()-ret.time) > ret.duration)
 			{
 				this._cacheDataCenter.setGlobalValue(netParams.userdatas.urlKey, null);
 
@@ -72,7 +72,7 @@ function(osUtil, DataCenter)
 
 	Class.getData = function(checkResult, netParams, success, error)
 	{
-		osUtil.nextTick(function(){success(checkResult.data);});
+		setTimeout(function(){success(checkResult.data);}, 0);
 	}
 
 	Class.setData = function(netParams, data)
@@ -86,19 +86,19 @@ function(osUtil, DataCenter)
 		var cache = netParams.options.cache;
 		if(cache === "NORMAL")
 		{
-			this._cacheDataCenter.setGlobalValue(netParams.userdatas.urlKey, {time:osUtil.time(), data:data, duration:bin.runtimeConfig.maxCacheDuration});
+			this._cacheDataCenter.setGlobalValue(netParams.userdatas.urlKey, {time:_.now(), data:data, duration:bin.runtimeConfig.maxCacheDuration});
 		}
 		else if(cache === "DURATION")
 		{
-			this._cacheDataCenter.setGlobalValue(netParams.userdatas.urlKey, {time:osUtil.time(), data:data, duration:netParams.options.cacheDuration});
+			this._cacheDataCenter.setGlobalValue(netParams.userdatas.urlKey, {time:_.now(), data:data, duration:netParams.options.cacheDuration});
 		}
 		else if(cache === "SESSION")
 		{
-			this._cacheDataCenter.setGlobalSessionValue(netParams.userdatas.urlKey, {time:osUtil.time(), data:data});
+			this._cacheDataCenter.setGlobalSessionValue(netParams.userdatas.urlKey, {time:_.now(), data:data});
 		}
 		else if(cache === "USER_SESSION")
 		{
-			this._cacheDataCenter.setUserSessionValue(netParams.userdatas.urlKey, {time:osUtil.time(), data:data});
+			this._cacheDataCenter.setUserSessionValue(netParams.userdatas.urlKey, {time:_.now(), data:data});
 		}
 	}
 

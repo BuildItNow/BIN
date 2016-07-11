@@ -1,5 +1,5 @@
-define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/common/hudView", "bin/util/osUtil"], 
-function(html, css, Base, osUtil)
+define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/common/hudView"], 
+function(html, css, Base)
 {
 	var Class = 
 	{

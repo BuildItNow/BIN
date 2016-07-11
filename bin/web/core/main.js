@@ -22,6 +22,8 @@ function(CHLoader)
 			console.info("APP Start up ");
 				
 			app.run();
+
+			console.info("BIN start cost "+(new Date().getTime()-__bin__start__time)+" ms");
 		});
 	}
 

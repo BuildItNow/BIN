@@ -12,6 +12,10 @@
  * 
  * Released on: June 14, 2015
  */
+
+define([], function()
+{
+
 (function () {
     'use strict';
     /*===========================
@@ -3824,16 +3828,6 @@
 
     window.Swiper = Swiper;
 })();
-/*===========================
-Swiper AMD Export
-===========================*/
-if (typeof(module) !== 'undefined')
-{
-    module.exports = window.Swiper;
-}
-else if (typeof define === 'function' && define.amd) {
-    define([], function () {
-        'use strict';
-        return window.Swiper;
-    });
-}
+
+    return window.Swiper;
+});

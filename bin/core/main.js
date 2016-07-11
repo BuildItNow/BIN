@@ -24,6 +24,8 @@ function(CHLoader)
 			app.fireReady();
 				
 			app.run();
+
+			console.info("BIN start cost "+(new Date().getTime()-__bin__start__time)+" ms");
 		});
 	}
 

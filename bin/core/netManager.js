@@ -1,4 +1,4 @@
-define(function()
+define(["bin/core/util"], function(util)
 {
 	var DEFAULT_NET_OPTIONS = {loading:"MODEL", silent:false};
 	var Net  = function()
@@ -195,15 +195,15 @@ define(function()
 
 		var self = this;
 
-		params.options   = _.extend(bin.util.osUtil.clone(DEFAULT_NET_OPTIONS), params.options);	
+		params.options   = _.extend(util.clone(DEFAULT_NET_OPTIONS), params.options);	
 		params.callbacks = _.pick(params, ["success", "complete", "beforeSend", "error"]);
 
-		params.success = function(netData)
+		params.success = function(netData, textStatus, xhr)
 		{
-			self._success(netData, params);
+			self._success(netData, params, xhr);
 		}
 
-		params.error = function(error)
+		params.error = function(error, textStatus)
 		{
 			self._error(error, params);
 		}
@@ -221,8 +221,20 @@ define(function()
 		return params;
 	}
 
-	Class._success = function(data, netParams)
+	Class._success = function(data, netParams, xhr)
 	{
+		if(xhr && data)
+		{
+			if(typeof data === "string")
+			{
+				var ct = xhr.getResponseHeader("Content-Type");
+				if(ct.indexOf("/json") > 0)
+				{
+					data = JSON.parse(data);
+				}
+			}
+		}
+
 		if(netParams.userdatas.from === "NET")
 		{
 			this._cachePolicy.setData(netParams, data);

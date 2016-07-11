@@ -1,4 +1,4 @@
-define(["bin/util/osUtil"], function(osUtil)
+define(["bin/core/util"], function(util)
 {
 	var defLoadAPI = function(params, success, error)
 	{
@@ -13,7 +13,7 @@ define(["bin/util/osUtil"], function(osUtil)
 
 	var ListDataProvider = function(options)
 	{
-		this._options = _.extend(osUtil.clone(DEFAULT_OPTIONS), options);
+		this._options = _.extend(util.clone(DEFAULT_OPTIONS), options);
 
 		this._data  = [];
 		this._total = -1;
@@ -36,10 +36,10 @@ define(["bin/util/osUtil"], function(osUtil)
 		var self = this;
 		if(!this.anyMore())
 		{
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 				success(self.count(), self.count());
-			});
+			}, 0);
 
 			return ;
 		}

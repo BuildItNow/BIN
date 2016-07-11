@@ -1,6 +1,6 @@
 define(
-	["bin/core/view", "text!bin/common/indicatorView.html", "css!bin/common/indicatorView.css", "bin/util/osUtil"],
-	function(Base, html, css, osUtil)
+	["bin/core/view", "text!bin/common/indicatorView.html", "css!bin/common/indicatorView.css", "bin/core/util"],
+	function(Base, html, css, util)
 	{
 		var Class = 
 		{
@@ -32,7 +32,7 @@ define(
 			}
 			else
 			{
-				options = osUtil.clone(options, true);
+				options = util.clone(options, true);
 			}
 			this._incLoading(options.model);
 			options._lv = this._lv;

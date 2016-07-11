@@ -1,3 +1,5 @@
+var __bin__start__time = new Date().getTime();
+
 // bin frame-work namespace
 var bin = {};
 
@@ -20,6 +22,7 @@ require.config(
 		map: 'bin/requirePlugin/requirejs-map',
 
 		// 3rdParty libs
+		//jquery: 'bin/3rdParty/zepto/zepto',
 		jquery: 'bin/3rdParty/jquery/jquery',
 		underscore: 'bin/3rdParty/underscore/underscore',
 		backbone: 'bin/3rdParty/backbone/backbone',
@@ -60,7 +63,7 @@ require.config(
 				return cls;
 			}
 
-			var bbClasses = [Backbone.Model, Backbone.Collection, Backbone.Router, Backbone.View, Backbone.History];
+			var bbClasses = [Backbone.Router, Backbone.View, Backbone.History];
 			_.each(bbClasses, function(Class) {
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;
