@@ -494,15 +494,25 @@ define([], function()
                 width = s.params.width;
             }
             else {
-                width = s.container[0].clientWidth;
+                if(s.container[0].clientWidth == 0)
+                {
+                    width = s.width;
+                }else{
+                    width = s.container[0].clientWidth;
+               }
+                
             }
             if (typeof s.params.height !== 'undefined') {
                 height = s.params.height;
             }
             else {
-                height = s.container[0].clientHeight;
+                if(s.container[0].clientHeight == 0)
+                {
+                    height = s.height;
+                }else{
+                    height = s.container[0].clientHeight;
+               }
             }
-
             if(width === 0 && isH())
             {
                 width = 1;
