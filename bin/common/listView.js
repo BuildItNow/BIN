@@ -20,7 +20,6 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		createItemView:function(listView, i, data)
 		{
 			var html = this._template(data);
-
 			return new View({html:html});
 		}
 	});
@@ -160,6 +159,10 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 			f.append(this._refreshFooter.$());
 			this._unhookFooterClick();	// Avoid hook too much times
 			this._hookFooterClick();
+		}
+		if(beg == end && !this._dataProvider.anyMore())
+		{
+			bin.hudManager.showStatus('加载数据为空！');
 		}
 		f.setup();
 
