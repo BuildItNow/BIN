@@ -98,8 +98,13 @@ function(Base, TabBarView, SwipeView)
 
 	Class._onTabChange = function(item)
 	{
+		if(!this._swipeView)
+		{
+			return ;
+		}
+
 		this._swipeView.setCurrent(this._item2index(item), true);
-	
+		
 		if(this._options.onChange)
 		{
 			this._options.onChange(this, item);
@@ -108,6 +113,11 @@ function(Base, TabBarView, SwipeView)
 
 	Class._onSwipeChange = function(index)
 	{
+		if(!this._tabBarView)
+		{
+			return ;
+		}
+
 		this._tabBarView.setCurrent(this._options.items[index], true);
 
 		if(this._options.onChange)
