@@ -22,6 +22,14 @@ define(
             return this.$(".bin-page-content");
         }
 
+        Class.posGenHTML = function()
+        {
+            if(this.$content().hasClass("bin-lazyload-container"))
+            {
+                this.lazyLoadContainer(this.$content());
+            }
+        }
+
         // For performance reason, don't define these function in base class, 
         // You can overwrite these function in your class to get these features.
         

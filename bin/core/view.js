@@ -281,7 +281,7 @@ function(util)
     {
         this._llDirty = false;
 
-        var elemContainer = this.$();
+        var elemContainer = this._llContainer;
 
         var os = elemContainer.offset();
         var vl = os.left;
@@ -339,12 +339,13 @@ function(util)
         this._llTryLazyLoad();
     }
 
-    Class.lazyLoadContainer = function()
+    Class.lazyLoadContainer = function(container)
     {
+        this._llContainer = container || this.$();
         var self = this;
         require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {
-            var elemContainer = self.$();
+            var elemContainer = self._llContainer;
 
             if(!self._llOnScrollListener)
             {
