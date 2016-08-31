@@ -474,6 +474,11 @@ function(effecters)
 	          	newView.render();
 	          	self._container.append(newView.$());
 
+	          	if(newView.doRequesting)
+	          	{
+	          		newView.doRequesting();
+	          	}
+
 	          	if(curView)
 	          	{
 	          		var start = pushData.options && pushData.options.start;
@@ -506,6 +511,11 @@ function(effecters)
 				          			newView.onInAnimationEnd();
 				          		}, 0);
 	          				}
+
+	          				if(newView.doRequestDone)
+				          	{
+				          		newView.doRequestDone();
+				          	}
 	          			}
 	          		}
 	          		else if(newView.onInAnimationEnd)
@@ -516,6 +526,18 @@ function(effecters)
 			          		{
 			          			newView.onInAnimationEnd();
 			          		}, 0);
+
+			          		if(newView.doRequestDone)
+				          	{
+				          		newView.doRequestDone();
+				          	}
+	          			}
+	          		}
+	          		else if(newView.doRequestDone)
+	          		{
+	          			onInAnimationEnd = function()
+	          			{
+	          				newView.doRequestDone();
 	          			}
 	          		}
 
@@ -524,6 +546,11 @@ function(effecters)
 	          	else
 	          	{
 	          		newView.show();
+	          		
+	          		if(newView.doRequestDone)
+				    {
+		          		newView.doRequestDone();
+		          	}
 	          	}
 	          
 	          	var item = {key:viewKey(pushData.path, pushData.queryParams._queryString), view: newView, name:pushData.path, effecter:pushData.effecter, native:ViewClass.native !== undefined};

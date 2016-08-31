@@ -73,6 +73,14 @@
     transform: translateX(0);
   }
 }
+
+.prepareSlideInLeft
+{
+    -webkit-transform: translateX(-100%);
+    -ms-transform: translateX(-100%);
+    transform: translateX(-100%);
+}
+
 .slideInLeft {
   -webkit-animation-name: slideInLeft;
   animation-name: slideInLeft;
@@ -101,6 +109,14 @@
     transform: translateX(0);
   }
 }
+
+.prepareSlideInRight
+{
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+}
+
 .slideInRight {
   -webkit-animation-name: slideInRight;
   animation-name: slideInRight;
