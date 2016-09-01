@@ -81,10 +81,15 @@ function(html, css, Base)
 		this.$append("#buttons", '<div class="AlertView-line"></div>');
 
 		var elem = $('<div class="AlertView-button">'+button.text+'</div>');
-		if(button.onClick)
+		if(!button.onClick)
 		{
-			elem.on("click", function(e){button.onClick(self, button.text)});
+			button.onClick = function(view, value)
+			{
+				view.close();
+			}
 		}
+		elem.on("click", function(e){button.onClick(self, button.text)});
+		
 		if(button.color)
 		{
 			elem.css("color", button.color);
@@ -97,25 +102,37 @@ function(html, css, Base)
 
 	Class._wrap2Button = function(button0, button1)
 	{
+		if(!button0.onClick)
+		{
+			button0.onClick = function(view, value)
+			{
+				view.close();
+			}
+		}
+
+		if(!button1.onClick)
+		{
+			button1.onClick = function(view, value)
+			{
+				view.close();
+			}
+		}
+
 		var self = this;
 		this.$append("#buttons", '<div class="AlertView-line"></div>');
 
 		var elemWrap = $('<div class="AlertView-wrap-block"></div>');
 		var elem     = $('<div class="AlertView-wrap-button">'+button0.text+'</div>');
-		if(button0.onClick)
-		{
-			elem.on("click", function(e){button0.onClick(self, button0.text)});
-		}
+		elem.on("click", function(e){button0.onClick(self, button0.text)});
+		
 		if(button0.color)
 		{
 			elem.css("color", button0.color);
 		}
 		elemWrap.append(elem);
 		elem = $('<div class="AlertView-wrap-button">'+button1.text+'</div>');
-		if(button1.onClick)
-		{
-			elem.on("click", function(e){button1.onClick(self, button1.text)});
-		}
+		elem.on("click", function(e){button1.onClick(self, button1.text)});
+		
 		if(button1.color)
 		{
 			elem.css("color", button1.color);
