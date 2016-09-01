@@ -85,8 +85,10 @@
 			});
 		}
 
-		Class.alertError = function(options)
+		Class.alertError = function(message, title)
 		{
+			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定"}]};
+
 			if(options.title)
 			{
 				options.title.color = "red";
@@ -101,7 +103,7 @@
 
 		Class.alertInfo = function(message, title)
 		{
-			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定", onClick:function(v){v.close()}}]};
+			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定"}]};
 
 			return this.alert(options);
 		}

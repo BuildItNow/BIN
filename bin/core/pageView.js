@@ -66,11 +66,15 @@ define(
             r.success = function(impl)
             {
                 r._sImpl = impl;
+
+                return r;
             }
 
             r.error = function(impl)
             {
                 r._eImpl = impl;
+
+                return r;
             }
 
             r.do = function()
