@@ -96,6 +96,7 @@ function(Base, iscroll)
 	{
 		if(this.scroller)
 		{
+			this.scroller.destroy();
 			delete this.scroller;
 		}
 	}

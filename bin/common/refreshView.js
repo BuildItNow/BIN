@@ -11,11 +11,15 @@ function(Base, iscroll, RefreshHeaderView)
 
 	Class.constructor = function(options)
 	{
-		this._refreshHeader = options.headerClass ? new options.headerClass() : new RefreshHeaderView();
-		this._headerHeight  = this._refreshHeader.height();
+		this._noPullToRefresh = options.noPullToRefresh;
+		if(!this._noPullToRefresh)
+		{
+			this._refreshHeader = options.headerClass ? new options.headerClass() : new RefreshHeaderView();
+			this._headerHeight  = this._refreshHeader.height();
+		}
 		this._onRefresh     = options.onRefresh;
 		this._autoRefresh   = options.autoRefresh;
-
+		
 		this._elemScroller = null;
 		this.$scrollerContent = null;
 		this._contentDirty = false;
@@ -33,7 +37,11 @@ function(Base, iscroll, RefreshHeaderView)
 
 		this._elemScroller = $("<div style='position:relative;top:0px;height:auto;'></div>");
 		
-		this._elemScroller.append(this._refreshHeader.$());
+		if(!this._noPullToRefresh)
+		{
+			this._elemScroller.append(this._refreshHeader.$());
+		}
+
 		this._elemScroller.append(this.$scrollerContent);
 		this.$().append(this._elemScroller);
 
@@ -87,7 +95,7 @@ function(Base, iscroll, RefreshHeaderView)
 				return ;
 			}
 
-			if(ani)
+			if(!self._noPullToRefresh && ani)
 			{
 				self.scroller.options.pullToRefresh = true;
 				self.scroller.scrollTo(0, self._headerHeight, 100);	
@@ -133,13 +141,41 @@ function(Base, iscroll, RefreshHeaderView)
 
 	Class.refreshDone = function(fail, options)
 	{
+		var self = this;
+		if(this._noPullToRefresh)
+		{
+			// refresh the scroller
+			this.refreshUI();
+
+			if(!options)
+			{
+				setTimeout(function()
+				{
+					self._refreshState = REFRESH_STATE_DONE;
+					if(self.scroller.y < self.scroller.maxScrollY)
+					{
+						self.scroller.scrollTo(0, self.scroller.maxScrollY, 100);
+					}
+				}, 0);
+			}
+			else
+			{
+				this._refreshDoneOptions = options;
+				setTimeout(function()
+				{
+					self._refreshState = REFRESH_STATE_DONE;
+				}, 0);
+			}
+
+			return ;
+		}
+
 		this._refreshState = REFRESH_STATE_DONE_WATING;
 		this._refreshHeader.onRefreshDone(fail);
 
 		// refresh the scroller
 		this.refreshUI();
 		
-		var self = this;
 		if(!options)
 		{
 			setTimeout(function()
@@ -149,7 +185,11 @@ function(Base, iscroll, RefreshHeaderView)
 				if(/*!self._scrollerTouching &&*/ self.scroller.y > 0)
 				{
 					self.scroller.scrollTo(0, 0, 100);
-				}	
+				}
+				else if(self.scroller.y < self.scroller.maxScrollY)
+				{
+					self.scroller.scrollTo(0, self.scroller.maxScrollY, 100);
+				}
 			}, 500);
 		}
 		else
@@ -167,12 +207,18 @@ function(Base, iscroll, RefreshHeaderView)
 	{
 		if(this.scroller)
 		{
-			delete this.scroller;
+			this.scroller.destroy();
+			//delete this.scroller;
 		}
 	}
 
 	Class._onScrollerTouchStart = function()
 	{
+		if(this._noPullToRefresh)
+		{
+			return ;
+		}
+
 		this._scrollerTouching = true;
 
 		if(this._refreshState === REFRESH_STATE_DONE)
@@ -183,6 +229,11 @@ function(Base, iscroll, RefreshHeaderView)
 
 	Class._onScrollerTouchEnd = function()
 	{
+		if(this._noPullToRefresh)
+		{
+			return ;
+		}
+
 		this._scrollerTouching = false;
 
 		if(this._refreshState === REFRESH_STATE_READY)
@@ -212,6 +263,11 @@ function(Base, iscroll, RefreshHeaderView)
 			this._llOnScroll();
 		}
 
+		if(this._noPullToRefresh)
+		{
+			return ;
+		}
+
 		if(!this._scrollerTouching)
 		{
 			return ;
@@ -229,7 +285,10 @@ function(Base, iscroll, RefreshHeaderView)
 	{
 		this._refreshState = REFRESH_STATE_REFRESHING;
 			
-		this._refreshHeader.onRefresh();
+		if(!this._noPullToRefresh)
+		{
+			this._refreshHeader.onRefresh();
+		}
 
 		if(this._onRefresh)
 		{
