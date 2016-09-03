@@ -694,6 +694,13 @@ IScroll.prototype = {
 	refresh: function () {
 		var rf = this.wrapper.offsetHeight;		// Force reflow
 
+		if(    !(this.wrapperWidth === undefined || this.wrapperHeight === undefined) 
+			&& (!this.wrapper.clientWidth || !this.wrapper.clientHeight)
+		  )
+		{
+			return ;
+		}
+
 		this.wrapperWidth	= this.wrapper.clientWidth;
 		this.wrapperHeight	= this.wrapper.clientHeight;
 

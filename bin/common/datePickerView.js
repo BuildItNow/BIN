@@ -405,5 +405,21 @@ function(html, css, Base, iscroll)
 		});
 	}
 
+	Class.onRemove = function()
+	{
+		var val = null;
+		for(var key in this._scrollers)
+		{
+			val = this._scrollers[key];
+			if(val && val.destroy)
+			{
+				val.destroy();
+			}
+			delete this._scrollers[key];
+		}
+
+		Base.prototype.onRemove.call(this);
+	}
+
 	return Base.extend(Class, {html:html});
 });
