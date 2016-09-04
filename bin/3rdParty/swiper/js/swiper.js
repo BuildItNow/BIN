@@ -494,7 +494,7 @@ define([], function()
                 width = s.params.width;
             }
             else {
-                if(s.container[0].clientWidth == 0)
+                if(s.width && s.container[0].clientWidth === 0)
                 {
                     width = s.width;
                 }else{
@@ -506,7 +506,7 @@ define([], function()
                 height = s.params.height;
             }
             else {
-                if(s.container[0].clientHeight == 0)
+                if(s.height && s.container[0].clientHeight === 0)
                 {
                     height = s.height;
                 }else{
