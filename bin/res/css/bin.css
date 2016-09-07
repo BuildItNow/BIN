@@ -46,6 +46,10 @@ html
     z-index: 10001;
 }
 
+.bin-view
+{
+}
+
 .bin-page
 {
 	position: absolute;

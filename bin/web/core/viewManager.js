@@ -22,6 +22,7 @@ define([], function()
 	pro.newView = function(options, cb)
 	{
 		var self     = this;
+		options = options || {};
 		var noPlugin = (options.elem && options.root) || options.noPlugin;
 		this.loadViewClass(options.path, function(ViewClass)
 		{
@@ -32,11 +33,12 @@ define([], function()
 			}
 			else
 			{
+				options.elemParent = options.elemParent || options.elem;
 				view = ViewClass.create(options);
-				if(options.elem)
+				if(options.elemParent)
 				{
 					view.render();
-					$(options.elem).append(view.$());
+					//$(options.elem).append(view.$());
 					view.show();
 				}
 			}

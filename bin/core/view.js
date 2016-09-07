@@ -16,6 +16,7 @@ function(util)
     Class.constructor = function(options)
     {
         this._show  = null;
+        this._elemParent = options ? options.elemParent : null;
         
         if(options && options.el)   // Load by BIN, BIN will auto set element by html content
         {
@@ -59,6 +60,21 @@ function(util)
         this.preGenHTML();
        
         this.genHTML();
+
+        if(this._elemParent)
+        {
+            if(typeof this._elemParent === "function")
+            {
+                this._elemParent(this);
+            }
+            else
+            {
+                $(this._elemParent).append(this.$());
+            }
+
+            this._elemParent = undefined;
+            delete this._elemParent;
+        }
        
         this.posGenHTML();
         
