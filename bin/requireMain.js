@@ -110,6 +110,8 @@ require.config(
 			bin.extend = function() {
 				var cls = extend.apply(this, arguments);
 				cls.prototype.__$class = cls;
+				cls.prototype.__$super = this;
+				cls.__$super = this;
 
 				return cls;
 			}
