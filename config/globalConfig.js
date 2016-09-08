@@ -11,6 +11,11 @@ define(
 	//top    : 20,
 	//width  : 320,
 	//height : 568,
+	//remConfig:
+	//{
+	//	unit : 20,
+	//	standard : 320,
+	//},
 	DEBUG : 
 	{
 		debug : true,
