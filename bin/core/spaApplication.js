@@ -177,8 +177,24 @@ define([
                 this._height = elemRoot.clientHeight; 
                 this._elemWindow.css("width", this._width+"px");
                 this._elemWindow.css("height", this._height+"px");
-			}		
-            elemRoot.style.fontSize = this._width/640*40+"px";
+			}	
+
+			var standard = 320;
+	        var unit     = 20;
+	        if(bin.globalConfig.remConfig)
+	        {
+	        	if(bin.globalConfig.remConfig.unit)
+	        	{
+	        		unit = bin.globalConfig.remConfig.unit;
+	        	}
+
+	        	if(bin.globalConfig.remConfig.standard)
+	        	{
+	        		standard = bin.globalConfig.remConfig.standard;
+	        	}
+	        }
+	        elemRoot.style.fontSize = this._width/standard*unit+"px";
+	        
 			setTimeout(function(){Backbone.trigger("DISPLAY_METRICS_CHANGED");});
 		}
 

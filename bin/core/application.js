@@ -118,7 +118,22 @@ define([],
 			var elemRoot = document.documentElement;
 			this._width  = elemRoot.clientWidth;
 	        this._height = elemRoot.clientHeight; 
-	        elemRoot.style.fontSize = elemRoot.clientWidth/640*40+"px";
+
+	        var standard = 320;
+	        var unit     = 20;
+	        if(bin.globalConfig.remConfig)
+	        {
+	        	if(bin.globalConfig.remConfig.unit)
+	        	{
+	        		unit = bin.globalConfig.remConfig.unit;
+	        	}
+
+	        	if(bin.globalConfig.remConfig.standard)
+	        	{
+	        		standard = bin.globalConfig.remConfig.standard;
+	        	}
+	        }
+	        elemRoot.style.fontSize = this._width/standard*unit+"px";
 		}
 
 		/**
