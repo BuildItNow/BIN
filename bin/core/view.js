@@ -24,6 +24,12 @@ function(util)
             
             Backbone.View.call(this, options);
 
+            if(options.autoRender)
+            {
+                this.render();
+                this.show();
+            }
+
             return ;
         }
 
@@ -33,7 +39,6 @@ function(util)
             options.elem = null;
 
             Backbone.View.call(this, options);
-
 
             this.render();
             this.show();
@@ -45,7 +50,7 @@ function(util)
 
         Backbone.View.call(this, options);
 
-        if(this._html)
+        if(this._html || (options && options.autoRender))
         {
             this.render();
             this.show();
@@ -425,7 +430,13 @@ function(util)
         }
     }
 
-    View = Base.extend(Class);
+    View = Base.extend(Class, 
+        {
+            create:function(options)
+            {
+                return new this(options);
+            }
+        });
 
     return View;
 });

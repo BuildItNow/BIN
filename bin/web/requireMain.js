@@ -76,6 +76,7 @@ require.config(
 			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
 			require.config(globalConfig.requireConfig);
 			bin.classConfig = globalConfig.classConfig;
+			bin.componentConfig = globalConfig.componentConfig || {};
 			
 			var start = function()
 			{

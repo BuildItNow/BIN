@@ -1,5 +1,5 @@
-define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "iscroll"], 
-function(html, css, Base, iscroll)
+define(["bin/common/hudView", "iscroll"], 
+function(Base, iscroll)
 {
 	var Class = {};
 
@@ -162,5 +162,5 @@ function(html, css, Base, iscroll)
 		Base.prototype.onRemove.call(this);
 	}
 
-	return Base.extend(Class, {html:html});
+	return Base.extend(Class, {view:"bin/common/selectView.html", style:"bin/common/selectView.css", autoRender:true});
 });

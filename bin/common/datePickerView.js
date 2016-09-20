@@ -1,5 +1,5 @@
-define(["text!bin/common/datePickerView.html", "css!bin/common/datePickerView.css", "bin/common/hudView", "iscroll"], 
-function(html, css, Base, iscroll)
+define(["bin/common/hudView", "iscroll"], 
+function(Base, iscroll)
 {
 	var DEFAULT_OPTIONS = 
 	{
@@ -421,5 +421,5 @@ function(html, css, Base, iscroll)
 		Base.prototype.onRemove.call(this);
 	}
 
-	return Base.extend(Class, {html:html});
+	return Base.extend(Class, {view:"bin/common/datePickerView.html", style:"bin/common/datePickerView.css", autoRender:true});
 });

@@ -1,5 +1,5 @@
-define(["text!bin/common/statusView.html", "css!bin/common/statusView.css", "bin/core/view"], 
-function(html, css, Base)
+define(["bin/core/view"], 
+function(Base)
 {
 	var Class = 
 	{
@@ -43,5 +43,5 @@ function(html, css, Base)
 		this.$().hide().fadeIn(200);
 	}
 
-	return Base.extend(Class, {html:html});
+	return Base.extend(Class, {view:"bin/common/statusView.html", style:"bin/common/statusView.css", autoRender:true});
 });

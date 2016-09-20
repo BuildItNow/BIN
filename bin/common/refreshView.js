@@ -1,4 +1,4 @@
-define(["bin/core/view", "iscroll", "bin/common/refreshHeaderView"], 
+define(["bin/core/view", "iscroll", (bin.componentConfig.refreshHeader || "bin/common/refreshHeaderView") ], 
 function(Base, iscroll, RefreshHeaderView)
 {
 	var Class = {};
@@ -14,7 +14,7 @@ function(Base, iscroll, RefreshHeaderView)
 		this._noPullToRefresh = options.noPullToRefresh;
 		if(!this._noPullToRefresh)
 		{
-			this._refreshHeader = options.headerClass ? new options.headerClass() : new RefreshHeaderView();
+			this._refreshHeader = options.headerClass ? options.headerClass.create() : RefreshHeaderView.create();
 			this._headerHeight  = this._refreshHeader.height();
 		}
 		this._onRefresh     = options.onRefresh;
