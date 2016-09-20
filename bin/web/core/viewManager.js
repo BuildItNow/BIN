@@ -23,25 +23,35 @@ define([], function()
 	{
 		var self     = this;
 		options = options || {};
-		var noPlugin = (options.elem && options.root) || options.noPlugin;
+		if(options.autoRender === undefined)
+		{
+			options.autoRender = true;
+		}
+
+		if((options.elem || options.html) && options.noPlugin === undefined)
+		{
+			options.noPlugin = true;
+		}
+
+		//var noPlugin = (options.elem && options.root) || options.noPlugin;
 		this.loadViewClass(options.path, function(ViewClass)
 		{
-			var view = null;
-			if(noPlugin)
-			{
-				view = new ViewClass(options);
-			}
-			else
-			{
-				options.elemParent = options.elemParent || options.elem;
-				view = ViewClass.create(options);
-				if(options.elemParent)
-				{
-					view.render();
-					//$(options.elem).append(view.$());
-					view.show();
-				}
-			}
+			var view = ViewClass.create(options);
+			// if(noPlugin)
+			// {
+			// 	view = ViewClass.create(options);
+			// }
+			// else
+			// {
+			// 	options.elemParent = options.elemParent || options.elem;
+			// 	view = ViewClass.create(options);
+			// 	if(options.elemParent)
+			// 	{
+			// 		view.render();
+			// 		//$(options.elem).append(view.$());
+			// 		view.show();
+			// 	}
+			// }
 
 			var name = options.name || options.path;
 
@@ -51,7 +61,7 @@ define([], function()
 			{
 				cb(view);
 			}
-		}, noPlugin);
+		}, options.noPlugin);
 	}
 
 	pro.delView = function(name)

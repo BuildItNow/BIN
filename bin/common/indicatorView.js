@@ -1,6 +1,6 @@
 define(
-	["bin/core/view", "text!bin/common/indicatorView.html", "css!bin/common/indicatorView.css", "bin/core/util"],
-	function(Base, html, css, util)
+	["bin/core/view", "bin/core/util"],
+	function(Base, util)
 	{
 		var Class = 
 		{
@@ -133,6 +133,6 @@ define(
 			return this._mc;
 		}
 
-		return Base.extend(Class, {html:html});
+		return Base.extend(Class, {view:"bin/common/indicatorView.html", style:"bin/common/indicatorView.css", autoRender:true});
 	}
 );

@@ -87,5 +87,15 @@ define(
 		[
 			
 		]
+	},
+	componentConfig:	// Customize components
+	{
+		//alert:"",
+		//datePicker:"",
+		//indicator:"",
+		//status:"",
+		//select:"",
+		//refreshHeader:"",
+		//refreshFooter:""
 	}
 });

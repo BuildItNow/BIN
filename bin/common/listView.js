@@ -1,6 +1,6 @@
 define([
 "bin/common/refreshView", 
-"bin/common/refreshFooterView", 
+(bin.componentConfig.refreshFooter || "bin/common/refreshFooterView"), 
 "bin/core/util", 
 "bin/common/itemProvider",
 "bin/common/dataProvider",
@@ -48,7 +48,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 			options.autoRefresh = "animation";
 		}
 		
-		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
+		this._refreshFooter = options.footerClass ? options.footerClass.create() : RefreshFooterView.create();
 		this._dataProvider  = options.dataProvider;
 
 		var t = typeof(options.itemProvider);

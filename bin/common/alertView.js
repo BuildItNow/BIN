@@ -1,5 +1,5 @@
-define(["text!bin/common/alertView.html", "css!bin/common/alertView.css", "bin/common/hudView"], 
-function(html, css, Base)
+define(["bin/common/hudView"], 
+function(Base)
 {
 	var Class = 
 	{
@@ -143,5 +143,5 @@ function(html, css, Base)
 		this.$append("#buttons", elemWrap);
 	}
 
-	return Base.extend(Class, {html:html});
+	return Base.extend(Class, {view:"bin/common/alertView.html", style:"bin/common/alertView.css", autoRender:true});
 });
