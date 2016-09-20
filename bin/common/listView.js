@@ -125,7 +125,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		this._refreshFooter.$().detach();
 
 		this._touchTargetHolder.empty();
-		if(this._touchTarget)	// Avoid touch target is removed, or the touch event will miss
+		if(this._touchTarget && this._touchTarget !== this.$scrollerContent[0])	// Avoid touch target is removed, or the touch event will miss
 		{
 			var elem = $(this._touchTarget);
 			elem.hide();
