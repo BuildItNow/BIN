@@ -37,8 +37,14 @@ require.config(
 	shim: {}
 });
 
-(function()
+require(["config/globalConfig"], function(globalConfig)
 {
+	bin.globalConfig  = globalConfig;
+	bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
+	bin.classConfig = globalConfig.classConfig;
+	bin.componentConfig = globalConfig.componentConfig || {};
+
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
@@ -48,7 +54,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
+		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -70,13 +76,6 @@ require.config(
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;
 			});
-			
-			bin.globalConfig  = globalConfig;
-			bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
-			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-			require.config(globalConfig.requireConfig);
-			bin.classConfig = globalConfig.classConfig;
-			bin.componentConfig = globalConfig.componentConfig || {};
 			
 			var start = function()
 			{
@@ -153,7 +152,7 @@ require.config(
 		});
 	};
 
-	var packages = ["config/globalConfig"];
+	var packages = [];
 	if(typeof pageConfig !== "undefined")
 	{
 		packages = packages.concat(pageConfig.packages);
@@ -166,6 +165,6 @@ require.config(
 	{
 		onPackageLoaded();
 	});
-})();
+});
 
 

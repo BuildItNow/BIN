@@ -143,5 +143,5 @@ function(Base)
 		this.$append("#buttons", elemWrap);
 	}
 
-	return Base.extend(Class, {view:"bin/common/alertView.html", style:"bin/common/alertView.css", autoRender:true});
+	return Base.extend(Class, {view:"bin/common/alertView.html", style:"bin/common/alertView.css"});
 });

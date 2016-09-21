@@ -24,7 +24,7 @@ function(util)
             
             Backbone.View.call(this, options);
 
-            if(options.autoRender)
+            if(!options.manualRender)
             {
                 this.render();
                 this.show();
@@ -40,8 +40,11 @@ function(util)
 
             Backbone.View.call(this, options);
 
-            this.render();
-            this.show();
+            if(!options.manualRender)
+            {
+                this.render();
+                this.show();
+            }
             
             return ;
         }
@@ -50,7 +53,7 @@ function(util)
 
         Backbone.View.call(this, options);
 
-        if(this._html || (options && options.autoRender))
+        if(this._html || !options || !options.manualRender)
         {
             this.render();
             this.show();

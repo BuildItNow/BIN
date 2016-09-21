@@ -421,5 +421,5 @@ function(Base, iscroll)
 		Base.prototype.onRemove.call(this);
 	}
 
-	return Base.extend(Class, {view:"bin/common/datePickerView.html", style:"bin/common/datePickerView.css", autoRender:true});
+	return Base.extend(Class, {view:"bin/common/datePickerView.html", style:"bin/common/datePickerView.css"});
 });

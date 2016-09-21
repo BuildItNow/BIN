@@ -81,12 +81,10 @@ define(["bin/core/application"],
 					if(root)	// No plugin
 					{
 						options.elem = elem;
-						options.noPlugin = true;
 					}
 					else		// Use plugin
 					{
 						options.elemParent = elem;
-						options.autoRender = true;
 					}
 
 					bin.viewManager.newView(options)

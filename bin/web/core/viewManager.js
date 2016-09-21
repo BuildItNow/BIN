@@ -23,36 +23,14 @@ define([], function()
 	{
 		var self     = this;
 		options = options || {};
-		if(options.autoRender === undefined)
-		{
-			options.autoRender = true;
-		}
-
 		if((options.elem || options.html) && options.noPlugin === undefined)
 		{
 			options.noPlugin = true;
 		}
 
-		//var noPlugin = (options.elem && options.root) || options.noPlugin;
 		this.loadViewClass(options.path, function(ViewClass)
 		{
 			var view = ViewClass.create(options);
-			// if(noPlugin)
-			// {
-			// 	view = ViewClass.create(options);
-			// }
-			// else
-			// {
-			// 	options.elemParent = options.elemParent || options.elem;
-			// 	view = ViewClass.create(options);
-			// 	if(options.elemParent)
-			// 	{
-			// 		view.render();
-			// 		//$(options.elem).append(view.$());
-			// 		view.show();
-			// 	}
-			// }
-
 			var name = options.name || options.path;
 
 			self._views[name] = view;

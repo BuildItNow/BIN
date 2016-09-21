@@ -43,5 +43,5 @@ function(Base)
 		this.$().hide().fadeIn(200);
 	}
 
-	return Base.extend(Class, {view:"bin/common/statusView.html", style:"bin/common/statusView.css", autoRender:true});
+	return Base.extend(Class, {view:"bin/common/statusView.html", style:"bin/common/statusView.css"});
 });
