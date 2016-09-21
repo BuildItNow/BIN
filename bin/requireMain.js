@@ -87,8 +87,13 @@ require.config(
 	shim: {}
 });
 
-(function()
+require(["config/globalConfig"], function(globalConfig)
 {
+	bin.globalConfig  = globalConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
+	bin.classConfig   = globalConfig.classConfig;
+	bin.componentConfig = globalConfig.componentConfig || {};
+
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
@@ -98,7 +103,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
+		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -121,11 +126,6 @@ require.config(
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;
 			});
-
-			bin.globalConfig  = globalConfig;
-			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-			bin.classConfig   = globalConfig.classConfig;
-			bin.componentConfig = globalConfig.componentConfig || {};
 
 			var start = function()
 			{
@@ -211,7 +211,7 @@ require.config(
 		});
 	};
 
-	var packages = ["bin/3party.js", "bin/bin.js", "config/globalConfig"];
+	var packages = ["bin/3party.js", "bin/bin.js"];
 
 	require(packages, function()
 	{
@@ -220,6 +220,6 @@ require.config(
 	{
 		onPackageLoaded();
 	});
-})();
+});
 
 

@@ -60,7 +60,7 @@
         'bin/common/selectView',
         'text!bin/common/selectView.html',
         'css!bin/common/selectView.css',
-        'bin/common/dataProvider',
+       
         'bin/common/datePickerView',
         'text!bin/common/datePickerView.html',
         'css!bin/common/datePickerView.css',
@@ -73,8 +73,7 @@
     	'text!bin/res/html/defaultNaviBar.html',
    
         // refresh view
-	    'bin/common/refreshFooterView',
-        'text!bin/common/refreshFooterView.html',
+
         'bin/common/refreshHeaderView',
         'text!bin/common/refreshHeaderView.html',
         'bin/common/refreshView',
@@ -82,6 +81,10 @@
     include:
     [
         // list view
+        'bin/common/itemProvider',
+        'bin/common/dataProvider',
+        'bin/common/refreshFooterView',
+        'text!bin/common/refreshFooterView.html',
         'bin/common/listView',
     ],
     out: "bin/bin-web-listView.js"

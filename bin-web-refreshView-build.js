@@ -75,8 +75,6 @@
     include:
     [
         // refresh view
-	    'bin/common/refreshFooterView',
-        'text!bin/common/refreshFooterView.html',
         'bin/common/refreshHeaderView',
         'text!bin/common/refreshHeaderView.html',
         'bin/common/refreshView',

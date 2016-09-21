@@ -8,7 +8,7 @@ define(
 
 		Class.constructor = function(options)
 		{
-			this._style = options ? options.style : "dark";
+			this._style = options ? (options.style || bin.globalConfig.indicator || "dark") : (bin.globalConfig.indicator || "dark");
 
 			Base.prototype.constructor.call(this, options);
 
@@ -133,6 +133,6 @@ define(
 			return this._mc;
 		}
 
-		return Base.extend(Class, {view:"bin/common/indicatorView.html", style:"bin/common/indicatorView.css", autoRender:true});
+		return Base.extend(Class, {view:"bin/common/indicatorView.html", style:"bin/common/indicatorView.css"});
 	}
 );

@@ -42,10 +42,6 @@ define([], function ()
         ViewClass.create = function(options)
         {
             options = options || {};
-            if(options.autoRender === undefined && this.autoRender)
-            {
-                options.autoRender = this.autoRender;
-            }
 
             if(!options.html && !options.elem)
             {

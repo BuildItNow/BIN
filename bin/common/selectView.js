@@ -162,5 +162,5 @@ function(Base, iscroll)
 		Base.prototype.onRemove.call(this);
 	}
 
-	return Base.extend(Class, {view:"bin/common/selectView.html", style:"bin/common/selectView.css", autoRender:true});
+	return Base.extend(Class, {view:"bin/common/selectView.html", style:"bin/common/selectView.css"});
 });

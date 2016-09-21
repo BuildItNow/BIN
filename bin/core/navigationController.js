@@ -459,7 +459,7 @@ function(effecters)
 		// Require is async process, avoid _clear and requie conflicting, store the require stack version
 		require(['view!' + pushData.path], function(ViewClass)
         {
-    	  	var newView = ViewClass.create();
+    	  	var newView = ViewClass.create({fromNavi:true, manualRender:true});
     	  	var curView = self.current();
 
     	  	var onNewView = function()	

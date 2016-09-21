@@ -32,7 +32,7 @@
 			var self = this;
 			require([bin.componentConfig.indicator || "view!bin/common/indicatorView"], function(IndicatorView)
 			{
-				self._indicator = IndicatorView.create({style:bin.globalConfig.indicator || "dark"});
+				self._indicator = IndicatorView.create();
 				elemIndicatorContainer.append(self._indicator.$());
 			});
 		}

@@ -18,7 +18,7 @@ define(
 
         Class.constructor = function(options)
         {
-            if(options && options.el)
+            if(options && options.fromNavi)
             {
                 this._reqsStatus = REQ_STATUS_NONE;
                 this._requests   = [];
