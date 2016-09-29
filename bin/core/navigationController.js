@@ -108,7 +108,8 @@ function(effecters)
 		this._container = $("#navigationContainer");
 
 		// Redirect to index.html
-		window.location.href = './index.html#';
+		// window.location.href = './index.html#';
+
 		// Start rooter
 		Backbone.history.start({pushState: false, silent:true});
 
@@ -582,7 +583,7 @@ function(effecters)
     	  	}
     	  	else if(!curView)
 	        {
-	        	if(cordova)
+	        	if(cordova && cordova.binPlugins && cordova.binPlugins.nativeBridge)
     	  		{
     	  			cordova.binPlugins.nativeBridge.pushStubView(function(error)
     	  			{
