@@ -279,13 +279,13 @@ define([
 
 		Class.fireReady = function()
 		{
-			setTimeout(function()
+			if(cordova && cordova.binPlugins && cordova.binPlugins.eventEmiter)
 			{
-				if(cordova)
+				setTimeout(function()
 				{
 					cordova.binPlugins.eventEmiter.fire("SCRIPT_EVENT_READY");
-				}
-			}, 0);
+				}, 0);
+			}
 		}
 
 		return Application.extend(Class);
