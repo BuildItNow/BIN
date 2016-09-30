@@ -1,6 +1,8 @@
 # BIN
 BIN是一个简单、轻量的前端JS框架，可用于Hybrid(结合Cordova框架) APP、SPA(Single Page Application) APP、MPA(Multiple Page Application) APP以及一般的网页开发。<br/>
 
+## [参考文档](https://github.com/BuildItNow/BIN_Documents)
+
 # 工程结构和开发模式
 BIN工程结构<br/>
 ![工程结构](http://101.200.215.114:8080/res/img/gcjg.png)
@@ -57,8 +59,6 @@ BIN提供了基于Gulp的自动构建，在工程发布时，一键处理混淆�
 * 数据中心模块，支持本地存储和会话存储
 * 本地API测试框架，支持完全无依赖服务器进行开发
 * rem自适应机制([demo](http://101.200.215.114:8080/apps/tutorials/index.html))<br/>
-
-## [参考文档](https://github.com/BuildItNow/BIN_Documents)
 
 # UI组件
 ## DatePickerView
