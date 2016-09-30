@@ -58,6 +58,8 @@ BIN提供了基于Gulp的自动构建，在工程发布时，一键处理混淆�
 * 本地API测试框架，支持完全无依赖服务器进行开发
 * rem自适应机制([demo](http://101.200.215.114:8080/apps/tutorials/index.html))<br/>
 
+## [参考文档](https://github.com/BuildItNow/BIN_Documents)
+
 # UI组件
 ## DatePickerView
 ![UI组件](http://101.200.215.114:8080/res/gif/datePicker.gif)
