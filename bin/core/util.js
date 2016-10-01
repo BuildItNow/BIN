@@ -45,18 +45,31 @@ define([], function()
 
         if (!_.isObject(obj)) return obj;
 
+        var ret = undefined;
         if(_.isArray(obj))
         {
-            return obj.slice();
+            ret = [];
+            for(var i=0,i_sz=obj.length; i<i_sz; ++i)
+            {
+                ret.push(Class.clone(obj[i], deep));   
+            }
+
+            return ret;
         } 
-
-        var ret = {};
-        for(var key in obj)
+        else if(_.isFunction(obj))
         {
-            ret[key] = Class.clone(obj[key], deep);    
+            return obj;
         }
+        else
+        {
+            ret = {};
+            for(var key in obj)
+            {
+                ret[key] = Class.clone(obj[key], deep);    
+            }
 
-        return ret;
+            return ret;
+        }
     }
 
     Class.dump = function(obj)

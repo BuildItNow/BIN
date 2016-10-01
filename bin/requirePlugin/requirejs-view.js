@@ -11,11 +11,7 @@ define([], function ()
         el.innerHTML = "<div id='"+name+"' class='bin-native-page'></div>";
         el = el.firstElementChild;
 
-        var $super = ViewClass.__$super;
-
         ViewClass = ViewClass.extend({});
-        ViewClass.prototype.__$super = $super;
-        ViewClass.__$super = $super;
             
         ViewClass.create = function(options)
         {
@@ -40,11 +36,7 @@ define([], function ()
         el = el.firstElementChild;
 
         // Spawn a new class, avoid change the source class create method
-        var $super = ViewClass.__$super;
-
         ViewClass = ViewClass.extend({});
-        ViewClass.prototype.__$super = $super;
-        ViewClass.__$super = $super;
             
         var oldCreate = ViewClass.create;
         ViewClass.create = function(options)
