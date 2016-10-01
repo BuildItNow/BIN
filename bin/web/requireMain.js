@@ -32,6 +32,7 @@ require.config(
 		md5: 'bin/3rdParty/md5/md5',
 		lzstring: "bin/3rdParty/lz-string/lz-string",
 		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
+		vue:"bin/3rdParty/vue/vue",
 	},
 	waitSeconds: 5,
 	shim: {}
