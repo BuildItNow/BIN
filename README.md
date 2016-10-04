@@ -1,7 +1,7 @@
 # BIN
 BIN是一个简单、轻量的前端JS框架，可用于Hybrid(结合Cordova框架) APP、SPA(Single Page Application) APP、MPA(Multiple Page Application) APP以及一般的网页开发。<br/>
 
-## [参考文档](https://github.com/BuildItNow/BIN_Documents)
+## [参考文档](https://github.com/BuildItNow/BIN_Documents) [开发示例](https://github.com/BuildItNow/BIN_Tutorials)
 
 # 工程结构和开发模式
 BIN工程结构<br/>
@@ -60,40 +60,6 @@ BIN提供了基于Gulp的自动构建，在工程发布时，一键处理混淆�
 * 本地API测试框架，支持完全无依赖服务器进行开发
 * rem自适应机制([demo](http://101.200.215.114:8080/apps/tutorials/index.html))<br/>
 
-# UI组件
-## DatePickerView
-![UI组件](http://101.200.215.114:8080/res/gif/datePicker.gif)
-
-## RefreshView
-![UI组件](http://101.200.215.114:8080/res/gif/refreshView.gif)
-
-## ListView
-![UI组件](http://101.200.215.114:8080/res/gif/listView.gif)
-
-## AlertView
-![UI组件](http://101.200.215.114:8080/res/gif/alertView.gif)
-
-## IndicatorView
-![UI组件](http://101.200.215.114:8080/res/gif/indicatorView.gif)
-
-## StatusView
-![UI组件](http://101.200.215.114:8080/res/gif/statusView.gif)
-
-## SwipeView
-![UI组件](http://101.200.215.114:8080/res/gif/swipeView.gif)
-
-## TabBarView
-![UI组件](http://101.200.215.114:8080/res/gif/tabbarView.gif)
-
-## TabView
-![UI组件](http://101.200.215.114:8080/res/gif/tabView.gif)
-
-## 延迟加载
-![UI组件](http://101.200.215.114:8080/res/gif/lazyLoad.gif)
-
-## TabView结合RefreshView，ListView
-![UI组件](http://101.200.215.114:8080/res/gif/complexTab.gif)
-
 ## 1px显示问题
 1. 可以使用viewport scales设置为0.5达到整体效果，但是在Chrome上所有height:auto的元素文字可能会scale失败，解决方法是显式设置height为具体的尺寸<br/>
 2. 在viewport scale设置为1情况下，使用transform:scale来达到效果
@@ -104,8 +70,6 @@ BIN提供了基于Gulp的自动构建，在工程发布时，一键处理混淆�
 * bin : BIN 框架代码 <br/>
 * config : 配置模板文件<br />
 * index.html : BIN框架Web引导页面<br />
-
-## demo
 
 # 文档
 
