@@ -25,7 +25,7 @@
 			lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
 			prloader: "bin/3rdParty/requirejs-prloader/prloader",
 			hammer:"bin/3rdParty/hammerjs/hammer",
-
+			vue:"bin/3rdParty/vue/vue",
     },
     include:['hammer'],
     out: "bin/3party-web-hammer.js",

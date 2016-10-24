@@ -1,5 +1,5 @@
-define(["bin/core/util"], 
-function(util)
+define(["bin/core/util", "vue"], 
+function(util, Vue)
 {
     var Base = Backbone.View;
     var View = undefined;
@@ -60,9 +60,19 @@ function(util)
         }
     }
 
+    var methodWrapper = function(self, impl)
+    {
+        return function()
+        {
+            self.vm = self.vm || this;
+            return impl.apply(self, arguments);
+        }
+    }
 
     Class.render = function ()
-    {                
+    {             
+        var self = this;  
+
         Base.prototype.render.call(this);
 
         this.preGenHTML();
@@ -83,13 +93,69 @@ function(util)
             this._elemParent = undefined;
             delete this._elemParent;
         }
+
+        var VMOptions = undefined;
+        if(this.__$class.VMOptions)
+        {
+            VMOptions = util.clone(this.__$class.VMOptions, true);
+
+            // Fix vm functions
+            var methods = VMOptions.methods;
+            for(var key in methods)
+            {
+                methods[key] = methodWrapper(self, methods[key]);
+            }
+
+            var computed = VMOptions.computed;
+            for(var key in computed)
+            {
+                if(typeof computed[key] === "function")
+                {
+                    computed[key] = methodWrapper(self, computed[key]);
+                }
+                else
+                {
+                    if(computed[key].set)
+                    {
+                        computed[key].set = methodWrapper(self, computed[key].set);
+                    }
+
+                    if(computed[key].get)
+                    {
+                        computed[key].get = methodWrapper(self, computed[key].get);
+                    }
+                }
+            }
+
+            var watch = VMOptions.watch;
+            for(var key in watch)
+            {
+                if(typeof watch[key] === "function")
+                {
+                    watch[key] = methodWrapper(self, watch[key]);
+                }
+                else
+                {
+                    watch[key].handler = methodWrapper(self, watch[key].handler);
+                }
+            }
+        }
+
+        if(this.prepareVMOptions)
+        {
+            VMOptions = this.prepareVMOptions(VMOptions);
+        }
+
+        if(VMOptions)
+        {
+            VMOptions.el = this.$()[0];
+            this.vm = new Vue(VMOptions);
+        }
        
         this.posGenHTML();
         
         if(this.asyncPosGenHTML)
         {
-            var self = this;
-
             setTimeout(function(){self.asyncPosGenHTML();}, 0);
         }
 
@@ -132,6 +198,11 @@ function(util)
             }
 
             delete this._llViews;
+        }
+
+        if(this.vm)
+        {
+            this.vm.$destroy();
         }
 
         this.onRemove();
@@ -440,6 +511,76 @@ function(util)
                 return new this(options);
             }
         });
+
+    var extend = View.extend;
+    View.extend = function(cls, sta)
+    {
+        // Generate View-Model options
+        var VMOptions = util.clone(this.VMOptions, true) || {};
+
+        if(!VMOptions.data)
+        {
+            VMOptions.data = {};
+        }
+
+        if(!VMOptions.computed)
+        {
+            VMOptions.computed = {};
+        }
+
+        if(!VMOptions.watch)
+        {
+            VMOptions.watch = {};
+        }
+
+        if(!VMOptions.methods)
+        {
+            VMOptions.methods = {};
+        }
+
+        var hasVM = false;
+
+        if(cls.vmData)
+        {
+            VMOptions.data = _.extend(VMOptions.data, cls.vmData);
+            hasVM = true;
+        }
+
+        for(var key in cls)
+        {
+            if(key.indexOf("vm") !== 0)
+            {
+                continue;
+            }
+
+            if(key.indexOf("Method_", 2) === 2)
+            {
+                VMOptions.methods[key.substring(9)] = cls[key];
+                hasVM = true;
+            }
+            else if(key.indexOf("Computed_", 2) === 2)
+            {
+                VMOptions.computed[key.substring(11)] = cls[key];
+                hasVM = true;
+            }
+            else if(key.indexOf("Watch_", 2) === 2)
+            {
+                VMOptions.watch[key.substring(8)] = cls[key];
+                hasVM = true;
+            }
+        }
+
+        hasVM = hasVM || this.VMOptions;
+
+        var ret = extend.apply(this, arguments);
+
+        if(hasVM)
+        {
+            ret.VMOptions = VMOptions;
+        }
+
+        return ret;
+    }
 
     return View;
 });
