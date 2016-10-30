@@ -210,7 +210,7 @@ function(View)
 
 		if(nxtView.view.onViewBack)
 		{
-			nxtView.view.onViewBack(curView.name, popData.data);
+			nxtView.view.onViewBack(this.current().name, popData.data);
 		}
 
 		var v = null;
