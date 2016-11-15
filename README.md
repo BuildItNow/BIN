@@ -10,8 +10,6 @@ BIN采用的开发模式十分贴近传统的GUI开发，无论多么复杂的�
 ![概念类比](http://101.200.215.114:8080/res/img/vsnative.png)
 BIN遵循MVC，OCP，KISS等原则，没有引入过多的模式和概念，保持简单但又足够强大！<br/>
 <br/>
-以[翡翠吧吧](http://t.feicuibaba.com)为例：<br/>
-![开发模式](http://101.200.215.114:8080/res/img/kfms.png)
 
 # 框架特性
 ## 前后端分离
