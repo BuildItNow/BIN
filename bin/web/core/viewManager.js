@@ -19,6 +19,23 @@ define([], function()
 		return this._views[name];
 	}
 
+	pro.getOrNewView = function(options, cb)
+	{
+		var name = options.name || options.path;
+		var view = this.getView(name);
+		if(view)
+		{
+			setTimeout(function()
+			{
+				cb(view);
+			}, 0)
+			
+			return ;
+		}
+
+		this.newView(options, cb);
+	}
+
 	pro.newView = function(options, cb)
 	{
 		var self     = this;

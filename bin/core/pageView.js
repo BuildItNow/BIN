@@ -33,6 +33,14 @@ define(
 
         Class.request = function(impl, success, error)
         {
+            if(!impl && success && !error)  // Just want to do something after page animation
+            {
+                impl = function(s, e)
+                {
+                    s();
+                }
+            }
+
             var o = this._requestor(impl);
             if(success)
             {
