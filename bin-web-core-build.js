@@ -23,11 +23,11 @@
 			md5: 'bin/3rdParty/md5/md5',
 			lzstring: "bin/3rdParty/lz-string/lz-string",
 			lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
-			prloader: "bin/3rdParty/requirejs-prloader/prloader"
-
+			prloader: "bin/3rdParty/requirejs-prloader/prloader",
+            vue:"bin/3rdParty/vue/vue",
     },
     exclude:
-    ['css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone', 'config/netLocalConfig'],
+    ['vue', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone', 'config/netLocalConfig'],
     include:[
     
     // core
