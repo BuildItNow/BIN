@@ -16,7 +16,12 @@ define(
 
 		}
 
-		Class.beforeSend = function(netParams)
+		Class.before = function(params)
+		{
+
+		}
+
+		Class.beforeSend = function(xhr, netParams)
 		{
 			var options = netParams.options;
 			if(options.loading)
@@ -26,34 +31,34 @@ define(
 
 			if(netParams.callbacks.beforeSend)
 			{
-				netParams.callbacks.beforeSend(netParams);
+				return netParams.callbacks.beforeSend(xhr, netParams);
 			}
 		}
 
-		Class.success = function(data, netParams)
+		Class.success = function(data, textStatus, xhr, netParams)
 		{
 			if(netParams.callbacks.success)
 			{
-				netParams.callbacks.success(data, netParams);
+				return netParams.callbacks.success(data, textStatus, xhr, netParams);
 			}
 		}
 
-		Class.error = function(error, netParams)
+		Class.error = function(xhr, textStatus, netParams)
 		{
 			if(bin.runtimeConfig.debug)
 			{
-				console.error("API["+netParams.api+"] Error "+error.status+" "+error.statusText);
+				console.error("API["+netParams.api+"] Error "+xhr.status+" "+xhr.statusText);
 			}
 
 			var status = "";
 
-			if(error.status === 0)
+			if(xhr.status === 0)
 			{
-				if(error.statusText === "abort")
+				if(xhr.statusText === "abort")
 				{
 					netParams.userdatas.abort = true;
 				}
-				else if(error.statusText === "timeout")
+				else if(xhr.statusText === "timeout")
 				{
 					netParams.userdatas.timeout = true;
 					status = "网络连接超时";
@@ -65,7 +70,7 @@ define(
 			}
 			else
 			{
-				status = "网络错误，错误代码 "+error.status;
+				status = "网络错误，错误代码 "+xhr.status;
 			}
 
 			if(status && !netParams.options.silent)
@@ -75,21 +80,24 @@ define(
 
 			if(netParams.callbacks.error)
 			{
-				netParams.callbacks.error(error, netParams);
+				return netParams.callbacks.error(xhr, textStatus, netParams);
 			}
 		}
 
-		Class.complete = function(netParams)
+		Class.complete = function(xhr, textStatus, netParams)
 		{
+			var r = undefined;
 			if(netParams.callbacks.complete)
 			{
-				netParams.callbacks.complete(netParams);
+				r = netParams.callbacks.complete(xhr, textStatus, netParams);
 			}
 
 			if(netParams.userdatas.indicatorID)
 			{
 				bin.hudManager.stopIndicator(netParams.userdatas.indicatorID);
 			}
+
+			return r;
 		}
 
 		return NetCallbackPolicy;

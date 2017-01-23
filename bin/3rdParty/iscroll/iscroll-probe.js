@@ -279,7 +279,8 @@ function IScroll (el, options) {
 
 		HWCompositing: true,
 		useTransition: true,
-		useTransform: true
+		useTransform: true,
+		disablePointer: true,
 	};
 
 	for ( var i in options ) {

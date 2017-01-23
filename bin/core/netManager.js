@@ -54,6 +54,18 @@ define(["bin/core/util"], function(util)
 
 	Class.doAPI = function(params)
 	{
+		if(this._callbackPolicy && this._callbackPolicy.before(params) === false)
+		{
+			if(params.error)
+			{
+				setTimeout(function()
+				{
+					params.error({status:0, statusText:"reject"}, "reject:CallbackPolicy.before", params);
+				}, 0);
+			}
+			return ;
+		}
+
 		var netParams = this._genNetParams(params);
 		if(!netParams)
 		{
@@ -81,6 +93,13 @@ define(["bin/core/util"], function(util)
 					break;
 					case "REJECT":
 					{
+						if(netParams.callbacks.error)
+						{
+							setTimeout(function()
+							{
+								netParams.callbacks.error({status:0, statusText:"reject"}, "reject:SendCheckPolicy.check", netParams);
+							}, 0);
+						}
 						return ;
 					}
 					break;
@@ -96,17 +115,17 @@ define(["bin/core/util"], function(util)
 			{
 				netParams.userdatas.from = "DEBUG";
 
-				this._beforeSend(netParams);
+				this._beforeSend(null, netParams);
 
 				this._debugPolicy.getData(checkResult, netParams, function(data)
 				{
-					self._success(data, netParams);
-					self._complete(netParams);
+					self._success(data, "success", null, netParams);
+					self._complete(null, "success", netParams);
 				},
 				function(error)
 				{
-					self._error(error, netParams);
-					self._complete(netParams);
+					self._error(error, "error", netParams);
+					self._complete(null, "error", netParams);
 				});
 
 				return ;
@@ -120,17 +139,17 @@ define(["bin/core/util"], function(util)
 			{
 				netParams.userdatas.from = "CACHE";
 
-				this._beforeSend(netParams);
+				this._beforeSend(null, netParams);
 
 				this._cachePolicy.getData(checkResult, netParams, function(data)
 				{
-					self._success(data, netParams);
-					self._complete(netParams);
+					self._success(data, "success", null, netParams);
+					self._complete(null, "success", netParams);
 				},
 				function(error)
 				{
-					self._error(error, netParams);
-					self._complete(netParams);
+					self._error(error, "error", netParams);
+					self._complete(null, "error", netParams);
 				});
 
 				return ;
@@ -200,35 +219,35 @@ define(["bin/core/util"], function(util)
 
 		params.success = function(netData, textStatus, xhr)
 		{
-			self._success(netData, params, xhr);
+			return self._success(netData, textStatus, xhr, params);
 		}
 
-		params.error = function(error, textStatus)
+		params.error = function(xhr, textStatus)
 		{
-			self._error(error, params);
+			return self._error(xhr, textStatus, params);
 		}
 
-		params.complete = function()
+		params.complete = function(xhr, textStatus)
 		{
-			self._complete(params);
+			return self._complete(xhr, textStatus, params);
 		}
 
-		params.beforeSend = function()
+		params.beforeSend = function(xhr)
 		{
-			self._beforeSend(params);
+			return self._beforeSend(xhr, params);
 		}
 
 		return params;
 	}
 
-	Class._success = function(data, netParams, xhr)
+	Class._success = function(data, textStatus, xhr, netParams)
 	{
 		if(xhr && data)
 		{
 			if(typeof data === "string")
 			{
 				var ct = xhr.getResponseHeader("Content-Type");
-				if(ct.indexOf("/json") > 0)
+				if(ct && ct.indexOf("/json") > 0)
 				{
 					data = JSON.parse(data);
 				}
@@ -240,26 +259,28 @@ define(["bin/core/util"], function(util)
 			this._cachePolicy.setData(netParams, data);
 		}
 
-		this._callbackPolicy.success(data, netParams);
+		return this._callbackPolicy.success(data, textStatus, xhr, netParams);
 	}
 
-	Class._error = function(error, netParams)
+	Class._error = function(xhr, textStatus, netParams)
 	{
-		this._callbackPolicy.error(error, netParams);
+		return this._callbackPolicy.error(xhr, textStatus, netParams);
 	}
 
-	Class._complete = function(netParams)
+	Class._complete = function(xhr, textStatus, netParams)
 	{
-		this._callbackPolicy.complete(netParams);
+		var r = this._callbackPolicy.complete(xhr, textStatus, netParams);
 
 		this._sendCheckPolicy.onComplete(netParams);
+
+		return r;
 	}
 
-	Class._beforeSend = function(netParams)
+	Class._beforeSend = function(xhr, netParams)
 	{
 		this._sendCheckPolicy.onBeforeSend(netParams);
 		
-		this._callbackPolicy.beforeSend(netParams);
+		return this._callbackPolicy.beforeSend(xhr, netParams);
 	}
 	
 	return Net;
