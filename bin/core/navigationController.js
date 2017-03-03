@@ -82,14 +82,11 @@ function(effecters)
 		return queryString ? path+'?'+queryString : path;
 	} 
 
-	var DEFAULT_IO_EFFECT = bin.globalConfig.pageIOAnim;
-
 	var NavigationController = function()
 	{
       	this._views = [];
 	    this._pushData = null;
 	    this._popData  = null;
-	    //this._stackV   = 0;
 	}
 
 	NavigationController.extend = bin.extend;
@@ -116,6 +113,17 @@ function(effecters)
 		console.info("NavigationController module initialize");
 
 		this._zIndex = 100;
+
+		this._defaultIOEffecter = bin.globalConfig.pageIOAnim;
+
+		if(this._defaultIOEffecter && (typeof bin.globalConfig.pageIOAnim === "string"))
+		{
+			this._defaultIOEffecter = effecters[bin.globalConfig.pageIOAnim] || effecters["rightIO"];
+		}
+		else if(!this._defaultIOEffecter)
+		{
+			this._defaultIOEffecter = effecters["rightIO"];
+		}
 	}
 
 	cls.popTo = function(name, popData, options)
@@ -189,15 +197,14 @@ function(effecters)
 			options.trigger = true;
 		}
 
-		var effecter = null;
-		if(options.effect)
+		var effecter = options.effect;
+		if(effecter && (typeof effecter === "string"))
 		{
-			effecter = effecters[options.effect];
-			effecter = effecter || effecters["noIO"];
+			effecter = effecters[effecter] || this._defaultIOEffecter;
 		}
-		else
+		else if(!effecter)
 		{
-			effecter = effecters[DEFAULT_IO_EFFECT];
+			effecter = this._defaultIOEffecter;
 		}
 
 		var pos = name.indexOf('?');
@@ -362,7 +369,7 @@ function(effecters)
 
 			// Do push
 			// Ignore : Must call naviController.push to do naviage operation
-			this._doPush({path:path, queryParams:queryParams(queryString), effecter:effecters[DEFAULT_IO_EFFECT]});
+			this._doPush({path:path, queryParams:queryParams(queryString), effecter:this._defaultIOEffecter});
 		}
 	}
 
@@ -426,6 +433,11 @@ function(effecters)
         {
            	++n;
         }
+
+        var onOutAnimationEnd = function()
+        {
+        	curView.view.remove();
+        }
 		
 		if(n > 0)
 		{
@@ -436,7 +448,7 @@ function(effecters)
 				OEffecter = nxtView.native ? effecters["nativeSNIO"][1] : effecters["nativeSSIO"][1];
 			}
 
-			OEffecter(curView.view, nxtView.view);
+			OEffecter(curView.view, nxtView.view, onOutAnimationEnd);
 
 			cordova.binPlugins.nativeBridge.popNativePageView(n, curView.native || nxtView.native, function(error)
     	  	{
@@ -450,7 +462,7 @@ function(effecters)
     	  	return ;
 		}
 
-		curView.effecter[1](curView.view, nxtView.view);
+		curView.effecter[1](curView.view, nxtView.view, onOutAnimationEnd);
     }
 
 	cls._doPush = function(pushData)
