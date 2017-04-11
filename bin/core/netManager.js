@@ -52,6 +52,27 @@ define(["bin/core/util"], function(util)
 		this._sendCheckPolicy = policy;
 	}
 
+	Class.doAPIEx = function(params)
+	{
+		var self = this;
+		var p = new Promise(function(resolve, reject)
+			{
+				params.success = function(netData, textStatus, xhr, params)
+				{
+					resolve(netData/*, textStatus, xhr, params*/);
+				}
+
+				params.error = function(xhr, textStatus, params)
+				{
+					reject(xhr/*, textStatus, params*/);
+				}
+
+				self.doAPI(params);
+			});
+
+		return p;
+	}
+
 	Class.doAPI = function(params)
 	{
 		if(this._callbackPolicy && this._callbackPolicy.before(params) === false)

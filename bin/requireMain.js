@@ -88,7 +88,7 @@ require.config(
 	shim: {}
 });
 
-require(["config/globalConfig"], function(globalConfig)
+require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
 	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];

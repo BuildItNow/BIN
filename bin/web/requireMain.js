@@ -38,7 +38,7 @@ require.config(
 	shim: {}
 });
 
-require(["config/globalConfig"], function(globalConfig)
+require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
 	bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
