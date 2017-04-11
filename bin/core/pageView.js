@@ -33,11 +33,15 @@ define(
 
         Class.request = function(impl, success, error)
         {
-            if(!impl && success && !error)  // Just want to do something after page animation
+            if(!impl && !error)  // Just want to do something after page animation
             {
-                impl = function(s, e)
+                if(success)
                 {
-                    s();
+                    impl = function(s, e){s();}
+                }
+                else
+                {
+                    impl = Promise.resolve();
                 }
             }
 
@@ -64,6 +68,8 @@ define(
             {
                 this._requests.push(o);
             }
+
+            return o._prose;
         }
 
         Class._requestor = function(impl)
@@ -123,6 +129,31 @@ define(
                 else if(this._eDone && this._eImpl)
                 {
                     this._eImpl.apply(this, this._eArgs);
+                }
+            }
+
+            if(typeof impl === "object")    // promise
+            {
+                r._pImpl = impl;
+                r._prose = new Promise(function(resolve, reject)
+                {
+                    r._pResolve = resolve;
+                    r._pReject  = reject;
+                });
+
+                r._impl = function(success, error)
+                {
+                    this._pImpl.then(success).catch(error);
+                }
+
+                r._sImpl = function(data)
+                {
+                    this._pResolve(data);
+                }
+
+                r._eImpl = function(error)
+                {
+                    this._pReject(error);
                 }
             }
 

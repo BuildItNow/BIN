@@ -7,28 +7,48 @@ function()
 		"nativeIO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				curView.show();
-				//preView.hide();
+				
+				if(aniEnd)
+				{
+					setTimeout(function()
+					{
+						aniEnd();
+					}, 0);
+				}
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				curView.hide();
-				curView.remove();
+				
+				if(aniEnd)
+				{
+					setTimeout(function()
+					{
+						aniEnd();
+					}, 0);
+				}
 			}
 		],
 		"nativeSSIO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
-				
+				if(aniEnd)
+				{
+					setTimeout(function()
+					{
+						aniEnd();
+					}, 0);
+				}
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				preView.animateSlideInLeft(function()
@@ -38,25 +58,39 @@ function()
 				curView.animateSlideOutRight(function()
 				{
 					curView.hide();
-					curView.remove();
+					
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				});
 			}
 		],
 		"nativeSNIO" :
 		[
 			// In
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
-				
+				if(aniEnd)
+				{
+					setTimeout(function()
+					{
+						aniEnd();
+					}, 0);
+				}
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				setTimeout(function()
 				{
 					preView.show();
 					curView.hide();
-					curView.remove();
+					
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				}, 500);
 			}
 		],
@@ -77,11 +111,18 @@ function()
 				}
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				curView.hide();
-				curView.remove();
+
+				if(aniEnd)
+				{
+					setTimeout(function()
+					{
+						aniEnd();
+					}, 0);
+				}
 			}
 		],
 		"fadeIO" :
@@ -94,6 +135,7 @@ function()
 				{
 					preView.hide();
 					curView.show();
+
 					if(aniEnd)
 					{
 						aniEnd();
@@ -101,14 +143,18 @@ function()
 				});
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				curView.animateFadeOut(function()
 				{
 					curView.hide();
-					curView.remove();
 					preView.show();
+
+					if(aniEnd)
+					{
+						aniEnd();
+					}
 				});
 			}
 		],
@@ -135,7 +181,7 @@ function()
 				}, 30);
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				setTimeout(function()
@@ -143,8 +189,12 @@ function()
 					curView.animateSlideOutRight(function()
 					{
 						curView.hide();
-						curView.remove();
 						preView.show();
+
+						if(aniEnd)
+						{
+							aniEnd();
+						}
 					});
 				}, 30);
 			}
@@ -172,7 +222,7 @@ function()
 				}, 30);
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				setTimeout(function()
@@ -180,8 +230,12 @@ function()
 					curView.animateSlideOutLeft(function()
 					{
 						curView.hide();
-						curView.remove();
 						preView.show();
+
+						if(aniEnd)
+						{
+							aniEnd();
+						}
 					});
 				}, 30);
 			}
@@ -213,7 +267,7 @@ function()
 				}, 30);
 			},
 			// Out
-			function(curView, preView)
+			function(curView, preView, aniEnd)
 			{
 				preView.show();
 				setTimeout(function()
@@ -225,13 +279,16 @@ function()
 					curView.animateSlideOutRight(function()
 					{
 						curView.hide();
-						curView.remove();
+						
+						if(aniEnd)
+						{
+							aniEnd();
+						}
 					});
 				}, 30);
 			}
 		]
 	}
-
 
 	return effecters;
 });
