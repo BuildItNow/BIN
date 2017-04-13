@@ -101,17 +101,35 @@ function(effecters)
 	cls.init = function()
 	{
 		var self = this;
-		this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
 		this._container = $("#navigationContainer");
 
 		// Redirect to index.html
 		// window.location.href = './index.html#';
 
-		// Start rooter
-		Backbone.history.start({pushState: false, silent:true});
+		var pageHistory = bin.globalConfig.pageHistory || "hashChange";
+		if(pageHistory === "hashChange" || pageHistory === "pushState")	// Use backbone router
+		{
+			this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
+	
+			this._pageHistory = Backbone.history;
 
-		console.info("NavigationController module initialize");
-
+			var options = {silent:true};
+			if(pageHistory === "pushState")
+			{
+				console.warn("pushState feature not supported on SPA, use hashChange instead.");
+				// options.pushState = true;
+				// var root = window.location.host+window.location.pathname;
+				// var i = root.lastIndexOf("/");
+				// if(i > 0)
+				// {
+				// 	root = root.substring(0, i);
+				// }
+				
+				// options.root = root;
+			}
+			this._pageHistory.start(options);
+		}
+		
 		this._zIndex = 100;
 
 		this._defaultIOEffecter = bin.globalConfig.pageIOAnim;
@@ -124,6 +142,8 @@ function(effecters)
 		{
 			this._defaultIOEffecter = effecters["rightIO"];
 		}
+
+		console.info("NavigationController module initialize");
 	}
 
 	cls.popTo = function(name, popData, options)
@@ -175,7 +195,14 @@ function(effecters)
 
 		this._popData = {data:popData, options:options, count:count, time:now};
 
-		window.history.go(-count);
+		if(this._pageHistory)
+		{
+			window.history.go(-count);
+		}
+		else
+		{
+			this._route();
+		}
 
 		return true;
 	}
@@ -218,20 +245,31 @@ function(effecters)
 		
 		path = toNaviName(path);
 
-		queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+		if(this._pageHistory)
+		{
+			queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+		}
 
       	name = queryString ? path+"?"+queryString : path;
 
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, time:now, effecter:effecter};
 
 
+		if(this._pageHistory)
+		{
+			this._pageHistory.navigate(name, options);
+		}
+		else
+		{
+			this._route(path, queryString);
+		}
 		//if(options.native)
 		//{
 		//	this._route(path, queryString);
 		//}
 		//else
 		//{
-			Backbone.history.navigate(name, options); // ==> route
+			//Backbone.history.navigate(name, options); // ==> route
 		//}
 
 		return true;
@@ -281,7 +319,10 @@ function(effecters)
 	cls.startWith = function(view, data, options)
 	{	
 		// Set backgone to a invalid fragment to clear the old url
-		Backbone.history.fragment = "";
+		if(this._pageHistory)
+		{
+			this._pageHistory.fragment = "";
+		}
 
 		options = options || {};
 		options.start = true;
