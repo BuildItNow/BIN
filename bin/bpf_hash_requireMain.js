@@ -82,6 +82,7 @@ require.config(
 		lzstring: "bin/3rdParty/lz-string/lz-string",
 		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
 		prloader: "bin/3rdParty/requirejs-prloader/prloader",
+		hammer:"bin/3rdParty/hammerjs/hammer",
 		vue:"bin/3rdParty/vue/vue"
 	},
 	waitSeconds: 5,
@@ -211,7 +212,7 @@ require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 		});
 	};
 
-	var packages = ["bin/3party.js", "bin/bin.js"];
+	var packages = ["bin/bpf_hash_3party.bundle.js", "bin/bpf_hash_bin.bundle.js"];
 
 	require(packages, function()
 	{

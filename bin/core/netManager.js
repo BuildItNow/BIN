@@ -23,9 +23,6 @@ define(["bin/core/util"], function(util)
 		this._callbackPolicy = new Net.CallbackPolicy(this);
 		this._callbackPolicy.init();
 
-		this._cachePolicy = new Net.CachePolicy(this);
-		this._cachePolicy.init();
-
 		this._sendCheckPolicy = new Net.SendCheckPolicy(this);
 		this._sendCheckPolicy.init();
 
@@ -40,11 +37,6 @@ define(["bin/core/util"], function(util)
 	Class.setCallbackPolicy = function(policy)
 	{
 		this._callbackPolicy = policy;
-	}
-
-	Class.setCachePolicy = function(policy)
-	{
-		this._cachePolicy = policy;
 	}
 
 	Class.setSendCheckPolicy = function(policy)
@@ -90,6 +82,13 @@ define(["bin/core/util"], function(util)
 		var netParams = this._genNetParams(params);
 		if(!netParams)
 		{
+			if(params.error)
+			{
+				setTimeout(function()
+				{
+					params.error({status:0, statusText:"invalid"}, "invalid:_genNetParams", params);
+				}, 0);
+			}
 			return ;
 		}
 
@@ -153,31 +152,6 @@ define(["bin/core/util"], function(util)
 			}
 		}
 
-		// Try cache policy
-		{
-			var checkResult = this._cachePolicy.check(netParams);
-			if(checkResult)
-			{
-				netParams.userdatas.from = "CACHE";
-
-				this._beforeSend(null, netParams);
-
-				this._cachePolicy.getData(checkResult, netParams, function(data)
-				{
-					self._success(data, "success", null, netParams);
-					self._complete(null, "success", netParams);
-				},
-				function(error)
-				{
-					self._error(error, "error", netParams);
-					self._complete(null, "error", netParams);
-				});
-
-				return ;
-			}
-
-		}
-
 		netParams.userdatas.from = "NET";
 		netParams.userdatas.request = this.ajax(netParams);
 	}
@@ -210,6 +184,11 @@ define(["bin/core/util"], function(util)
 		if(!params.url && !params.api)
 		{
 			return null;
+		}
+
+		if(params.userdatas)	// It's generated, just return self
+		{
+			return params;
 		}
 
 		params.userdatas = {};
@@ -273,11 +252,6 @@ define(["bin/core/util"], function(util)
 					data = JSON.parse(data);
 				}
 			}
-		}
-
-		if(netParams.userdatas.from === "NET")
-		{
-			this._cachePolicy.setData(netParams, data);
 		}
 
 		return this._callbackPolicy.success(data, textStatus, xhr, netParams);

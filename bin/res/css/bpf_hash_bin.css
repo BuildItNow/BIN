@@ -95,7 +95,7 @@ html
 	background-size: 1rem 1rem;
 	background-position: 0.5rem 50%;
 
-	background-image: url(../img/back.png);
+	background-image: url("../img/bpf_hash_back.png");
 }
 
 .bin-page-navi-right
@@ -186,7 +186,7 @@ html
 	bottom:3.5rem;
 	right:0.5rem;
 	background-color:transparent;
-	background-image: url("../img/gototop.png");
+	background-image: url("../img/bpf_hash_gototop.png");
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }

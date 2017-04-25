@@ -1,6 +1,6 @@
 define(
-	["bin/core/navigationController-ioEffecters"],
-function(effecters)
+	["bin/core/navigationController-ioEffecters", "vue"],
+function(effecters, Vue)
 {
 	var toLeftSlash = function(path)
 	{
@@ -142,6 +142,86 @@ function(effecters)
 		{
 			this._defaultIOEffecter = effecters["rightIO"];
 		}
+
+		// Add directive to Vue
+		var NUMBER_REG = /^[0-9]*$/;
+		var makeGetter = function(vm, exp)
+		{
+			var func = new Function("vm", "return "+exp);
+
+			return function(){return func(vm);}
+		}
+
+		Vue.directive("navigation", 
+		{
+			bind:function()
+			{
+				var arg  = this.arg;
+				var data = undefined;
+				var func = undefined;
+				var hand = undefined;
+				var view = undefined;
+				if(arg === "push")
+				{
+					view = this.expression;
+					data = this.el.getAttribute("pushData");
+					func = "push";
+				}
+				else if(arg === "pop")
+				{
+					view = this.expression;
+					func = "pop";
+					if(view)
+					{
+						if(NUMBER_REG.test(view))
+						{
+							view = parseInt(view);
+						}
+						else
+						{
+							func = "popTo";
+						}
+					}
+					data = this.el.getAttribute("popData");
+				}
+				else if(arg === "start")
+				{
+					view = this.expression;
+					data = this.el.getAttribute("pushData");
+					func = "startWith";
+				}
+
+				if(view && typeof view === "string" && view.startsWith("vm"))
+				{
+					var c = view.charAt(2);
+					if(c === "." || c === "[")
+					{
+						view = makeGetter(this.vm, view);
+					}
+				}
+				
+				if(data && data.startsWith("vm"))
+				{
+					var c = data.charAt(2);
+					if(c === "." || c === "[")
+					{
+						data = makeGetter(this.vm, data);
+					}
+				}
+
+				this.handler = function()
+				{
+					self[func](view && typeof view === "function" ? view() : view, data && typeof data === "function" ? data() : data);
+				}
+
+				this.el.addEventListener("click", this.handler);
+			},
+			unbind:function()
+			{
+				this.el.removeEventListener("click", this.handler);
+			},
+
+		});
 
 		console.info("NavigationController module initialize");
 	}
