@@ -170,14 +170,6 @@ define(
             return this.$(".bin-page-content");
         }
 
-        Class.posGenHTML = function()
-        {
-            if(this.$content().hasClass("bin-lazyload-container"))
-            {
-                this.lazyLoadContainer(this.$content());
-            }
-        }
-
         Class.doRequesting = function()
         {
             if(this._reqsStatus === REQ_STATUS_NONE)

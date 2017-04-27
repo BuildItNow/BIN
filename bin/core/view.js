@@ -148,12 +148,44 @@ function(util, Vue)
 
         if(VMOptions)
         {
-            VMOptions.el = this.$()[0];
+            var el = this.$()[0];
+            if(el)
+            {
+                if(!el.__v_pre__)
+                {
+                    el.nodeType === 1 && el.removeAttribute("v-pre");
+                    el.__v_pre__ = true;
+                }
+
+                VMOptions.el = this.$()[0];
+            }
             this.vm = new Vue(VMOptions);
         }
        
         this.posGenHTML();
-        
+
+        var elemContent = this.$content();
+        if(elemContent.hasClass("bin-lazyload-container"))
+        {
+            this.lazyLoadContainer(elemContent);
+
+            if(this.vm)
+            {
+                this.vm.$on("flush", function()
+                {
+                    self.lazyLoadContainer(elemContent);
+                });
+            }
+        }
+
+        if(this.vm && this.onViewModelFlush)
+        {
+            this.vm.$on("flush", function()
+            {
+                self.onViewModelFlush();
+            });
+        }
+
         if(this.asyncPosGenHTML)
         {
             setTimeout(function(){self.asyncPosGenHTML();}, 0);
@@ -177,13 +209,14 @@ function(util, Vue)
 
     }
 
+    Class.$content = function()
+    {
+        return this.$();
+    }
+
     // called after genHTML(), do some work after the view's dom tree is done. 
     Class.posGenHTML = function()
     {
-        if(this.$().hasClass("bin-lazyload-container"))
-        {
-            this.lazyLoadContainer();
-        }
     }
 
     Class.remove = function()
@@ -302,12 +335,6 @@ function(util, Vue)
         var elem = this.$(sel, fromSel);
         return elem ? util.newFragment(elem) : null;
     }
-
-    Class.$content = function()
-    {
-        return this.$(".bin-page-content");
-    }
-
 
     // Lazy load feature
 
@@ -436,7 +463,7 @@ function(util, Vue)
 
     Class.lazyLoadContainer = function(container)
     {
-        this._llContainer = container || this.$();
+        this._llContainer = container || this.$content();
         var self = this;
         require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {

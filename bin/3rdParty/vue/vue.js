@@ -3019,6 +3019,7 @@ var expression = Object.freeze({
   var has = {};
   var circular = {};
   var waiting = false;
+  var wvms = {vms:[]};
 
   /**
    * Reset the batcher's state.
@@ -3030,6 +3031,7 @@ var expression = Object.freeze({
     has = {};
     circular = {};
     waiting = false;
+    wvms = {vms:[]};
   }
 
   /**
@@ -3055,6 +3057,13 @@ var expression = Object.freeze({
       if (devtools && config.devtools) {
         devtools.emit('flush');
       }
+
+      var vms = wvms.vms;
+      for(var i=0,i_sz=vms.length; i<i_sz; ++i)
+      {
+        vms[i].$emit("flush");
+      }
+
       resetBatcherState();
     }
   }
@@ -3071,8 +3080,14 @@ var expression = Object.freeze({
     for (var i = 0; i < queue.length; i++) {
       var watcher = queue[i];
       var id = watcher.id;
+      var vm = watcher.vm;
       has[id] = null;
       watcher.run();
+
+      if(vm && !wvms[vm._uid]){
+        wvms[vm._uid] = true;
+        wvms.vms.push(vm);
+      }
       // in dev build, check and stop circular updates.
       if ('development' !== 'production' && has[id] != null) {
         circular[id] = (circular[id] || 0) + 1;
@@ -7110,6 +7125,16 @@ var template = Object.freeze({
    */
 
   function compileElement(el, options) {
+    if (el.__v_pre__){
+      if(!el.__v_pre_root_now__){
+        return skip;
+      }
+    }
+    else if(el.hasAttributes() && getAttr(el, 'v-pre') !== null){
+      el.__v_pre__ = true;
+      return skip;
+    }
+
     // preprocess textareas.
     // textarea treats its text content as the initial value.
     // just bind it as an attr directive for value.
@@ -7372,10 +7397,10 @@ var template = Object.freeze({
    */
 
   function checkTerminalDirectives(el, attrs, options) {
-    // skip v-pre
-    if (getAttr(el, 'v-pre') !== null) {
-      return skip;
-    }
+    // // skip v-pre
+    // if (getAttr(el, 'v-pre') !== null) {
+    //   return skip;
+    // }
     // skip v-else block, but only if following v-if
     if (el.hasAttribute('v-else')) {
       var prev = el.previousElementSibling;
@@ -8578,8 +8603,17 @@ var template = Object.freeze({
       this._initElement(el);
 
       // handle v-pre on root node (#2026)
-      if (el.nodeType === 1 && getAttr(el, 'v-pre') !== null) {
-        return;
+      if(el.nodeType === 1 && el.hasAttributes() && getAttr(el, 'v-pre') !== null){
+        el.__v_pre__ = true;
+      }
+
+      if(el.__v_pre__){
+        if(el === this.$el){
+          el.__v_pre_root_now__ = true;
+        }
+        else{
+          return;
+        }
       }
 
       // root is always compiled per-instance, because
@@ -8623,6 +8657,8 @@ var template = Object.freeze({
 
       this._isCompiled = true;
       this._callHook('compiled');
+
+      el.__v_pre_root_now__ && (delete el.__v_pre_root_now__);
     };
 
     /**
