@@ -169,7 +169,7 @@ function(util, Vue)
         {
             this.lazyLoadContainer(elemContent);
 
-            if(this.vm)
+            if(this.vm && !elemContent.hasClass("bin-no-vm-flush"))
             {
                 this.vm.$on("flush", function()
                 {
