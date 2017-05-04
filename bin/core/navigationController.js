@@ -14,6 +14,7 @@ function(effecters)
 			Backbone.Router.prototype.initialize.call(this);
 			
 			this._callbackImpl = callback;
+			this._pathHistory = []
 		},
 		routes: 
 		{
@@ -210,7 +211,7 @@ function(effecters)
 			
 			return false;
 		}
-		if(this._views.length > 0 && this._views[this._views.length-1].name == name){//same page, reject
+		if(this._views.length > 0 && this._views[this._views.length-1].name === name){//same page, reject
 			console.warn("push same page");
 
 			return false;
