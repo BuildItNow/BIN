@@ -4,11 +4,6 @@ function(util, Vue)
     var Base = Backbone.View;
     var View = undefined;
 
-    // Static Properties
-    //__$html:null, // View from class html string
-    //__$view:null, // View from html file
-    //__$native:{ios:null, android:null},  // View from native
-
     var Class =  
     {
     };
@@ -209,11 +204,6 @@ function(util, Vue)
 
     }
 
-    Class.$content = function()
-    {
-        return this.$();
-    }
-
     // called after genHTML(), do some work after the view's dom tree is done. 
     Class.posGenHTML = function()
     {
@@ -235,6 +225,15 @@ function(util, Vue)
 
         if(this.vm)
         {
+            if(this._vmUnLinks)
+            {
+                for(var i=this._vmUnLinks.length-1; i>=0; --i)
+                {
+                    this._vmUnLinks[i](true);
+                }
+
+                delete this._vmUnLinks;
+            }
             this.vm.$destroy();
         }
 
@@ -263,6 +262,25 @@ function(util, Vue)
         this._show = false;
         this.$().hide();
         this.onHide();
+    }
+
+    // Only handle jquery elements
+    Class.compile = function(elem)
+    {
+        if(!this.vm)
+        {
+            console.warm("ViewModel not created for this view, can't compile the element");
+            return ;
+        }
+        if(!this._vmUnLinks)
+        {
+            this._vmUnLinks = [];
+        }
+
+        for(var i=0,i_sz=elem.length; i<i_sz; ++i)
+        {
+            this._vmUnLinks.push(this.vm.$compile(elem[i]));
+        }
     }
 
     Class.isShow = function()
@@ -295,6 +313,11 @@ function(util, Vue)
         {
             return sel ? this.$el.find(sel) : this.$el;
         }
+    }
+
+    Class.$content = function()
+    {
+        return this.$();
     }
 
     Class.$html = function(sel, html)
@@ -532,12 +555,12 @@ function(util, Vue)
     }
 
     View = Base.extend(Class, 
+    {
+        create:function(options)
         {
-            create:function(options)
-            {
-                return new this(options);
-            }
-        });
+            return new this(options);
+        }
+    });
 
     var extend = View.extend;
     View.extend = function(cls, sta)
