@@ -14,31 +14,10 @@ function(effecters)
 			Backbone.Router.prototype.initialize.call(this);
 			
 			this._callbackImpl = callback;
-			this._pathHistory = []
 		},
 		routes: 
 		{
 			'*path(?*queryString)': '_callback',
-		},
-		navigate:function(a,b){
-			if(this._pathHistory.length > 1){
-				this._pathHistory[0] = this._pathHistory[1];
-				var history = {};
-				history.url = a.split("?")[0];
-				history.time = a.split("?")[1].split("=")[1];
-				if(this._pathHistory[0].url === history.url){
-					if((history.time - this._pathHistory[0].time) < 1000){
-						return false;
-					}
-				}
-				this._pathHistory[1] = history;
-			}else{
-				var history = {};
-				history.url = a.split("?")[0];
-				history.time = a.split("?")[1].split("=")[1];
-				this._pathHistory.push(history);
-			}
-			Backbone.history.navigate(a,b);
 		},
 		_callback: function(path, queryString)
 		{
@@ -207,13 +186,8 @@ function(effecters)
 		var now = _.now();
 		if(this._pushData && (now - this._pushData.time) < 500)	// Too fast, reject
 		{
-			console.warn("push too fast");
+			console.warning("push too fast");
 			
-			return false;
-		}
-		if(this._views.length > 0 && this._views[this._views.length-1].name === name){//same page, reject
-			console.warn("push same page");
-
 			return false;
 		}
 
@@ -257,7 +231,7 @@ function(effecters)
 		//}
 		//else
 		//{
-			this._router.navigate(name, options); // ==> route
+			Backbone.history.navigate(name, options); // ==> route
 		//}
 
 		return true;
