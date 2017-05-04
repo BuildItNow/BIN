@@ -145,17 +145,17 @@ function(effecters, Vue)
 
 		// Add directive to Vue
 		var NUMBER_REG = /^[0-9]*$/;
-		var makeGetter = function(vm, exp)
+		var VM_EL_REG  = /^((vm)|(el))[\.\[]/;
+		var makeGetter = function(exp)
 		{
-			var func = new Function("vm", "return "+exp);
-
-			return function(){return func(vm);}
+			return new Function("vm", "el", "return "+exp);
 		}
 
 		Vue.directive("navigation", 
 		{
 			bind:function()
 			{
+				var dirc = this;
 				var arg  = this.arg;
 				var data = undefined;
 				var func = undefined;
@@ -191,27 +191,19 @@ function(effecters, Vue)
 					func = "startWith";
 				}
 
-				if(view && typeof view === "string" && view.startsWith("vm"))
+				if(view && typeof view === "string" && VM_EL_REG.test(view))
 				{
-					var c = view.charAt(2);
-					if(c === "." || c === "[")
-					{
-						view = makeGetter(this.vm, view);
-					}
+					view = makeGetter(view);
 				}
 				
-				if(data && data.startsWith("vm"))
+				if(data && VM_EL_REG.test(data))
 				{
-					var c = data.charAt(2);
-					if(c === "." || c === "[")
-					{
-						data = makeGetter(this.vm, data);
-					}
+					data = makeGetter(data);
 				}
 
 				this.handler = function()
 				{
-					self[func](view && typeof view === "function" ? view() : view, data && typeof data === "function" ? data() : data);
+					self[func](view && typeof view === "function" ? view(dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm, dirc.el) : data);
 				}
 
 				this.el.addEventListener("click", this.handler);
