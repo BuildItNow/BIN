@@ -1,7 +1,84 @@
 define(
-["bin/util/lsUtil", "bin/util/ssUtil"],
-function(lsUtil, ssUtil)
+[],
+function()
 {
+	var COMPRESS = true;
+
+	var lsUtil = {};
+	lsUtil.save = function(name, data)
+    {
+    	if(COMPRESS)
+    	{
+    		name = LZString.compress(name);
+    	}
+
+        if(data === null || data === undefined)
+        {
+            window.localStorage.removeItem(name);
+            return ;
+        }
+
+        data = JSON.stringify(data);
+        
+        if(COMPRESS && data)
+        {
+        	data = LZString.compress(data);
+        }
+
+        window.localStorage[name] = data;
+    }
+        
+    lsUtil.load = function(name)
+    {
+    	if(COMPRESS)
+    	{
+    		name = LZString.compress(name);
+    	}
+
+        var ret = window.localStorage[name];
+
+        if(COMPRESS && ret)
+        {
+        	ret = LZString.decompress(ret);
+        }
+
+        return ret ? JSON.parse(ret) : null;
+    }
+
+    lsUtil.clear = function(name)
+    {
+    	if(COMPRESS)
+    	{
+    		name = LZString.compress(name);
+    	}
+
+        window.localStorage.removeItem(name);
+    }
+
+    var ssUtil = {};
+	ssUtil.save = function(name, data)
+    {
+    	if(data === null || data === undefined)
+        {
+            window.sessionStorage.removeItem(name);
+            return ;
+        }
+        
+        window.sessionStorage[name] = JSON.stringify(data);
+    }
+        
+    ssUtil.load = function(name)
+    {
+    	var ret = window.sessionStorage[name];
+
+    	return ret ? JSON.parse(ret) : null;
+    }
+
+    ssUtil.clear = function(name)
+    {
+    	window.sessionStorage.removeItem(name);
+    }
+
 	// Global : Always
 	// Global Session : APP Runtime
 	// User : Always
@@ -25,7 +102,7 @@ function(lsUtil, ssUtil)
 		this._userSession = {}
 
 		this._userIdentify = identify;
-		this._uvPrefix = identify+"_UV_";
+		this._uvPrefix = bin.globalConfig.appID+"u-"+identify+"-";
 	}
 
 	Class.onUserLogout = function()
@@ -81,12 +158,12 @@ function(lsUtil, ssUtil)
 
 	Class.setGlobalValue = function(key, value)
 	{
-		lsUtil.save("BIN_"+key, value);
+		lsUtil.save(bin.globalConfig.appID+"g-"+key, value);
 	}
 
 	Class.getGlobalValue = function(key, def)
 	{
-		var ret = lsUtil.load("BIN_"+key);
+		var ret = lsUtil.load(bin.globalConfig.appID+"g-"+key);
 		return ret === null || ret === undefined ? def : ret;
 	}
 
@@ -101,11 +178,8 @@ function(lsUtil, ssUtil)
 		return ret === null || ret === undefined ? def : ret;
 	}
 	
-	if(typeof Backbone !== "undefined")
-	{
-		_.extend(Class, Backbone.Events);
-	}
-
+	_.extend(Class, Backbone.Events);
+	
 	return DataCenter;
 }
 );

@@ -1,6 +1,6 @@
 define(
-	["bin/core/view", "text!bin/common/indicatorView.html", "css!bin/common/indicatorView.css", "bin/util/osUtil"],
-	function(Base, html, css, osUtil)
+	["bin/core/view", "bin/core/util"],
+	function(Base, util)
 	{
 		var Class = 
 		{
@@ -8,7 +8,7 @@ define(
 
 		Class.constructor = function(options)
 		{
-			this._style = options ? options.style : "dark";
+			this._style = options ? (options.style || bin.globalConfig.indicator || "dark") : (bin.globalConfig.indicator || "dark");
 
 			Base.prototype.constructor.call(this, options);
 
@@ -32,7 +32,7 @@ define(
 			}
 			else
 			{
-				options = osUtil.clone(options, true);
+				options = util.clone(options, true);
 			}
 			this._incLoading(options.model);
 			options._lv = this._lv;
@@ -133,6 +133,6 @@ define(
 			return this._mc;
 		}
 
-		return Base.extend(Class, {html:html});
+		return Base.extend(Class, {view:"bin/common/indicatorView.html", style:"bin/common/indicatorView.css"});
 	}
 );

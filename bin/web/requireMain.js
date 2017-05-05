@@ -1,3 +1,5 @@
+var __bin__start__time = new Date().getTime();
+
 // bin frame-work namespace
 var bin = {};
 
@@ -20,6 +22,7 @@ require.config(
 		map: 'bin/requirePlugin/requirejs-map',
 
 		// 3rdParty libs
+		//jquery: 'bin/3rdParty/zepto/zepto',
 		jquery: 'bin/3rdParty/jquery/jquery',
 		underscore: 'bin/3rdParty/underscore/underscore',
 		backbone: 'bin/3rdParty/backbone/backbone',
@@ -29,13 +32,20 @@ require.config(
 		md5: 'bin/3rdParty/md5/md5',
 		lzstring: "bin/3rdParty/lz-string/lz-string",
 		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
+		vue:"bin/3rdParty/vue/vue",
 	},
 	waitSeconds: 5,
 	shim: {}
 });
 
-(function()
+require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 {
+	bin.globalConfig  = globalConfig;
+	bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
+	bin.classConfig = globalConfig.classConfig;
+	bin.componentConfig = globalConfig.componentConfig || {};
+
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
@@ -45,7 +55,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
+		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -56,21 +66,16 @@ require.config(
 			bin.extend = function() {
 				var cls = extend.apply(this, arguments);
 				cls.prototype.__$class = cls;
+				cls.__$super = this;
 
 				return cls;
 			}
 
-			var bbClasses = [Backbone.Model, Backbone.Collection, Backbone.Router, Backbone.View, Backbone.History];
+			var bbClasses = [Backbone.Router, Backbone.View, Backbone.History];
 			_.each(bbClasses, function(Class) {
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;
 			});
-			
-			bin.globalConfig  = globalConfig;
-			bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
-			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-			require.config(globalConfig.requireConfig);
-			bin.classConfig = globalConfig.classConfig;
 			
 			var start = function()
 			{
@@ -147,7 +152,7 @@ require.config(
 		});
 	};
 
-	var packages = ["config/globalConfig"];
+	var packages = [];
 	if(typeof pageConfig !== "undefined")
 	{
 		packages = packages.concat(pageConfig.packages);
@@ -160,6 +165,6 @@ require.config(
 	{
 		onPackageLoaded();
 	});
-})();
+});
 
 

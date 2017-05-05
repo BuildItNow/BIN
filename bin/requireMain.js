@@ -1,3 +1,5 @@
+var __bin__start__time = new Date().getTime();
+
 /**
  * The root namespace of BIN framework.
  * @namespace 
@@ -69,6 +71,7 @@ require.config(
 		map: 'bin/requirePlugin/requirejs-map',
 
 		// 3rdParty libs
+		//jquery: 'bin/3rdParty/zepto/zepto',
 		jquery: 'bin/3rdParty/jquery/jquery',
 		underscore: 'bin/3rdParty/underscore/underscore',
 		backbone: 'bin/3rdParty/backbone/backbone',
@@ -78,14 +81,20 @@ require.config(
 		md5: 'bin/3rdParty/md5/md5',
 		lzstring: "bin/3rdParty/lz-string/lz-string",
 		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
-		prloader: "bin/3rdParty/requirejs-prloader/prloader"
+		prloader: "bin/3rdParty/requirejs-prloader/prloader",
+		vue:"bin/3rdParty/vue/vue"
 	},
 	waitSeconds: 5,
 	shim: {}
 });
 
-(function()
+require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 {
+	bin.globalConfig  = globalConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
+	bin.classConfig   = globalConfig.classConfig;
+	bin.componentConfig = globalConfig.componentConfig || {};
+
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
@@ -95,7 +104,7 @@ require.config(
 		}
 
 		onPackageLoadedOnce = true;
-		require(["jquery", "underscore", "backbone", "lzstring", "config/globalConfig"], function(jquery, underscore, backbone, lzString, globalConfig)
+		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;
 			_ = underscore;
@@ -107,19 +116,16 @@ require.config(
 			bin.extend = function() {
 				var cls = extend.apply(this, arguments);
 				cls.prototype.__$class = cls;
+				cls.__$super = this;
 
 				return cls;
 			}
 
-			var bbClasses = [Backbone.Model, Backbone.Collection, Backbone.Router, Backbone.View, Backbone.History];
+			var bbClasses = [Backbone.Router, Backbone.View, Backbone.History];
 			_.each(bbClasses, function(Class) {
 				Class.extend = bin.extend;
 				Class.prototype.__$class = Class;
 			});
-
-			bin.globalConfig  = globalConfig;
-			bin.runtimeConfig = globalConfig[globalConfig.runtime ? globalConfig.runtime : "RELEASE"];
-			bin.classConfig   = globalConfig.classConfig;
 
 			var start = function()
 			{
@@ -205,7 +211,7 @@ require.config(
 		});
 	};
 
-	var packages = ["bin/3party.js", "bin/bin.js", "config/globalConfig"];
+	var packages = ["bin/3party.js", "bin/bin.js"];
 
 	require(packages, function()
 	{
@@ -214,6 +220,6 @@ require.config(
 	{
 		onPackageLoaded();
 	});
-})();
+});
 
 

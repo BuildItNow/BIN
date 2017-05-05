@@ -10,6 +10,8 @@ define([], function ()
         var el = document.createElement('div');
         el.innerHTML = "<div id='"+name+"' class='bin-native-page'></div>";
         el = el.firstElementChild;
+
+        ViewClass = ViewClass.extend({});
             
         ViewClass.create = function(options)
         {
@@ -32,21 +34,29 @@ define([], function ()
             return ;
         }
         el = el.firstElementChild;
+
+        // Spawn a new class, avoid change the source class create method
+        ViewClass = ViewClass.extend({});
             
+        var oldCreate = ViewClass.create;
         ViewClass.create = function(options)
         {
             options = options || {};
-            options.el = el.cloneNode(true);
 
-            return new ViewClass(options);
+            if(!options.html && !options.elem)
+            {
+                options.el = el.cloneNode(true);
+            }
+
+            return oldCreate ? oldCreate.call(this, options) : new this(options);
         }
 
-        var cssName = el.getAttribute('data-css');
-        if(cssName == '$')
+        var cssName = el.getAttribute('data-css') || ViewClass.style;
+        if(cssName === '$')
         {
-            cssName = name;
+            cssName = name+".css";
         }
-
+       
         if(!cssName)
         {
             success(ViewClass);
@@ -54,7 +64,7 @@ define([], function ()
             return ;
         }
 
-        require(["css!"+toLeftSlash(cssName)+".css"], function()
+        require(["css!"+toLeftSlash(cssName)], function()
         {
             success(ViewClass);
         }, fail);
@@ -73,20 +83,30 @@ define([], function ()
             }
 
             // Class html
-            if(ViewClass.html)
-            {
-                loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
+            // if(ViewClass.html)
+            // {
+            //     loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
 
-                return ;
-            }
+            //     return ;
+            // }
 
             // From view html
             var view = ViewClass.view || name+".html";
 
             require(['text!'+view], function(html)
             {
+                if(!html)
+                {
+                    success(ViewClass);
+
+                    return ;
+                }
+                
                 loadFromHtml(ViewClass, html, require, name, success, fail);
-            }, fail);
+            },function()
+            {
+                success(ViewClass);
+            });
             
         }, fail);
     }

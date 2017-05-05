@@ -1,5 +1,5 @@
  define([], 
-	function(IndicatorView, AlertView, StatusView, DatePickerView, SelectView)
+	function()
 	{
 		var HUDManager = function()
 		{
@@ -18,8 +18,6 @@
 			var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
 			root.append(elemIndicatorContainer);
 
-			
-
 			// Add alert
 			this._elemAlertContainer = $("<div id='alertHUD'       style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
 			root.append(this._elemAlertContainer);	
@@ -32,9 +30,9 @@
 			console.info("HUDManager module initialize");
 
 			var self = this;
-			require(["bin/common/indicatorView"], function(IndicatorView)
+			require([bin.componentConfig.indicator || "view!bin/common/indicatorView"], function(IndicatorView)
 			{
-				self._indicator = new IndicatorView({style:bin.globalConfig.indicator || "dark"});
+				self._indicator = IndicatorView.create();
 				elemIndicatorContainer.append(self._indicator.$());
 			});
 		}
@@ -49,44 +47,52 @@
 			this._indicator && this._indicator.stop(indicatorID);
 		}
 
-		Class.showStatus = function(message)
+		Class.showStatus = function(message, cb, status)
 		{
 			var self = this;
-			require(["bin/common/statusView"], function(StatusView)
+			require([status || bin.componentConfig.status || "view!bin/common/statusView"], function(StatusView)
 			{
-				var v = new StatusView({text:message});
+				var v = StatusView.create({text:message});
 				self._elemStatusContainer.append(v.$()); 
+
+				cb && cb(v);
 			});
 			
 		}
-		Class.select = function(options)
+		Class.select = function(options, cb, select)
 		{
 			var self = this;
-			require(["bin/common/selectView"], function(SelectView)
+			require([select || bin.componentConfig.select || "view!bin/common/selectView"], function(SelectView)
 			{
-				var v = new SelectView(options);
+				var v = SelectView.create(options);
 				v.$().css("z-index", self._alertZIndex);
 				++self._alertZIndex;
 				
 				self._elemAlertContainer.append(v.$());
+
+				cb && cb(v);
 			});
 			
 		}
-		Class.alert = function(options)
+		Class.alert = function(options, cb, alert)
 		{
 			var self = this;
-			require(["bin/common/alertView"], function(AlertView)
+			require([alert || bin.componentConfig.alert || "view!bin/common/alertView"], function(AlertView)
 			{
-				var v = new AlertView(options);
+				var v = AlertView.create(options);
 				v.$().css("z-index", self._alertZIndex);
 				++self._alertZIndex;
 
 				self._elemAlertContainer.append(v.$());
+
+				cb && cb(v);
 			});
 		}
 
-		Class.alertError = function(options)
+		Class.alertError = function(message, title)
 		{
+			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定"}]};
+
 			if(options.title)
 			{
 				options.title.color = "red";
@@ -101,26 +107,28 @@
 
 		Class.alertInfo = function(message, title)
 		{
-			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定", onClick:function(v){v.close()}}]};
+			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定"}]};
 
 			return this.alert(options);
 		}
 
-		Class.datePicker = function(options)
+		Class.datePicker = function(options, cb, datePicker)
 		{
 			var self = this;
-			require(["bin/common/DatePickerView"], function(DatePickerView)
+			require([datePicker || bin.componentConfig.datePicker || "view!bin/common/datePickerView"], function(DatePickerView)
 			{
 				if(typeof options === "function")
 				{
 					options = {onPick:options};
 				}
 				
-				var v = new DatePickerView(options);
+				var v = DatePickerView.create(options);
 				v.$().css("z-index", self._alertZIndex);
 				++self._alertZIndex;
 				
 				self._elemAlertContainer.append(v.$());
+
+				cb && cb(v);
 			});
 
 			

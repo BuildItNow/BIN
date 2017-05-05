@@ -12,6 +12,10 @@
  * 
  * Released on: June 14, 2015
  */
+
+define([], function()
+{
+
 (function () {
     'use strict';
     /*===========================
@@ -490,7 +494,7 @@
                 width = s.params.width;
             }
             else {
-                if(s.container[0].clientWidth == 0)
+                if(s.width && s.container[0].clientWidth === 0)
                 {
                     width = s.width;
                 }else{
@@ -502,7 +506,7 @@
                 height = s.params.height;
             }
             else {
-                if(s.container[0].clientHeight == 0)
+                if(s.height && s.container[0].clientHeight === 0)
                 {
                     height = s.height;
                 }else{
@@ -3834,16 +3838,6 @@
 
     window.Swiper = Swiper;
 })();
-/*===========================
-Swiper AMD Export
-===========================*/
-if (typeof(module) !== 'undefined')
-{
-    module.exports = window.Swiper;
-}
-else if (typeof define === 'function' && define.amd) {
-    define([], function () {
-        'use strict';
-        return window.Swiper;
-    });
-}
+
+    return window.Swiper;
+});

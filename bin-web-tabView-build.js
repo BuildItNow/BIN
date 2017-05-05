@@ -13,6 +13,7 @@
 			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
+            //jquery: 'bin/3rdParty/zepto/zepto',
 			jquery: 'bin/3rdParty/jquery/jquery',
 			underscore: 'bin/3rdParty/underscore/underscore',
 			backbone: 'bin/3rdParty/backbone/backbone',
@@ -22,14 +23,14 @@
 			md5: 'bin/3rdParty/md5/md5',
 			lzstring: "bin/3rdParty/lz-string/lz-string",
 			lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
-			prloader: "bin/3rdParty/requirejs-prloader/prloader"
-
+			prloader: "bin/3rdParty/requirejs-prloader/prloader",
+            vue:"bin/3rdParty/vue/vue",
     },
     exclude:
     [
 
         // 3party
-        'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone', 'config/netLocalConfig',
+        'vue', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone', 'config/netLocalConfig',
 
         // core
         'view',
@@ -46,10 +47,7 @@
         'bin/core/netPolicy/netDebugPolicy',
         'bin/core/netPolicy/netSendCheckPolicy',
         'bin/common/lazyLoadView',
-    	'bin/util/elemUtil',
-    	'bin/util/lsUtil',
-    	'bin/util/osUtil',
-    	'bin/util/ssUtil',
+    	'bin/core/util',
         
         // mobile
         'bin/web/core/mpaApplication', 
@@ -73,7 +71,6 @@
     	'text!bin/common/statusView.html',
     	'css!bin/common/statusView.css',
     	'text!bin/res/html/defaultNaviBar.html',
-    	'bin/util/fastclickUtil',
 
         // swipe view
         'bin/common/swipeView',

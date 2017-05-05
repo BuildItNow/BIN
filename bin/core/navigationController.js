@@ -1,6 +1,6 @@
 define(
-	["bin/util/osUtil", "bin/core/navigationController-ioEffecters"],
-function(osUtil, effecters)
+	["bin/core/navigationController-ioEffecters"],
+function(effecters)
 {
 	var toLeftSlash = function(path)
 	{
@@ -82,16 +82,13 @@ function(osUtil, effecters)
 		return queryString ? path+'?'+queryString : path;
 	} 
 
-	var DEFAULT_IO_EFFECT = bin.globalConfig.pageIOAnim;
-
 	var NavigationController = function()
 	{
       	this._views = [];
 	    this._pushData = null;
 	    this._popData  = null;
-	    //this._stackV   = 0;
-		this._pushTime = 0;
-		this._popTime = 0;
+		  this._pushTime = 0;
+		  this._popTime = 0;
 	}
 
 	NavigationController.extend = bin.extend;
@@ -106,17 +103,49 @@ function(osUtil, effecters)
 	cls.init = function()
 	{
 		var self = this;
-		this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
 		this._container = $("#navigationContainer");
 
 		// Redirect to index.html
-		window.location.href = './index.html#';
-		// Start rooter
-		Backbone.history.start({pushState: false, silent:true});
+		// window.location.href = './index.html#';
+
+		var pageHistory = bin.globalConfig.pageHistory || "hashChange";
+		if(pageHistory === "hashChange" || pageHistory === "pushState")	// Use backbone router
+		{
+			this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
+	
+			this._pageHistory = Backbone.history;
+
+			var options = {silent:true};
+			if(pageHistory === "pushState")
+			{
+				console.warn("pushState feature not supported on SPA, use hashChange instead.");
+				// options.pushState = true;
+				// var root = window.location.host+window.location.pathname;
+				// var i = root.lastIndexOf("/");
+				// if(i > 0)
+				// {
+				// 	root = root.substring(0, i);
+				// }
+				
+				// options.root = root;
+			}
+			this._pageHistory.start(options);
+		}
+		
+		this._zIndex = 100;
+
+		this._defaultIOEffecter = bin.globalConfig.pageIOAnim;
+
+		if(this._defaultIOEffecter && (typeof bin.globalConfig.pageIOAnim === "string"))
+		{
+			this._defaultIOEffecter = effecters[bin.globalConfig.pageIOAnim] || effecters["rightIO"];
+		}
+		else if(!this._defaultIOEffecter)
+		{
+			this._defaultIOEffecter = effecters["rightIO"];
+		}
 
 		console.info("NavigationController module initialize");
-
-		this._zIndex = 100;
 	}
 
 	cls.popTo = function(name, popData, options)
@@ -169,7 +198,14 @@ function(osUtil, effecters)
 		this._popData = {data:popData, options:options, count:count};
 		this._popTime = now;
 
-		window.history.go(-count);
+		if(this._pageHistory)
+		{
+			window.history.go(-count);
+		}
+		else
+		{
+			this._route();
+		}
 
 		return true;
 	}
@@ -191,15 +227,14 @@ function(osUtil, effecters)
 			options.trigger = true;
 		}
 
-		var effecter = null;
-		if(options.effect)
+		var effecter = options.effect;
+		if(effecter && (typeof effecter === "string"))
 		{
-			effecter = effecters[options.effect];
-			effecter = effecter || effecters["noIO"];
+			effecter = effecters[effecter] || this._defaultIOEffecter;
 		}
-		else
+		else if(!effecter)
 		{
-			effecter = effecters[DEFAULT_IO_EFFECT];
+			effecter = this._defaultIOEffecter;
 		}
 
 		var pos = name.indexOf('?');
@@ -213,21 +248,31 @@ function(osUtil, effecters)
 		
 		path = toNaviName(path);
 
-		queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+		if(this._pageHistory)
+		{
+			queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+		}
 
       	name = queryString ? path+"?"+queryString : path;
 
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, effecter:effecter};
 		this._pushTime = now;
 
-
+		if(this._pageHistory)
+		{
+			this._pageHistory.navigate(name, options);
+		}
+		else
+		{
+			this._route(path, queryString);
+		}
 		//if(options.native)
 		//{
 		//	this._route(path, queryString);
 		//}
 		//else
 		//{
-			Backbone.history.navigate(name, options); // ==> route
+			//Backbone.history.navigate(name, options); // ==> route
 		//}
 
 		return true;
@@ -277,7 +322,10 @@ function(osUtil, effecters)
 	cls.startWith = function(view, data, options)
 	{	
 		// Set backgone to a invalid fragment to clear the old url
-		Backbone.history.fragment = "";
+		if(this._pageHistory)
+		{
+			this._pageHistory.fragment = "";
+		}
 
 		options = options || {};
 		options.start = true;
@@ -365,7 +413,7 @@ function(osUtil, effecters)
 
 			// Do push
 			// Ignore : Must call naviController.push to do naviage operation
-			this._doPush({path:path, queryParams:queryParams(queryString), effecter:effecters[DEFAULT_IO_EFFECT]});
+			this._doPush({path:path, queryParams:queryParams(queryString), effecter:this._defaultIOEffecter});
 		}
 	}
 
@@ -429,6 +477,11 @@ function(osUtil, effecters)
         {
            	++n;
         }
+
+        var onOutAnimationEnd = function()
+        {
+        	curView.view.remove();
+        }
 		
 		if(n > 0)
 		{
@@ -439,7 +492,7 @@ function(osUtil, effecters)
 				OEffecter = nxtView.native ? effecters["nativeSNIO"][1] : effecters["nativeSSIO"][1];
 			}
 
-			OEffecter(curView.view, nxtView.view);
+			OEffecter(curView.view, nxtView.view, onOutAnimationEnd);
 
 			cordova.binPlugins.nativeBridge.popNativePageView(n, curView.native || nxtView.native, function(error)
     	  	{
@@ -453,7 +506,7 @@ function(osUtil, effecters)
     	  	return ;
 		}
 
-		curView.effecter[1](curView.view, nxtView.view);
+		curView.effecter[1](curView.view, nxtView.view, onOutAnimationEnd);
     }
 
 	cls._doPush = function(pushData)
@@ -463,7 +516,7 @@ function(osUtil, effecters)
 		// Require is async process, avoid _clear and requie conflicting, store the require stack version
 		require(['view!' + pushData.path], function(ViewClass)
         {
-    	  	var newView = ViewClass.create();
+    	  	var newView = ViewClass.create({fromNavi:true, manualRender:true});
     	  	var curView = self.current();
 
     	  	var onNewView = function()	
@@ -478,6 +531,11 @@ function(osUtil, effecters)
 	          	newView.render();
 	          	self._container.append(newView.$());
 
+	          	if(newView.doRequesting)
+	          	{
+	          		newView.doRequesting();
+	          	}
+
 	          	if(curView)
 	          	{
 	          		var start = pushData.options && pushData.options.start;
@@ -491,10 +549,10 @@ function(osUtil, effecters)
 
 	          		if(newView.onInAnimationBeg)
 	          		{
-	          			osUtil.nextTick(function()
+	          			setTimeout(function()
 	          			{
 	          				newView.onInAnimationBeg();
-	          			});
+	          			}, 0);
 	          		}
 
 	          		var onInAnimationEnd = null;
@@ -505,21 +563,38 @@ function(osUtil, effecters)
 	          				curView.view.remove();
 	          				if(newView.onInAnimationEnd)
 	          				{
-	          					osUtil.nextTick(function()
+	          					setTimeout(function()
 				          		{
 				          			newView.onInAnimationEnd();
-				          		});
+				          		}, 0);
 	          				}
+
+	          				if(newView.doRequestDone)
+				          	{
+				          		newView.doRequestDone();
+				          	}
 	          			}
 	          		}
 	          		else if(newView.onInAnimationEnd)
 	          		{
 	          			onInAnimationEnd = function()
 	          			{
-	          				osUtil.nextTick(function()
+	          				setTimeout(function()
 			          		{
 			          			newView.onInAnimationEnd();
-			          		});
+			          		}, 0);
+
+			          		if(newView.doRequestDone)
+				          	{
+				          		newView.doRequestDone();
+				          	}
+	          			}
+	          		}
+	          		else if(newView.doRequestDone)
+	          		{
+	          			onInAnimationEnd = function()
+	          			{
+	          				newView.doRequestDone();
 	          			}
 	          		}
 
@@ -528,6 +603,11 @@ function(osUtil, effecters)
 	          	else
 	          	{
 	          		newView.show();
+	          		
+	          		if(newView.doRequestDone)
+				    {
+		          		newView.doRequestDone();
+		          	}
 	          	}
 	          
 	          	var item = {key:viewKey(pushData.path, pushData.queryParams._queryString), view: newView, name:pushData.path, effecter:pushData.effecter, native:ViewClass.native !== undefined};
@@ -559,7 +639,7 @@ function(osUtil, effecters)
     	  	}
     	  	else if(!curView)
 	        {
-	        	if(cordova)
+	        	if(cordova && cordova.binPlugins && cordova.binPlugins.nativeBridge)
     	  		{
     	  			cordova.binPlugins.nativeBridge.pushStubView(function(error)
     	  			{

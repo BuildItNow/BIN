@@ -1,18 +1,26 @@
 define(
 {
 	name        : "BIN Framework",		// Name of the application
-	appID       : "com.bin.example",
-	version     : "1.0.0",						// Applicatoin version	
-	pageIOAnim  : "rightIO",					// Default page in/out animation
+	appID       : "com.bin.example",	// app id
+	version     : "1.0.0",				// Applicatoin version	
+	pageIOAnim  : "rightIO",			// Default page in/out animation
 	runtime     : "DEBUG",				// runtime config
-	placeholder : "bin/res/img/placeholder.jpg",					    
+	placeholder : "bin/res/img/placeholder.jpg",	
+	indicator   :"dark",				// Default indicator style			    
 	//left   : 20,
 	//top    : 20,
 	//width  : 320,
 	//height : 568,
+	//remConfig:
+	//{
+	//	unit : 20,
+	//	standard : 320,
+	//},
 	DEBUG : 
 	{
 		debug : true,
+		useLSCache : false,				// Local Storage Cache switch
+		usePRLoader : false,			// Pre-loader switch, prloadConfig will be used in pre-loader
 		useNetLocal : true,
 		server : "http://localhost:8081",
 		timeout : 20000,
@@ -21,6 +29,8 @@ define(
 	RELEASE :
 	{
 		debug : false,
+		useLSCache : false,
+		usePRLoader : false,
 		useNetLocal : true,
 		server : "http://localhost:8081",
 		timeout : 20000,
@@ -44,7 +54,7 @@ define(
 		// There is no dependency relation here, it's just a class hierarchy
 		core:
 		{
-			Application:"bin/core/application",
+			Application:"bin/core/spaApplication",	// Change to your own application class
 			DebugManager: "bin/core/debugManager",
 			NetManager:
 			{
@@ -68,8 +78,24 @@ define(
 		},
 		util:
 		{
-			osUtil:"bin/util/osUtil",
-			disUtil:"bin/util/disUtil",
 		},
+	},
+	prloadConfig:
+	{
+		interval : 1000,	// loading interval time
+		views :
+		[
+			
+		]
+	},
+	componentConfig:	// Customize components
+	{
+		//alert:"",
+		//datePicker:"",
+		//indicator:"",
+		//status:"",
+		//select:"",
+		//refreshHeader:"",
+		//refreshFooter:""
 	}
 });

@@ -25,16 +25,9 @@ define(["bin/core/view"], function(Base)
 			this.$("#"+this._items[i]).on("click", func);
 		}
 
-		// Add the style, avoid flick effect
-		this._activeItem(this._initCurrent);
-	}
+		this.setCurrent(this._initCurrent);
 
-	Class.asyncPosGenHTML = function()
-	{
-		var current = this._initCurrent;
 		delete this._initCurrent;
-		
-		this.setCurrent(current);
 	}
 
 	Class.setCurrent = function(item, noTrigger)
@@ -59,7 +52,7 @@ define(["bin/core/view"], function(Base)
 
 	Class.getCurrent = function()
 	{
-		return this._current || this._initCurrent;
+		return this._current;
 	}
 
 	Class._onTabClick = function(item)

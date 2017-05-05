@@ -1,4 +1,4 @@
-define(["bin/util/osUtil"], function(osUtil)
+define(["bin/core/util"], function(util)
 {
 	var defLoadAPI = function(params, success, error)
 	{
@@ -13,7 +13,7 @@ define(["bin/util/osUtil"], function(osUtil)
 
 	var ListDataProvider = function(options)
 	{
-		this._options = _.extend(osUtil.clone(DEFAULT_OPTIONS), options);
+		this._options = _.extend(util.clone(DEFAULT_OPTIONS), options);
 
 		this._data  = [];
 		this._total = -1;
@@ -26,7 +26,21 @@ define(["bin/util/osUtil"], function(osUtil)
 	Class.refresh = function(success, error)
 	{
 		var self = this;
-		this._options.loadAPI(	{type:this._options.type, page:0, pageSize:this._options.pageSize}, 
+
+		var params = {type:this._options.type, page:0, pageSize:this._options.pageSize};
+		if(this._options.data)
+		{
+			if(typeof this._options.data === "function")
+			{
+				params = _.extend(params, this._options.data(this, params));
+			}
+			else if(typeof this._options.data === "object")
+			{
+				params = _.extend(params, this._options.data);
+			}
+		}
+
+		this._options.loadAPI(	params, 
 								function(netData){self._onRefresh(null, netData, success, error)}, 
 								function(netError){self._onRefresh(netError, null, success, error)});
 	}
@@ -36,15 +50,28 @@ define(["bin/util/osUtil"], function(osUtil)
 		var self = this;
 		if(!this.anyMore())
 		{
-			osUtil.nextTick(function()
+			setTimeout(function()
 			{
 				success(self.count(), self.count());
-			});
+			}, 0);
 
 			return ;
 		}
 
-		this._options.loadAPI(	{type:this._options.type, page:parseInt(this.count()/this._options.pageSize), pageSize:this._options.pageSize}, 
+		var params = {type:this._options.type, page:parseInt(this.count()/this._options.pageSize), pageSize:this._options.pageSize};
+		if(this._options.data)
+		{
+			if(typeof this._options.data === "function")
+			{
+				params = _.extend(params, this._options.data(this, params));
+			}
+			else if(typeof this._options.data === "object")
+			{
+				params = _.extend(params, this._options.data);
+			}
+		}
+
+		this._options.loadAPI(	params, 
 								function(netData){self._onLoadMore(null, netData, success, error)}, 
 								function(netError){self._onLoadMore(netError, null, success, error)});
 
@@ -98,6 +125,12 @@ define(["bin/util/osUtil"], function(osUtil)
 		if(netData.data.data && netData.data.data.length > 0)
 		{
 			this._data = this._data.concat(netData.data.data);
+		}
+
+		// want to redefine total ?
+		if(typeof(netData.data.total) === "number")
+		{
+			this._total = netData.data.total;
 		}
 
 		success(beg, this.count());

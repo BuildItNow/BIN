@@ -76,7 +76,18 @@ define(["bin/core/application"],
 					path = elem.getAttribute("data-bin-view");
 					name = elem.getAttribute("data-bin-name");
 					root = elem.getAttribute("data-bin-root");
-					bin.viewManager.newView({elem:elem, path:path, name:name, root:root})
+
+					var options = {path:path, name:name};
+					if(root)	// No plugin
+					{
+						options.elem = elem;
+					}
+					else		// Use plugin
+					{
+						options.elemParent = elem;
+					}
+
+					bin.viewManager.newView(options)
 				}
 			}
 

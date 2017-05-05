@@ -1,5 +1,5 @@
-define(["text!bin/common/selectView.html", "css!bin/common/selectView.css", "bin/common/hudView", "bin/util/osUtil", "iscroll"], 
-function(html, css, Base, osUtil, iscroll)
+define(["bin/common/hudView", "iscroll"], 
+function(Base, iscroll)
 {
 	var Class = {};
 
@@ -146,5 +146,21 @@ function(html, css, Base, osUtil, iscroll)
 		});
 	}
 
-	return Base.extend(Class, {html:html});
+	Class.onRemove = function()
+	{
+		var val = null;
+		for(var key in this._scrollers)
+		{
+			val = this._scrollers[key];
+			if(val && val.destroy)
+			{
+				val.destroy();
+			}
+			delete this._scrollers[key];
+		}
+
+		Base.prototype.onRemove.call(this);
+	}
+
+	return Base.extend(Class, {view:"bin/common/selectView.html", style:"bin/common/selectView.css"});
 });

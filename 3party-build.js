@@ -13,6 +13,7 @@
 			map: 'bin/requirePlugin/requirejs-map',
 
 			// 3rdParty libs
+			//jquery: 'bin/3rdParty/zepto/zepto',
 			jquery: 'bin/3rdParty/jquery/jquery',
 			underscore: 'bin/3rdParty/underscore/underscore',
 			backbone: 'bin/3rdParty/backbone/backbone',
@@ -22,9 +23,9 @@
 			md5: 'bin/3rdParty/md5/md5',
 			lzstring: "bin/3rdParty/lz-string/lz-string",
 			lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
-			prloader: "bin/3rdParty/requirejs-prloader/prloader"
-
+			prloader: "bin/3rdParty/requirejs-prloader/prloader",
+			vue:"bin/3rdParty/vue/vue",
     },
-    include:['i18n', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
+    include:['vue', 'i18n', 'css','swiper',  'domReady', 'text', 'iscroll', 'fastclick', 'prloader', 'lsloader', 'lzstring', 'jquery', 'underscore', 'backbone'],
     out: "bin/3party.js",
 })

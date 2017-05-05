@@ -1,5 +1,5 @@
-define(["bin/util/elemUtil", "bin/util/osUtil"], 
-function(elemUtil, osUtil)
+define(["bin/core/util", "vue"], 
+function(util, Vue)
 {
     var Base = Backbone.View;
     var View = undefined;
@@ -16,12 +16,19 @@ function(elemUtil, osUtil)
     Class.constructor = function(options)
     {
         this._show  = null;
+        this._elemParent = options ? options.elemParent : null;
         
         if(options && options.el)   // Load by BIN, BIN will auto set element by html content
         {
             this._html = null;
             
             Backbone.View.call(this, options);
+
+            if(!options.manualRender)
+            {
+                this.render();
+                this.show();
+            }
 
             return ;
         }
@@ -33,9 +40,11 @@ function(elemUtil, osUtil)
 
             Backbone.View.call(this, options);
 
-
-            this.render();
-            this.show();
+            if(!options.manualRender)
+            {
+                this.render();
+                this.show();
+            }
             
             return ;
         }
@@ -44,29 +53,110 @@ function(elemUtil, osUtil)
 
         Backbone.View.call(this, options);
 
-        if(this._html)
+        if(this._html || !options || !options.manualRender)
         {
             this.render();
             this.show();
         }
     }
 
+    var methodWrapper = function(self, impl)
+    {
+        return function()
+        {
+            self.vm = self.vm || this;
+            return impl.apply(self, arguments);
+        }
+    }
 
     Class.render = function ()
-    {                
+    {             
+        var self = this;  
+
         Base.prototype.render.call(this);
 
         this.preGenHTML();
        
         this.genHTML();
+
+        if(this._elemParent)
+        {
+            if(typeof this._elemParent === "function")
+            {
+                this._elemParent(this);
+            }
+            else
+            {
+                $(this._elemParent).append(this.$());
+            }
+
+            this._elemParent = undefined;
+            delete this._elemParent;
+        }
+
+        var VMOptions = undefined;
+        if(this.__$class.VMOptions)
+        {
+            VMOptions = util.clone(this.__$class.VMOptions, true);
+
+            // Fix vm functions
+            var methods = VMOptions.methods;
+            for(var key in methods)
+            {
+                methods[key] = methodWrapper(self, methods[key]);
+            }
+
+            var computed = VMOptions.computed;
+            for(var key in computed)
+            {
+                if(typeof computed[key] === "function")
+                {
+                    computed[key] = methodWrapper(self, computed[key]);
+                }
+                else
+                {
+                    if(computed[key].set)
+                    {
+                        computed[key].set = methodWrapper(self, computed[key].set);
+                    }
+
+                    if(computed[key].get)
+                    {
+                        computed[key].get = methodWrapper(self, computed[key].get);
+                    }
+                }
+            }
+
+            var watch = VMOptions.watch;
+            for(var key in watch)
+            {
+                if(typeof watch[key] === "function")
+                {
+                    watch[key] = methodWrapper(self, watch[key]);
+                }
+                else
+                {
+                    watch[key].handler = methodWrapper(self, watch[key].handler);
+                }
+            }
+        }
+
+        if(this.prepareVMOptions)
+        {
+            VMOptions = this.prepareVMOptions(VMOptions);
+        }
+
+        if(VMOptions)
+        {
+            VMOptions.el = this.$()[0];
+            this.vm = new Vue(VMOptions);
+        }
        
         this.posGenHTML();
         
         if(this.asyncPosGenHTML)
         {
-            var self = this;
-
-            osUtil.nextTick(function(){self.asyncPosGenHTML();});
+            setTimeout(function(){self.asyncPosGenHTML();}, 0);
         }
 
         return this;
@@ -108,6 +198,11 @@ function(elemUtil, osUtil)
             }
 
             delete this._llViews;
+        }
+
+        if(this.vm)
+        {
+            this.vm.$destroy();
         }
 
         this.onRemove();
@@ -205,7 +300,7 @@ function(elemUtil, osUtil)
     Class.$fragment = function(sel, fromSel)
     {
         var elem = this.$(sel, fromSel);
-        return elem ? elemUtil.newFragment(elem) : null;
+        return elem ? util.newFragment(elem) : null;
     }
 
     Class.$content = function()
@@ -281,7 +376,7 @@ function(elemUtil, osUtil)
     {
         this._llDirty = false;
 
-        var elemContainer = this.$();
+        var elemContainer = this._llContainer;
 
         var os = elemContainer.offset();
         var vl = os.left;
@@ -309,11 +404,11 @@ function(elemUtil, osUtil)
 
         if(views.length === 0)
         {
-            osUtil.nextTick(function()
+            setTimeout(function()
             {
                 elemContainer.unbind("scroll", this._llOnScrollListener);
                 this._llOnScrollListener = null;
-            });
+            }, 0);
         }
     }
 
@@ -339,12 +434,13 @@ function(elemUtil, osUtil)
         this._llTryLazyLoad();
     }
 
-    Class.lazyLoadContainer = function()
+    Class.lazyLoadContainer = function(container)
     {
+        this._llContainer = container || this.$();
         var self = this;
         require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {
-            var elemContainer = self.$();
+            var elemContainer = self._llContainer;
 
             if(!self._llOnScrollListener)
             {
@@ -390,10 +486,10 @@ function(elemUtil, osUtil)
             {
                 elemContainer.scroll(self._llOnScrollListener);
 
-                osUtil.nextTick(function()
+                setTimeout(function()
                 {
                     self.tryLazyLoad();
-                });
+                }, 0);
             }
         });
     }
@@ -408,7 +504,83 @@ function(elemUtil, osUtil)
         }
     }
 
-    View = Base.extend(Class);
+    View = Base.extend(Class, 
+        {
+            create:function(options)
+            {
+                return new this(options);
+            }
+        });
+
+    var extend = View.extend;
+    View.extend = function(cls, sta)
+    {
+        // Generate View-Model options
+        var VMOptions = util.clone(this.VMOptions, true) || {};
+
+        if(!VMOptions.data)
+        {
+            VMOptions.data = {};
+        }
+
+        if(!VMOptions.computed)
+        {
+            VMOptions.computed = {};
+        }
+
+        if(!VMOptions.watch)
+        {
+            VMOptions.watch = {};
+        }
+
+        if(!VMOptions.methods)
+        {
+            VMOptions.methods = {};
+        }
+
+        var hasVM = false;
+
+        if(cls.vmData)
+        {
+            VMOptions.data = _.extend(VMOptions.data, cls.vmData);
+            hasVM = true;
+        }
+
+        for(var key in cls)
+        {
+            if(key.indexOf("vm") !== 0)
+            {
+                continue;
+            }
+
+            if(key.indexOf("Method_", 2) === 2)
+            {
+                VMOptions.methods[key.substring(9)] = cls[key];
+                hasVM = true;
+            }
+            else if(key.indexOf("Computed_", 2) === 2)
+            {
+                VMOptions.computed[key.substring(11)] = cls[key];
+                hasVM = true;
+            }
+            else if(key.indexOf("Watch_", 2) === 2)
+            {
+                VMOptions.watch[key.substring(8)] = cls[key];
+                hasVM = true;
+            }
+        }
+
+        hasVM = hasVM || this.VMOptions;
+
+        var ret = extend.apply(this, arguments);
+
+        if(hasVM)
+        {
+            ret.VMOptions = VMOptions;
+        }
+
+        return ret;
+    }
 
     return View;
 });

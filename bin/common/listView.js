@@ -1,13 +1,12 @@
 define([
 "bin/common/refreshView", 
-"bin/util/osUtil", 
-"bin/common/refreshFooterView", 
-"bin/util/elemUtil", 
+(bin.componentConfig.refreshFooter || "bin/common/refreshFooterView"), 
+"bin/core/util", 
 "bin/common/itemProvider",
 "bin/common/dataProvider",
 "bin/core/view"
 ], 
-function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, View)
+function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 {
 	var TemplateItemProvider = ItemProvider.extend(
 	{
@@ -49,7 +48,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 			options.autoRefresh = "animation";
 		}
 		
-		this._refreshFooter = options.footerClass ? new options.footerClass : new RefreshFooterView();
+		this._refreshFooter = options.footerClass ? options.footerClass.create() : RefreshFooterView.create();
 		this._dataProvider  = options.dataProvider;
 
 		var t = typeof(options.itemProvider);
@@ -126,7 +125,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		this._refreshFooter.$().detach();
 
 		this._touchTargetHolder.empty();
-		if(this._touchTarget)	// Avoid touch target is removed, or the touch event will miss
+		if(this._touchTarget && this._touchTarget !== this.$scrollerContent[0])	// Avoid touch target is removed, or the touch event will miss
 		{
 			var elem = $(this._touchTarget);
 			elem.hide();
@@ -141,7 +140,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 		this.$scrollerContent.empty();
 		this._items = [];
 		
-		var f = elemUtil.newFragment(this.$scrollerContent);
+		var f = util.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;
@@ -192,7 +191,7 @@ function(Base, osUtil, RefreshFooterView, elemUtil, ItemProvider, DataProvider, 
 	{
 		this._refreshFooter.$().detach();
 
-		var f = elemUtil.newFragment(this.$scrollerContent);
+		var f = util.newFragment(this.$scrollerContent);
 		if(beg < end)
 		{
 			var v = null;

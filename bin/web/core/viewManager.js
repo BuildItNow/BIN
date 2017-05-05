@@ -19,28 +19,35 @@ define([], function()
 		return this._views[name];
 	}
 
+	pro.getOrNewView = function(options, cb)
+	{
+		var name = options.name || options.path;
+		var view = this.getView(name);
+		if(view)
+		{
+			setTimeout(function()
+			{
+				cb(view);
+			}, 0)
+			
+			return ;
+		}
+
+		this.newView(options, cb);
+	}
+
 	pro.newView = function(options, cb)
 	{
 		var self     = this;
-		var noPlugin = (options.elem && options.root) || options.noPlugin;
+		options = options || {};
+		if((options.elem || options.html) && options.noPlugin === undefined)
+		{
+			options.noPlugin = true;
+		}
+
 		this.loadViewClass(options.path, function(ViewClass)
 		{
-			var view = null;
-			if(noPlugin)
-			{
-				view = new ViewClass(options);
-			}
-			else
-			{
-				view = ViewClass.create(options);
-				if(options.elem)
-				{
-					view.render();
-					$(options.elem).append(view.$());
-					view.show();
-				}
-			}
-
+			var view = ViewClass.create(options);
 			var name = options.name || options.path;
 
 			self._views[name] = view;
@@ -49,7 +56,7 @@ define([], function()
 			{
 				cb(view);
 			}
-		}, noPlugin);
+		}, options.noPlugin);
 	}
 
 	pro.delView = function(name)

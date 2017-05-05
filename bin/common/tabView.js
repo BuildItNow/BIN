@@ -13,7 +13,15 @@ function(Base, TabBarView, SwipeView)
 	Class.posGenHTML = function()
 	{
 		var self = this;
-		var elem       = this._options.tabBarID ? this.$("#"+this._options.tabBarID) : $(this.$().children()[0]);
+		var elem = null;
+		if(this._options.tabBarID)
+		{
+			elem = typeof this._options.tabBarID === "string" ? this.$("#"+this._options.tabBarID) : $(this._options.tabBarID);
+		}
+		else 
+		{
+			elem = $(this.$().children()[0]);
+		}
 		var current    = this._options.current ? this._options.current : this._optinos.items[0];
 
 		var options = 
@@ -31,7 +39,16 @@ function(Base, TabBarView, SwipeView)
 
 		this._tabBarView = new TabBarView(options);
 
-		elem = this._options.swipeID ? this.$("#"+this._options.swipeID) : $(this.$().children()[1]);
+		var elem = null;
+		if(this._options.swipeID)
+		{
+			elem = typeof this._options.swipeID === "string" ? this.$("#"+this._options.swipeID) : $(this._options.swipeID);
+		}
+		else 
+		{
+			elem = $(this.$().children()[1]);
+		}
+
 		options = 
 		{
 			elem:elem,
@@ -98,8 +115,13 @@ function(Base, TabBarView, SwipeView)
 
 	Class._onTabChange = function(item)
 	{
+		if(!this._swipeView)
+		{
+			return ;
+		}
+
 		this._swipeView.setCurrent(this._item2index(item), true);
-	
+		
 		if(this._options.onChange)
 		{
 			this._options.onChange(this, item);
@@ -108,6 +130,11 @@ function(Base, TabBarView, SwipeView)
 
 	Class._onSwipeChange = function(index)
 	{
+		if(!this._tabBarView)
+		{
+			return ;
+		}
+
 		this._tabBarView.setCurrent(this._options.items[index], true);
 
 		if(this._options.onChange)
