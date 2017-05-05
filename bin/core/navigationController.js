@@ -90,6 +90,8 @@ function(osUtil, effecters)
 	    this._pushData = null;
 	    this._popData  = null;
 	    //this._stackV   = 0;
+		this._pushTime = 0;
+		this._popTime = 0;
 	}
 
 	NavigationController.extend = bin.extend;
@@ -144,7 +146,7 @@ function(osUtil, effecters)
 	cls.pop = function(count, popData, options)
 	{
 		var now = _.now();
-		if(this._popData && (now - this._popData.time) < 500)	// Too fast, reject
+		if(this._popData && (now - this._popTime) < 500)	// Too fast, reject
 		{
 			console.warning("pop too fast");
 			
@@ -165,6 +167,7 @@ function(osUtil, effecters)
 		}
 
 		this._popData = {data:popData, options:options, count:count, time:now};
+		this._popTime = now;
 
 		window.history.go(-count);
 
@@ -175,7 +178,7 @@ function(osUtil, effecters)
 	cls.push = function(name, pushData, options)
 	{
 		var now = _.now();
-		if(this._pushData && (now - this._pushData.time) < 500)	// Too fast, reject
+		if(this._pushData && (now - this._pushTime) < 500)	// Too fast, reject
 		{
 			console.warning("push too fast");
 			
@@ -215,6 +218,8 @@ function(osUtil, effecters)
       	name = queryString ? path+"?"+queryString : path;
 
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, time:now, effecter:effecter};
+
+		this._pushTime = now;
 
 
 		//if(options.native)
