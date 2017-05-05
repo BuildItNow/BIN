@@ -146,7 +146,7 @@ function(osUtil, effecters)
 	cls.pop = function(count, popData, options)
 	{
 		var now = _.now();
-		if(this._popData && (now - this._popTime) < 500)	// Too fast, reject
+		if(now - this._popTime < 500)	// Too fast, reject
 		{
 			console.warning("pop too fast");
 			
@@ -166,7 +166,7 @@ function(osUtil, effecters)
 			return false;
 		}
 
-		this._popData = {data:popData, options:options, count:count, time:now};
+		this._popData = {data:popData, options:options, count:count};
 		this._popTime = now;
 
 		window.history.go(-count);
@@ -178,7 +178,7 @@ function(osUtil, effecters)
 	cls.push = function(name, pushData, options)
 	{
 		var now = _.now();
-		if(this._pushData && (now - this._pushTime) < 500)	// Too fast, reject
+		if(now - this._pushTime < 500)	// Too fast, reject
 		{
 			console.warning("push too fast");
 			
@@ -217,8 +217,7 @@ function(osUtil, effecters)
 
       	name = queryString ? path+"?"+queryString : path;
 
-		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, time:now, effecter:effecter};
-
+		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, effecter:effecter};
 		this._pushTime = now;
 
 
