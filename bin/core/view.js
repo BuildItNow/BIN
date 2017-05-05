@@ -464,7 +464,7 @@ function(util, Vue)
 
     Class._llTryLazyLoad = function()
     {
-        if(this._llViews.length === 0)
+        if(!this._llViews || this._llViews.length === 0)
         {
             return ;
         }

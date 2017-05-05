@@ -142,7 +142,10 @@ define(
                 return ret;
             }
 
-        
+            Class.$content = function()
+            {
+                return this.$(".bin-page-content");
+            }
 
             Class._setupNavigationBar = function()
             {
