@@ -135,6 +135,10 @@ function(util, Vue)
                 }
             }
         }
+        else if(this.$()[0].getAttribute("vm") !== null)
+        {
+            VMOptions = {};
+        }
 
         if(this.prepareVMOptions)
         {

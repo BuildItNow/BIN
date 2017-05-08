@@ -163,10 +163,12 @@ function(effecters, Vue)
 				var func = undefined;
 				var hand = undefined;
 				var view = undefined;
+				var effe = undefined;
 				if(arg === "push")
 				{
 					view = this.expression;
 					data = this.el.getAttribute("pushData");
+					effe = this.el.getAttribute("ioEffect");
 					func = "push";
 				}
 				else if(arg === "pop")
@@ -191,6 +193,7 @@ function(effecters, Vue)
 					view = this.expression;
 					data = this.el.getAttribute("pushData");
 					func = "startWith";
+					effe = this.el.getAttribute("ioEffect");
 				}
 
 				if(view && typeof view === "string" && VM_EL_REG.test(view))
@@ -205,7 +208,7 @@ function(effecters, Vue)
 
 				this.handler = function()
 				{
-					self[func](view && typeof view === "function" ? view(dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm, dirc.el) : data);
+					self[func](view && typeof view === "function" ? view(dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm, dirc.el) : data, {effect:effe});
 				}
 
 				this.el.addEventListener("click", this.handler);
