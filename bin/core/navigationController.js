@@ -246,6 +246,19 @@ function(effecters, Vue)
 		return false;
 	}
 
+	cls.extendIOEffects = function(effects)
+	{
+		for(var k in effects)
+		{
+			effecters[k] = effects[k];
+		}
+
+		if(typeof bin.globalConfig.pageIOAnim === "string" && effecters[bin.globalConfig.pageIOAnim])
+		{
+			this._defaultIOEffecter = effecters[bin.globalConfig.pageIOAnim];
+		}
+	}
+
 	// NB. Can't call pop many times once, Because Backbone route only once.  
 	cls.pop = function(count, popData, options)
 	{
