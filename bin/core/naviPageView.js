@@ -202,6 +202,10 @@ define(
                             this.setLeftVisible(false);
                         }
                     }
+                    else
+                    {
+                        this.setLeftImage("url('bin/res/img/bpf_hash_back.png')");
+                    }
 
                     if(rightConfig)
                     {
@@ -219,6 +223,11 @@ define(
                             this.setRightVisible(false);
                         }
                     }
+                    else
+                    {
+                        this.setRightVisible(false);
+                    }
+
                     navContainer.setup();
                 }
                 else
