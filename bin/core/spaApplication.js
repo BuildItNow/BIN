@@ -92,13 +92,6 @@ define([
 
 			bin.naviController = this._naviController;
 			bin.hudManager  = this._hudManager;
-			
-			if(cordova)
-			{
-				this._nativeManager = new bin.core.NativeManager();
-				this._nativeManager.init();
-				bin.nativeManager = this._nativeManager;
-			}
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);

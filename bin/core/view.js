@@ -147,6 +147,11 @@ function(util, Vue)
 
         if(VMOptions)
         {
+            if(this.hasOwnProperty("vmData"))
+            {
+                VMOptions.data = _.extend(VMOptions.data || {}, this.vmData);
+            }
+
             var el = this.$()[0];
             if(el)
             {
