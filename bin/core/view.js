@@ -1,6 +1,147 @@
 define(["bin/core/util", "vue"], 
 function(util, Vue)
 {
+    var ViewModel = bin.extend.call(Vue, 
+    {
+        constructor:function()  // two-phase to create view-model
+        {
+
+        },
+        b_init:function(view, options)
+        {
+            this._b_view = view;
+            Vue.call(this, options);
+        },
+        b_release:function()
+        {
+            if(this._b_unLinks)
+            {
+                for(var i=this._b_unLinks.length-1; i>=0; --i)
+                {
+                    this._b_unLinks[i](true);
+                }
+
+                delete this._b_unLinks;
+            }
+
+            this.$destroy();
+            this._b_view = null;
+        },
+        b_compile:function(elem)
+        {
+            if(!this._b_unLinks)
+            {
+                this._b_unLinks = [];
+            }
+
+            for(var i=0,i_sz=elem.length; i<i_sz; ++i)
+            {
+                this._b_unLinks.push(this.$compile(elem[i]));
+            }
+        }
+    });
+
+    var VM_EL_REG  = /^((vm)|(el)|(view))[\.\[]/;
+    var makeGetter = function(exp)
+    {
+        return new Function("view", "vm", "el", "return "+exp);
+    }
+
+    Vue.elementDirective("view", 
+    {
+        priority:500,
+        compileDirective:true,
+        bind:function()
+        {   
+            var vm   = this.vm;
+            var view = vm._b_view;
+            var el   = this.el;
+            var elCtn = el.children[0];
+            var name = null;
+            var path = null;
+                
+            var opts = null;
+            var otherOpts = {elem:elCtn};
+            var hide = false;
+
+            // parse attrs
+            var attrs = el.attributes;
+            var attrName  = null;
+            var attrVale  = null;
+            for(var i=0,i_sz=attrs.length; i<i_sz; ++i)
+            {
+                attrVale = attrs[i].value;
+                attrName = attrs[i].name;
+
+                if(attrName === "name")
+                {
+                    name = attrVale;
+                }
+                else if(attrName === "path")
+                {
+                    path = attrVale;
+                }
+                else if(attrName === "hide")
+                {
+                    hide = true;
+                }
+                else if(attrName.startsWith("opts"))
+                {
+                    if(attrName.length === 4)
+                    {
+                        opts = makeGetter(attrVale)(view, vm, el); 
+                    }
+                    else
+                    {
+                        var optsName = attrName.substring(5);
+                        otherOpts[optsName] = VM_EL_REG.test(attrVale) ? makeGetter(attrVale)(view, vm, el) : attrVale; 
+                    }
+                }
+            }
+
+            var ViewClass = view.__$class.deps && view.__$class.deps[path];
+            if(!ViewClass)
+            {
+                console.error("Can't find class for view "+path+", inject fail");
+
+                el.parentNode.removeChild(el);
+            }
+            else
+            {
+                if(opts)
+                {
+                    otherOpts = _.extend(opts, otherOpts);
+                }
+
+                var v = ViewClass.create(otherOpts);
+                el.parentNode.replaceChild(v.$()[0], el);
+
+                if(name)
+                {
+                    if(view[name])
+                    {
+                        console.warning("Injected view name confliction with "+name);
+                    }
+
+                    view[name] = v;
+                }
+
+                this.b_view = v;
+                this.b_name = name;
+
+                if(hide)
+                {
+                    v.hide();
+                }
+            }
+        },
+        unbind:function()
+        {
+            this.b_view && this.b_view.remove();
+            this.b_name && (this.vm._b_view[name] = null);
+        }
+    });
+
     var Base = Backbone.View;
     var View = undefined;
 
@@ -59,7 +200,6 @@ function(util, Vue)
     {
         return function()
         {
-            self.vm = self.vm || this;
             return impl.apply(self, arguments);
         }
     }
@@ -163,7 +303,9 @@ function(util, Vue)
 
                 VMOptions.el = this.$()[0];
             }
-            this.vm = new Vue(VMOptions);
+            
+            this.vm = new ViewModel();
+            this.vm.b_init(this, VMOptions);
         }
        
         this.posGenHTML();
@@ -234,16 +376,7 @@ function(util, Vue)
 
         if(this.vm)
         {
-            if(this._vmUnLinks)
-            {
-                for(var i=this._vmUnLinks.length-1; i>=0; --i)
-                {
-                    this._vmUnLinks[i](true);
-                }
-
-                delete this._vmUnLinks;
-            }
-            this.vm.$destroy();
+            this.vm.b_release();
         }
 
         this.onRemove();
@@ -281,15 +414,8 @@ function(util, Vue)
             console.warm("ViewModel not created for this view, can't compile the element");
             return ;
         }
-        if(!this._vmUnLinks)
-        {
-            this._vmUnLinks = [];
-        }
 
-        for(var i=0,i_sz=elem.length; i<i_sz; ++i)
-        {
-            this._vmUnLinks.push(this.vm.$compile(elem[i]));
-        }
+        this.vm.b_compile(elem);
     }
 
     Class.isShow = function()

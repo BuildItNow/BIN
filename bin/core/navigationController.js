@@ -147,14 +147,15 @@ function(effecters, Vue)
 
 		// Add directive to Vue
 		var NUMBER_REG = /^[0-9]*$/;
-		var VM_EL_REG  = /^((vm)|(el))[\.\[]/;
+		var VM_EL_REG  = /^((vm)|(el)|(view))[\.\[]/;
 		var makeGetter = function(exp)
 		{
-			return new Function("vm", "el", "return "+exp);
+			return new Function("view", "vm", "el", "return "+exp);
 		}
 
 		Vue.directive("navigation", 
 		{
+			priority:700,
 			bind:function()
 			{
 				var dirc = this;
@@ -208,7 +209,7 @@ function(effecters, Vue)
 
 				this.handler = function()
 				{
-					self[func](view && typeof view === "function" ? view(dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm, dirc.el) : data, {effect:effe});
+					self[func](view && typeof view === "function" ? view(dirc.vm._b_view, dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm._b_view, dirc.vm, dirc.el) : data, {effect:effe});
 				}
 
 				this.el.addEventListener("click", this.handler);
@@ -217,7 +218,6 @@ function(effecters, Vue)
 			{
 				this.el.removeEventListener("click", this.handler);
 			},
-
 		});
 
 		console.info("NavigationController module initialize");

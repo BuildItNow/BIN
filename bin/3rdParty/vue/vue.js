@@ -7154,7 +7154,7 @@ var template = Object.freeze({
     }
     // check element directives
     if (!linkFn) {
-      linkFn = checkElementDirectives(el, options);
+      linkFn = checkElementDirectives(el, attrs, options);
     }
     // check component
     if (!linkFn) {
@@ -7342,14 +7342,26 @@ var template = Object.freeze({
    * @param {Object} options
    */
 
-  function checkElementDirectives(el, options) {
+  function checkElementDirectives(el, attrs, options) {
     var tag = el.tagName.toLowerCase();
     if (commonTagRE.test(tag)) {
       return;
     }
     var def = resolveAsset(options, 'elementDirectives', tag);
     if (def) {
-      return makeTerminalNodeLinkFn(el, tag, '', options, def);
+      var tf = makeTerminalNodeLinkFn(el, tag, '', options, def);
+      if(def.compileDirective){
+        var df = compileDirectives(attrs, options);
+        if(!df) return tf;
+        var f = function(){
+          df.apply(this, arguments);
+          tf.apply(this, arguments);
+        }
+        f.terminal = tf.terminal;
+        return f;
+      }else{
+        return tf;
+      }
     }
   }
 
