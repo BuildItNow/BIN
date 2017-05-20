@@ -147,12 +147,6 @@ function(effecters, Vue)
 
 		// Add directive to Vue
 		var NUMBER_REG = /^[0-9]*$/;
-		var VM_EL_REG  = /^((vm)|(el)|(view))[\.\[]/;
-		var makeGetter = function(exp)
-		{
-			return new Function("view", "vm", "el", "return "+exp);
-		}
-
 		Vue.directive("navigation", 
 		{
 			priority:700,
@@ -197,14 +191,14 @@ function(effecters, Vue)
 					effe = this.el.getAttribute("ioEffect");
 				}
 
-				if(view && typeof view === "string" && VM_EL_REG.test(view))
+				if(view && typeof view === "string")
 				{
-					view = makeGetter(view);
+					view = Vue.b_makeValueFunction(view);
 				}
 				
-				if(data && VM_EL_REG.test(data))
+				if(data)
 				{
-					data = makeGetter(data);
+					data = Vue.b_makeValueFunction(data);
 				}
 
 				this.handler = function()

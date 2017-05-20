@@ -41,10 +41,15 @@ function(util, Vue)
         }
     });
 
-    var VM_EL_REG  = /^((vm)|(el)|(view))[\.\[]/;
-    var makeGetter = function(exp)
+    var camelizeRE = /-(\w)/g;
+    function camelize(str) 
     {
-        return new Function("view", "vm", "el", "return "+exp);
+        return str.replace(camelizeRE, toUpper);
+    }
+
+    function toUpper(_, c)
+    {
+        return c ? c.toUpperCase() : '';
     }
 
     Vue.elementDirective("view", 
@@ -61,7 +66,7 @@ function(util, Vue)
             var path = null;
                 
             var opts = null;
-            var otherOpts = {elem:elCtn};
+            var otherOpts = {};
             var hide = false;
 
             // parse attrs
@@ -89,12 +94,12 @@ function(util, Vue)
                 {
                     if(attrName.length === 4)
                     {
-                        opts = makeGetter(attrVale)(view, vm, el); 
+                        opts = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
                     }
                     else
                     {
-                        var optsName = attrName.substring(5);
-                        otherOpts[optsName] = VM_EL_REG.test(attrVale) ? makeGetter(attrVale)(view, vm, el) : attrVale; 
+                        var optsName = camelize(attrName.substring(5));
+                        otherOpts[optsName] = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
                     }
                 }
             }
@@ -108,13 +113,30 @@ function(util, Vue)
             }
             else
             {
+                var removeEl = false;
                 if(opts)
                 {
                     otherOpts = _.extend(opts, otherOpts);
                 }
 
+                if(otherOpts.elem)
+                {
+                    removeEl = true;
+                }
+                else
+                {
+                    otherOpts.elem = elCtn;
+                }
+
                 var v = ViewClass.create(otherOpts);
-                el.parentNode.replaceChild(v.$()[0], el);
+                if(removeEl)
+                {
+                    el.parentNode.removeChild(el);
+                }
+                else
+                {
+                    el.parentNode.replaceChild(v.$()[0], el);
+                }  
 
                 if(name)
                 {

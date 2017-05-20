@@ -10104,6 +10104,33 @@ var template = Object.freeze({
 
   Vue.version = '1.0.26';
 
+  /* BIN Frame work part */
+  var VALUE_REG = /^((vm)|(el)|(view))[\.\[]/;
+  var CODE_REG  = /^code((\.[a-zA-Z0-9]+)*)\:/;
+  
+  Vue.b_makeValueFunction = function(exp)
+  {
+    var match = null;
+    if(VALUE_REG.test(exp)){
+      return new Function("view", "vm", "el", "return "+exp);
+    }
+    else if(match = exp.match(CODE_REG)){
+      exp = exp.substring(match[0].length);
+      if(!match[1]){
+        return new Function("view", "vm", "el", "return "+exp);
+      }
+      else if(match[1] === ".raw"){
+        return new Function("view", "vm", "el", exp);
+      }
+      else{
+        return new Function("view", "vm", "el", "return "+exp);
+      }
+    }
+    else{
+      return function(){return exp;};
+    }
+  }
+
   // devtools global hook
   /* istanbul ignore next */
   setTimeout(function () {
