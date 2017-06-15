@@ -84,7 +84,20 @@ define(["bin/core/application"],
 					}
 					else		// Use plugin
 					{
-						options.elemParent = elem;
+						options.elemParent = (function(elem)
+						{
+							return function(view)
+							{
+								if(elem.parentNode)
+								{
+									elem.parentNode.replaceChild(view.$()[0], elem);
+								}
+								else
+								{
+									elem.appendChild(view.$()[0]);
+								}
+							}
+						})(elem);
 					}
 
 					bin.viewManager.newView(options)

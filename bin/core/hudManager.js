@@ -89,6 +89,33 @@
 			});
 		}
 
+		Class.confirm = function(message, onYes, onNo, cb)
+		{
+			var options = 
+			{
+				title:null, 
+				message:{text:message}, 
+				buttons:[
+					{
+						text:"确定", 
+						onClick:function(view, text)
+						{
+							return onYes && onYes(view, text);
+						}
+					},
+					{
+						text:"取消", 
+						onClick:function(view, text)
+						{
+							return onNo && onNo(view, text);
+						}
+					}
+				]
+			};
+
+			return this.alert(options, cb);
+		}
+
 		Class.alertError = function(message, title)
 		{
 			var options = {title:(title ? {text:title} : null), message:{text:message}, buttons:[{text:"确定"}]};

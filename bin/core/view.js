@@ -128,14 +128,26 @@ function(util, Vue)
                     otherOpts.elem = elCtn;
                 }
 
+                if(otherOpts.elemParent)
+                {
+                    removeEl = true;
+                    if(otherOpts.elemParent === "replace")
+                    {
+                        otherOpts.elemParent = function(v)
+                        {
+                            el.parentNode && el.parentNode.replaceChild(v.$()[0], el);
+                        }
+                    }
+                }
+
                 var v = ViewClass.create(otherOpts);
                 if(removeEl)
                 {
-                    el.parentNode.removeChild(el);
+                    el.parentNode && el.parentNode.removeChild(el);
                 }
                 else
                 {
-                    el.parentNode.replaceChild(v.$()[0], el);
+                    el.parentNode && el.parentNode.replaceChild(v.$()[0], el);
                 }  
 
                 if(name)

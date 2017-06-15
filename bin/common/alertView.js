@@ -81,14 +81,13 @@ function(Base)
 		this.$append("#buttons", '<div class="AlertView-line"></div>');
 
 		var elem = $('<div class="AlertView-button">'+button.text+'</div>');
-		if(!button.onClick)
-		{
-			button.onClick = function(view, value)
+		elem.on("click", function(e)
 			{
-				view.close();
-			}
-		}
-		elem.on("click", function(e){button.onClick(self, button.text)});
+				if(!button.onClick || !button.onClick(self, button.text))
+				{
+					self.close();
+				}
+			});
 		
 		if(button.color)
 		{
@@ -102,28 +101,18 @@ function(Base)
 
 	Class._wrap2Button = function(button0, button1)
 	{
-		if(!button0.onClick)
-		{
-			button0.onClick = function(view, value)
-			{
-				view.close();
-			}
-		}
-
-		if(!button1.onClick)
-		{
-			button1.onClick = function(view, value)
-			{
-				view.close();
-			}
-		}
-
 		var self = this;
 		this.$append("#buttons", '<div class="AlertView-line"></div>');
 
 		var elemWrap = $('<div class="AlertView-wrap-block"></div>');
 		var elem     = $('<div class="AlertView-wrap-button">'+button0.text+'</div>');
-		elem.on("click", function(e){button0.onClick(self, button0.text)});
+		elem.on("click", function(e)
+			{
+				if(!button0.onClick || !button0.onClick(self, button0.text))
+				{
+					self.close();
+				}
+			});
 		
 		if(button0.color)
 		{
@@ -131,7 +120,13 @@ function(Base)
 		}
 		elemWrap.append(elem);
 		elem = $('<div class="AlertView-wrap-button">'+button1.text+'</div>');
-		elem.on("click", function(e){button1.onClick(self, button1.text)});
+		elem.on("click", function(e)
+			{
+				if(!button1.onClick || !button1.onClick(self, button1.text))
+				{
+					self.close();
+				}
+			});
 		
 		if(button1.color)
 		{
