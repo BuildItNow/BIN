@@ -1,0 +1,54 @@
+<div class="container file-upload-view">
+	<style>
+		.file-upload-view
+		{
+			width: 100%;
+			height: auto;
+			margin: 0px;
+			padding: 0px;
+		}
+
+		.file-upload-item
+		{
+			width: 100%;
+			margin: 10px 0px;
+			padding: 0px;
+		}
+
+		.file-upload-item-name
+		{
+			float: none;
+			padding: 0px;
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		.file-upload-item-operation
+		{
+			float: none;
+			padding: 0px;
+			text-align: right;
+			display: inline-block;
+			vertical-align: middle;
+		}
+	</style>
+	<div>
+		<button id="browse_button" class="btn btn-sm btn-primary btn-flat" :disabled="uploading ? 'disabled' : null ">选择文件</button>
+	</div>
+	<div class="container file-upload-item" v-for="(i, item) in files">
+		<div class="col-xs-10 file-upload-item-name small">
+			{{item.name}}
+		</div><!--
+ 	 --><div class="col-xs-2 file-upload-item-operation">
+			<button class="btn btn-link btn-sm" style="margin:0px;padding:0px;" :disabled="uploading ? 'disabled' : null" @click="removeFile(item.id)">删除</button>
+		</div>
+		<div class="progress" style="margin:0px;color:black;width:100%;">
+  			<div class="progress-bar progress-bar-success" role="progressbar" :aria-valuenow="item.percent" aria-valuemin="0" aria-valuemax="100" :style="{width:item.percent+'%'}" v-show="item.status !== 'fail' ">
+    				{{item.status === "succeed" ? "上传成功" : item.percent+'%'}}
+    		</div>
+    		<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%" v-show="item.status === 'fail'">
+    				上传失败
+    		</div>
+    	</div>
+	</div>
+</div>

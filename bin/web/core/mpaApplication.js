@@ -63,11 +63,7 @@ define(["bin/web/core/webApplication", "fastclick"], function(Application, fastc
 
 		this.fixWindow();
 
-        Application.prototype.init.apply(this);
-
-		this._hudManager = new bin.core.HUDManager();
-		this._hudManager.init();
-		bin.hudManager = this._hudManager;
+        Application.prototype.init.apply(this); 
 	}
 
 	Class.fixWindow = function()
@@ -162,17 +158,6 @@ define(["bin/web/core/webApplication", "fastclick"], function(Application, fastc
         }
 
         elemRoot.style.fontSize = this._width/standard*unit+"px";
-	}
-
-	Class.run = function()
-	{
-		var view = bin.queryParams["binView"];
-		if(view)
-		{	
-			$("#binMainView").attr("data-bin-view", view);
-		}
-
-		Application.prototype.run.apply(this);
 	}
 
 	return Application.extend(Class);

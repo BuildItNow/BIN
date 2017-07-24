@@ -1,3 +1,31 @@
+// Define document depencies plugin
+define("documentdependencies", ["view"], function(ViewPlugin)
+{
+	var Class = {};
+	var deps  = null;
+
+	Class.load = function(name, req, onLoad, config)
+    {
+    	if(deps)
+    	{
+    		onLoad(deps);
+
+    		return ;
+    	}
+
+    	document.body.setAttribute("vm", "");
+
+    	ViewPlugin.resolveViewInjectionDependencies(document.body, function(data)
+    	{
+    		deps = data;
+
+    		onLoad(deps);
+    	});
+    }
+
+	return Class;
+});
+
 define(["bin/core/application"], 
 	function(Application)
 	{
@@ -46,11 +74,13 @@ define(["bin/core/application"],
 			this._queryParams = queryParams();
 			bin.queryParams = this._queryParams;
 
+			$("title").html(bin.globalConfig.name);
+
 			Application.prototype.init.apply(this);
-				
-			this._viewManager = new bin.core.ViewManager();
-			this._viewManager.init();
-			bin.viewManager = this._viewManager;
+
+			this._hudManager = new bin.core.HUDManager();
+			this._hudManager.init();
+			bin.hudManager  = this._hudManager;
 
 			if(bin.globalConfig.pageConfig.onInit)
 			{
@@ -63,46 +93,17 @@ define(["bin/core/application"],
 
 		Class.run = function()
 		{
-			var elems = $("div[data-bin-view]");
-			if(elems.length > 0)
-			{
-				var elem = null;
-				var path = null;
-				var name = null;
-				var root = null;
-				for(var i=0,i_sz=elems.length; i<i_sz; ++i)
+			var self = this;
+			var BodyView = bin.ui.View.extend({
+					onViewInject:function(path, view, name)
+					{
+						self.onDocumentDependentInject && self.onDocumentDependentInject(path, view, name);
+					}
+				}, 
 				{
-					elem = elems[i];
-					path = elem.getAttribute("data-bin-view");
-					name = elem.getAttribute("data-bin-name");
-					root = elem.getAttribute("data-bin-root");
-
-					var options = {path:path, name:name};
-					if(root)	// No plugin
-					{
-						options.elem = elem;
-					}
-					else		// Use plugin
-					{
-						options.elemParent = (function(elem)
-						{
-							return function(view)
-							{
-								if(elem.parentNode)
-								{
-									elem.parentNode.replaceChild(view.$()[0], elem);
-								}
-								else
-								{
-									elem.appendChild(view.$()[0]);
-								}
-							}
-						})(elem);
-					}
-
-					bin.viewManager.newView(options)
-				}
-			}
+					deps:bin.runtimeConfig.documentDependencies
+				});
+			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies
 
 			if(bin.globalConfig.pageConfig.onRun)
 			{

@@ -34,9 +34,23 @@ require.config(
 		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
 		hammer:"bin/3rdParty/hammerjs/hammer",
 		vue:"bin/3rdParty/vue/vue",
+
+		bootstrap:"bin/web/3rdParty/bootstrap-3.3.7/js/bootstrap",
+		layer:"bin/web/3rdParty/layer-3.0.3/src/layer",
+		plupload:"bin/web/3rdParty/plupload-2.3.1/js/plupload.dev",
+		moxie:"bin/web/3rdParty/plupload-2.3.1/js/moxie",
+
+		adminlte:"bin/web/3rdParty/adminlte-2.3.11/dist/js/app",
+		icheck:"bin/web/3rdParty/adminlte-2.3.11/plugins/iCheck/icheck",
 	},
 	waitSeconds: 5,
-	shim: {}
+	shim: 
+	{
+		plupload:"moxie",
+		adminlte:["jquery", "bootstrap"],
+		icheck:["jquery"],
+
+	}
 });
 
 require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)

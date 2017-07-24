@@ -74,7 +74,7 @@ define([], function ()
             viewEl = viewEls[i];
             viewEl.style.display = "none";  
             viewPath = viewEl.getAttribute("path");
-            if(viewPath && viewPath.indexOf("{") < 0)   // not vue bind
+            if(viewEl.getAttribute("async") == null && viewPath && viewPath.indexOf("{") < 0)   // not vue bind
             {
                 loadTasks.push(genLoadTask(viewEl, viewPath));
             }
@@ -205,6 +205,10 @@ define([], function ()
                     onLoad.error(err);
                 }
             );
+        },
+        resolveViewInjectionDependencies:function(el, cb)
+        {
+            return loadViewDependencies(el, cb);
         }
     }
 

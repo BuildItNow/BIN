@@ -68,6 +68,7 @@ function(util, Vue)
             var opts = null;
             var otherOpts = {};
             var hide = false;
+            var async = false;
 
             // parse attrs
             var attrs = el.attributes;
@@ -102,17 +103,19 @@ function(util, Vue)
                         otherOpts[optsName] = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
                     }
                 }
+                else if(attrName === "async")
+                {
+                    async = true;
+                }
             }
 
-            var ViewClass = view.__$class.deps && view.__$class.deps[path];
-            if(!ViewClass)
+            var createView = function(ViewClass)
             {
-                console.error("Can't find class for view "+path+", inject fail");
-
-                el.parentNode.removeChild(el);
-            }
-            else
-            {
+                if(this.b_unbinded)
+                {
+                    return ;
+                }
+                
                 var removeEl = false;
                 if(opts)
                 {
@@ -167,12 +170,47 @@ function(util, Vue)
                 {
                     v.hide();
                 }
+
+                if(view.onViewInject)
+                {
+                    view.onViewInject(path, v, name);
+                }
+            }
+
+            var self = this;
+            var ViewClass = view.__$class.deps && view.__$class.deps[path];
+            if(!ViewClass)
+            {
+                if(async)
+                {
+                    require([path], function(ViewClass)
+                    {
+                        createView.call(self, ViewClass);
+
+                    }, function()
+                    {
+                        console.error("Can't load class for view "+path+", inject fail");
+
+                        el.parentNode.removeChild(el);
+                    });
+                }
+                else
+                {
+                    console.error("Can't find class for view "+path+", inject fail");
+
+                    el.parentNode.removeChild(el);
+                }
+            }
+            else
+            {
+                createView.call(this, ViewClass);
             }
         },
         unbind:function()
         {
             this.b_view && this.b_view.remove();
             this.b_name && (this.vm._b_view[name] = null);
+            this.b_unbinded = true;
         }
     });
 
@@ -192,7 +230,7 @@ function(util, Vue)
         {
             this._html = null;
             
-            Backbone.View.call(this, options);
+            Base.call(this, options);
 
             if(!options.manualRender)
             {
@@ -208,7 +246,7 @@ function(util, Vue)
             options.el = options.elem;
             options.elem = null;
 
-            Backbone.View.call(this, options);
+            Base.call(this, options);
 
             if(!options.manualRender)
             {
@@ -221,7 +259,7 @@ function(util, Vue)
 
         this._html = options && options.html ? options.html : this.__$class.html;
 
-        Backbone.View.call(this, options);
+        Base.call(this, options);
 
         if(this._html || !options || !options.manualRender)
         {
@@ -396,7 +434,7 @@ function(util, Vue)
 
     Class.remove = function()
     {
-        Backbone.View.prototype.remove.call(this);
+        Base.prototype.remove.call(this);
 
         if(this._llViews && this._llViews.length > 0)
         {
