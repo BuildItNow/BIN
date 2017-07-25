@@ -13,8 +13,6 @@ define("documentdependencies", ["view"], function(ViewPlugin)
     		return ;
     	}
 
-    	document.body.setAttribute("vm", "");
-
     	ViewPlugin.resolveViewInjectionDependencies(document.body, function(data)
     	{
     		deps = data;
@@ -93,16 +91,15 @@ define(["bin/core/application"],
 
 		Class.run = function()
 		{
-			var self = this;
-			var BodyView = bin.ui.View.extend({
-					onViewInject:function(path, view, name)
-					{
-						self.onDocumentDependentInject && self.onDocumentDependentInject(path, view, name);
-					}
-				}, 
-				{
-					deps:bin.runtimeConfig.documentDependencies
-				});
+			var BodyView = bin.ui.BodyView;
+			if(!BodyView)
+			{
+				BodyView = bin.ui.View.extend({});
+			}
+
+			BodyView.deps = bin.runtimeConfig.documentDependencies;
+
+			document.body.setAttribute("vm", "");
 			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies
 
 			if(bin.globalConfig.pageConfig.onRun)
