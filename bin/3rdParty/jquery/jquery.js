@@ -37,6 +37,19 @@
 // Pass this if window is not defined yet
 }(typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
 
+	if(window.$)
+	{
+		if ( typeof define === "function" && define.amd ) 
+		{
+			define( "jquery", [], function() 
+			{
+				return window.$;
+			});
+		}
+			
+		return window.$;
+	}
+
 // Support: Firefox 18+
 // Can't be in strict mode, several libs including ASP.NET trace
 // the stack via arguments.caller.callee and Firefox dies if

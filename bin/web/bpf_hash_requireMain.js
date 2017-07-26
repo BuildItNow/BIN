@@ -1,18 +1,80 @@
 var __bin__start__time = new Date().getTime();
 
 // bin frame-work namespace
-var bin = {};
+var bin  = {};
+var page = {};
+
+(function()
+{
+	var toString = Object.prototype.toString;
+
+	bin.isObject = function(obj) 
+	{
+    	return !!(obj && typeof obj === "object" && obj === Object(obj));
+  	};
+
+  	var genFunc = function(name)
+  	{
+  		return function(obj)
+  		{
+  			return toString.call(obj) == "[object "+name+"]";
+  		}
+  	}
+
+  	var types = ["Array", "Function", "String", "Number", "Date", "RegExp"];
+  	for(var i=0,i_sz=types.length; i<i_sz; ++i)
+  	{
+  		bin["is"+types[i]] = genFunc(types[i]);
+  	}
+
+  	if(Array.isArray)
+  	{
+  		bin.isArray = Array.isArray;
+  	}
+
+  	if (typeof (/./) !== "function") 
+  	{
+    	bin.isFunction = function(obj) 
+    	{
+      		return typeof obj === "function";
+    	};
+  	}
+
+  	bin.isNaN = function(obj) 
+  	{
+    	return bin.isNumber(obj) && obj != +obj;
+  	};
+
+  	bin.isBoolean = function(obj) 
+  	{
+    	return obj === true || obj === false || toString.call(obj) == "[object Boolean]";
+  	};
+
+  	bin.isNull = function(obj) 
+  	{
+    	return obj === null;
+  	};
+
+  	bin.isUndefined = function(obj) 
+  	{
+    	return obj === void 0;
+  	};
+
+  	bin.isNU = function(obj)
+  	{
+  		return bin.isUndefined(obj) || bin.isNull(obj);
+  	}
+})();
 
 // Config the core lib
 require.config(
 {
 	baseUrl:'./', 
-	packages:[],
+	packages:
+	[
+	],
 	paths: 
 	{
-		// 3rdParty path
-		"3rdParty": "bin/3rdParty",
-
 		// equirejs plugins
 		text: 'bin/3rdParty/requirejs-text/text',
 		domReady: 'bin/3rdParty/requirejs-domready/domReady',
@@ -42,6 +104,8 @@ require.config(
 
 		adminlte:"bin/web/3rdParty/adminlte-2.3.11/dist/js/app",
 		icheck:"bin/web/3rdParty/adminlte-2.3.11/plugins/iCheck/icheck",
+		jquery_datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/jquery.dataTables",
+		datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/dataTables.bootstrap",	
 	},
 	waitSeconds: 5,
 	shim: 
@@ -49,17 +113,22 @@ require.config(
 		plupload:"moxie",
 		adminlte:["jquery", "bootstrap"],
 		icheck:["jquery"],
-
+		jquery_datatable:["jquery"],
+		datatable:["jquery_datatable", "bootstrap"],
 	}
 });
 
 require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
-	bin.globalConfig.pageConfig = typeof pageConfig === "undefined" ? {} : pageConfig;
 	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
 	bin.classConfig = globalConfig.classConfig;
 	bin.componentConfig = globalConfig.componentConfig || {};
+
+	page.pageConfig   = typeof pageConfig !== "undefined" ? pageConfig : {};
+	page.classConfig  = page.pageConfig.classConfig;
+	page.onInit = page.pageConfig.onInit;
+	page.onRun  = page.pageConfig.onRun;
 
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
@@ -95,6 +164,11 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 			var start = function()
 			{
 				require.config(globalConfig.requireConfig);
+
+				if(page.pageConfig.requireConfig)
+				{
+					require.config(page.pageConfig.requireConfig);
+				}
 
 				require(['domReady!', 'bin/web/core/main'], function(domReady, main) 
 				{
@@ -168,18 +242,29 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 	};
 
 	var packages = [];
-	if(typeof pageConfig !== "undefined")
+	if(bin.globalConfig.packages)
 	{
-		packages = packages.concat(pageConfig.packages);
+		packages = packages.concat(bin.globalConfig.packages);
+	}
+	if(page.pageConfig.packages)
+	{
+		packages = packages.concat(page.pageConfig.packages);
 	}
 
-	require(packages, function()
+	if(packages.length > 0)
+	{
+		require(packages, function()
+		{
+			onPackageLoaded();
+		}, function()
+		{
+			onPackageLoaded();
+		});
+	}
+	else
 	{
 		onPackageLoaded();
-	}, function()
-	{
-		onPackageLoaded();
-	});
+	}
 });
 
 

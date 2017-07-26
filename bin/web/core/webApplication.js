@@ -79,19 +79,11 @@ define(["bin/core/application"],
 			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
 			bin.hudManager  = this._hudManager;
-
-			if(bin.globalConfig.pageConfig.onInit)
-			{
-				setTimeout(function()
-				{
-					bin.globalConfig.pageConfig.onInit();
-				});
-			}
 		}
 
 		Class.run = function()
 		{
-			var BodyView = bin.ui.BodyView;
+			var BodyView = page.BodyView || bin.ui.BodyView;
 			if(!BodyView)
 			{
 				BodyView = bin.ui.View.extend({});
@@ -101,14 +93,6 @@ define(["bin/core/application"],
 
 			document.body.setAttribute("vm", "");
 			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies
-
-			if(bin.globalConfig.pageConfig.onRun)
-			{
-				setTimeout(function()
-				{
-					bin.globalConfig.pageConfig.onRun();
-				});
-			}
 		}
 
 		Class.goto = function(url, data)

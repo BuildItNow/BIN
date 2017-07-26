@@ -6,6 +6,68 @@ var __bin__start__time = new Date().getTime();
  */
 var bin = {};
 
+(function()
+{
+	var toString = Object.prototype.toString;
+
+	bin.isObject = function(obj) 
+	{
+    	return !!(obj && typeof obj === "object" && obj === Object(obj));
+  	};
+
+  	var genFunc = function(name)
+  	{
+  		return function(obj)
+  		{
+  			return toString.call(obj) == "[object "+name+"]";
+  		}
+  	}
+
+  	var types = ["Array", "Function", "String", "Number", "Date", "RegExp"];
+  	for(var i=0,i_sz=types.length; i<i_sz; ++i)
+  	{
+  		bin["is"+types[i]] = genFunc(types[i]);
+  	}
+
+  	if(Array.isArray)
+  	{
+  		bin.isArray = Array.isArray;
+  	}
+
+  	if (typeof (/./) !== "function") 
+  	{
+    	bin.isFunction = function(obj) 
+    	{
+      		return typeof obj === "function";
+    	};
+  	}
+
+  	bin.isNaN = function(obj) 
+  	{
+    	return bin.isNumber(obj) && obj != +obj;
+  	};
+
+  	bin.isBoolean = function(obj) 
+  	{
+    	return obj === true || obj === false || toString.call(obj) == "[object Boolean]";
+  	};
+
+  	bin.isNull = function(obj) 
+  	{
+    	return obj === null;
+  	};
+
+  	bin.isUndefined = function(obj) 
+  	{
+    	return obj === void 0;
+  	};
+
+  	bin.isNU = function(obj)
+  	{
+  		return bin.isUndefined(obj) || bin.isNull(obj);
+  	}
+})();
+
 /**
  * The root namespace of cordova framework.
  * NB: Only available for hybrid app. 
@@ -212,15 +274,21 @@ require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 		});
 	};
 
-	var packages = ["bin/bpf_hash_3party.bundle.js", "bin/bpf_hash_bin.bundle.js"];
-
-	require(packages, function()
+	//var packages = ["bin/bpf_hash_3party.bundle.js", "bin/bpf_hash_bin.bundle.js"];
+	if(bin.globalConfig.packages)
+	{
+		require([].concat(bin.globalConfig.packages), function()
+		{
+			onPackageLoaded();
+		}, function()
+		{
+			onPackageLoaded();
+		});
+	}
+	else
 	{
 		onPackageLoaded();
-	}, function()
-	{
-		onPackageLoaded();
-	});
+	}
 });
 
 

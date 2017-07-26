@@ -1,6 +1,5 @@
-define([], function()
+define(["plupload"], function(plupload)
 {
-	var plupload = bin.other.plupload;
 	var Class = {};
 
 	Class.vmData = 
