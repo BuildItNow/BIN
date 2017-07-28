@@ -114,6 +114,19 @@ else
 	bin.platform.browser = true;
 }
 
+require.onError = function(err)
+{
+	if(err.requireType === "timeout" && err.requireModules)
+	{
+		for(var i=0,i_sz=err.requireModules.length; i<i_sz; ++i)
+		{
+			require.undef(err.requireModules[i]);
+		}
+	}
+
+	console.error(err);
+}
+
 // Config the core lib
 require.config(
 {
@@ -134,7 +147,7 @@ require.config(
 
 		// 3rdParty libs
 		//jquery: 'bin/3rdParty/zepto/zepto',
-		jquery: 'bin/3rdParty/jquery/jquery',
+		jquery: 'bin/3rdParty/jquery/2.2.5/jquery',
 		underscore: 'bin/3rdParty/underscore/underscore',
 		backbone: 'bin/3rdParty/backbone/backbone',
 		fastclick: 'bin/3rdParty/fastclick/fastclick',

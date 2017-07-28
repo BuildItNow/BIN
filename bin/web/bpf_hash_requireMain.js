@@ -4,6 +4,11 @@ var __bin__start__time = new Date().getTime();
 var bin  = {};
 var page = {};
 
+if(!window.pageConfig)
+{
+	window.pageConfig = {};
+}
+
 (function()
 {
 	var toString = Object.prototype.toString;
@@ -64,59 +69,161 @@ var page = {};
   	{
   		return bin.isUndefined(obj) || bin.isNull(obj);
   	}
-})();
 
-// Config the core lib
-require.config(
-{
-	baseUrl:'./', 
-	packages:
-	[
-	],
-	paths: 
+  	// From http://keenwon.com/demo/201402/js-check-browser.html
+  	var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+    (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+    (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+    (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+    (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+    (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+    
+    bin.platform = Sys;
+    bin.platform.browser = true;
+
+    require.onError = function(err)
 	{
-		// equirejs plugins
-		text: 'bin/3rdParty/requirejs-text/text',
-		domReady: 'bin/3rdParty/requirejs-domready/domReady',
-		i18n: 'bin/3rdParty/requirejs-i18n/i18n',
-		css: 'bin/3rdParty/require-css/css',
-		view: 'bin/requirePlugin/requirejs-view',
-		map: 'bin/requirePlugin/requirejs-map',
+		if(err.requireType === "timeout" && err.requireModules)
+		{
+			for(var i=0,i_sz=err.requireModules.length; i<i_sz; ++i)
+			{
+				require.undef(err.requireModules[i]);
+			}
+		}
 
-		// 3rdParty libs
-		//jquery: 'bin/3rdParty/zepto/zepto',
-		jquery: 'bin/3rdParty/jquery/jquery',
-		underscore: 'bin/3rdParty/underscore/underscore',
-		backbone: 'bin/3rdParty/backbone/backbone',
-		fastclick: 'bin/3rdParty/fastclick/fastclick',
-		iscroll: 'bin/3rdParty/iscroll/iscroll-probe',
-		swiper: 'bin/3rdParty/swiper/swiper',
-		md5: 'bin/3rdParty/md5/md5',
-		lzstring: "bin/3rdParty/lz-string/lz-string",
-		lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
-		hammer:"bin/3rdParty/hammerjs/hammer",
-		vue:"bin/3rdParty/vue/vue",
-
-		bootstrap:"bin/web/3rdParty/bootstrap-3.3.7/js/bootstrap",
-		layer:"bin/web/3rdParty/layer-3.0.3/src/layer",
-		plupload:"bin/web/3rdParty/plupload-2.3.1/js/plupload.dev",
-		moxie:"bin/web/3rdParty/plupload-2.3.1/js/moxie",
-
-		adminlte:"bin/web/3rdParty/adminlte-2.3.11/dist/js/app",
-		icheck:"bin/web/3rdParty/adminlte-2.3.11/plugins/iCheck/icheck",
-		jquery_datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/jquery.dataTables",
-		datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/dataTables.bootstrap",	
-	},
-	waitSeconds: 5,
-	shim: 
-	{
-		plupload:"moxie",
-		adminlte:["jquery", "bootstrap"],
-		icheck:["jquery"],
-		jquery_datatable:["jquery"],
-		datatable:["jquery_datatable", "bootstrap"],
+		console.error(err);
 	}
-});
+
+	var config = 
+	{
+		baseUrl:'./', 
+		packages:
+		[
+		],
+		paths: 
+		{
+			// equirejs plugins
+			text: 'bin/3rdParty/requirejs-text/text',
+			domReady: 'bin/3rdParty/requirejs-domready/domReady',
+			i18n: 'bin/3rdParty/requirejs-i18n/i18n',
+			css: 'bin/3rdParty/require-css/css',
+			view: 'bin/requirePlugin/requirejs-view',
+			map: 'bin/requirePlugin/requirejs-map',
+
+			// 3rdParty libs
+			//jquery: 'bin/3rdParty/zepto/zepto',
+			jquery: 'bin/3rdParty/jquery/2.2.5/jquery',
+			underscore: 'bin/3rdParty/underscore/underscore',
+			backbone: 'bin/3rdParty/backbone/backbone',
+			fastclick: 'bin/3rdParty/fastclick/fastclick',
+			iscroll: 'bin/3rdParty/iscroll/iscroll-probe',
+			swiper: 'bin/3rdParty/swiper/swiper',
+			md5: 'bin/3rdParty/md5/md5',
+			lzstring: "bin/3rdParty/lz-string/lz-string",
+			lsloader: "bin/3rdParty/requirejs-lsloader/lsloader",
+			hammer:"bin/3rdParty/hammerjs/hammer",
+			vue:"bin/3rdParty/vue/vue",
+
+			bootstrap:"bin/web/3rdParty/bootstrap/3.3.7/js/bootstrap",
+			layer:"bin/web/3rdParty/layer-3.0.3/src/layer",
+			plupload:"bin/web/3rdParty/plupload-2.3.1/js/plupload.dev",
+			moxie:"bin/web/3rdParty/plupload-2.3.1/js/moxie",
+
+			adminlte:"bin/web/3rdParty/adminlte-2.3.11/dist/js/app",
+			icheck:"bin/web/3rdParty/adminlte-2.3.11/plugins/iCheck/icheck",
+			jquery_datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/jquery.dataTables",
+			datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/dataTables.bootstrap"
+		},
+		waitSeconds: 5,
+		shim: 
+		{
+			plupload:"moxie",
+			adminlte:["jquery", "bootstrap"],
+			icheck:["jquery"],
+			jquery_datatable:["jquery"],
+			datatable:["jquery_datatable", "bootstrap"]
+		}
+	};
+
+
+	if(bin.platform.ie && bin.platform.ie < 9)
+	{
+		if(bin.isNU(pageConfig.jquery))
+		{
+			pageConfig.jquery = "1.x";
+
+			console.warn("Browser is too low, use JQuery 1.x");
+		}
+
+		if(bin.isNU(pageConfig.bootstrap))
+		{
+			pageConfig.bootstrap = "2.x";
+
+			console.warn("Browser is too low, use Bootstrap 2.x");
+		}
+
+		if(bin.isNU(pageConfig.vue))
+		{
+			pageConfig.vue = false;
+
+			console.warn("Browser is too low, disable Vue");
+		}
+	}
+
+	if(bin.isNU(pageConfig.jquery))
+	{
+
+	}
+	else if(pageConfig.jquery === "1.x")
+	{
+		config.paths["jquery"] = "bin/3rdParty/jquery/1.12.4/jquery";
+	}
+	else if(pageConfig.jquery === "2.x")
+	{
+
+	}
+	else if(pageConfig.jquery)
+	{
+		config.paths["jquery"] = pageConfig.jquery;
+	}
+
+	if(bin.isNU(pageConfig.bootstrap))
+	{
+
+	}
+	if(pageConfig.bootstrap === "2.x")
+	{
+		config.paths["bootstrap"] = "bin/web/3rdParty/bootstrap/2.3.2/js/bootstrap";
+	}
+	else if(pageConfig.bootstrap === "3.x")
+	{
+
+	}
+	else if(pageConfig.bootstrap)
+	{
+		config.paths["bootstrap"] = pageConfig.bootstrap;
+	}
+
+	if(bin.isNU(pageConfig.vue))
+	{
+
+	}
+	else if(!pageConfig.vue)
+	{
+		define("vue", null);
+		delete config.paths["vue"];
+	}
+	else if(bin.isString(pageConfig.vue))
+	{
+		config.paths["vue"] = pageConfig.vue;
+	}
+
+	// Config the core lib
+	require.config(config);
+})();
 
 require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 {
@@ -125,10 +232,10 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 	bin.classConfig = globalConfig.classConfig;
 	bin.componentConfig = globalConfig.componentConfig || {};
 
-	page.pageConfig   = typeof pageConfig !== "undefined" ? pageConfig : {};
-	page.classConfig  = page.pageConfig.classConfig;
-	page.onInit = page.pageConfig.onInit;
-	page.onRun  = page.pageConfig.onRun;
+	page.pageConfig   = pageConfig;
+	page.classConfig  = pageConfig.classConfig;
+	page.onInit = pageConfig.onInit;
+	page.onRun  = pageConfig.onRun;
 
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
@@ -165,9 +272,9 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 			{
 				require.config(globalConfig.requireConfig);
 
-				if(page.pageConfig.requireConfig)
+				if(pageConfig.requireConfig)
 				{
-					require.config(page.pageConfig.requireConfig);
+					require.config(pageConfig.requireConfig);
 				}
 
 				require(['domReady!', 'bin/web/core/main'], function(domReady, main) 
@@ -246,9 +353,9 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 	{
 		packages = packages.concat(bin.globalConfig.packages);
 	}
-	if(page.pageConfig.packages)
+	if(pageConfig.packages)
 	{
-		packages = packages.concat(page.pageConfig.packages);
+		packages = packages.concat(pageConfig.packages);
 	}
 
 	if(packages.length > 0)

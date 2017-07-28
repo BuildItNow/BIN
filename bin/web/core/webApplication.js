@@ -72,8 +72,6 @@ define(["bin/core/application"],
 			this._queryParams = queryParams();
 			bin.queryParams = this._queryParams;
 
-			$("title").html(bin.globalConfig.name);
-
 			Application.prototype.init.apply(this);
 
 			this._hudManager = new bin.core.HUDManager();
@@ -93,6 +91,9 @@ define(["bin/core/application"],
 
 			document.body.setAttribute("vm", "");
 			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies
+
+			var elemAppBoot = $("#app-boot-bg");
+			elemAppBoot.remove();
 		}
 
 		Class.goto = function(url, data)

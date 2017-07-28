@@ -1,0 +1,483 @@
+#app-boot-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000000000;
+}
+
+#app-boot-bg .content, .loading-bg .content {
+    box-sizing: content-box;
+    display: block
+}
+
+#app-boot-bg .initial-load-animation, .loading-bg .initial-load-animation {
+    padding-top: 96px;
+    width: 200px;
+    margin: 0 auto;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    transition: -webkit-transform .5s ease;
+    transition: transform .5s ease;
+    transition: transform .5s ease, -webkit-transform .5s ease
+}
+
+#app-boot-bg .initial-load-animation.fade-load .linkedin-image,
+.loading-bg .initial-load-animation.fade-load .linkedin-image {
+    -webkit-transform: translate(0, 10px);
+    transform: translate(0, 10px);
+    opacity: 0
+}
+
+#app-boot-bg .initial-load-animation.fade-load .loading-bar, .loading-bg .initial-load-animation.fade-load .loading-bar {
+    -webkit-transform: rotateY(90deg);
+    transform: rotateY(90deg)
+}
+
+#app-boot-bg .initial-load-animation .linkedin-image, .loading-bg .initial-load-animation .linkedin-image {
+    height: 48px;
+    width: 48px;
+    margin: 0 auto 32px;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+    opacity: 1;
+    transition: all .5s ease-out
+}
+
+#app-boot-bg .initial-load-animation .loading-bar, .loading-bg .initial-load-animation .loading-bar {
+    width: 130px;
+    height: 2px;
+    margin: 0 auto;
+    border-radius: 2px;
+    background-color: #cfcfcf;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+    transition: -webkit-transform .3s ease-in;
+    transition: transform .3s ease-in;
+    transition: transform .3s ease-in, -webkit-transform .3s ease-in
+}
+
+#app-boot-bg .initial-load-animation .loading-bar .blue-bar, .loading-bg .initial-load-animation .loading-bar .blue-bar {
+    height: 100%;
+    width: 68px;
+    position: absolute;
+    -webkit-transform: translate(-34px, 0);
+    transform: translate(-34px, 0);
+    background-color: #0073b1;
+    border-radius: 2px;
+    -webkit-animation: initial-loading 1.5s infinite ease;
+    animation: initial-loading 1.5s infinite ease
+}
+
+#app-boot-bg .l1-core-rail, #app-boot-bg .l1-left-rail, #app-boot-bg .l1-right-rail,
+#app-boot-bg .l2-core-rail, #app-boot-bg .l2-right-rail, .loading-bg .l1-core-rail,
+.loading-bg .l1-left-rail, .loading-bg .l1-right-rail, .loading-bg .l2-core-rail,
+.loading-bg .l2-right-rail {
+    float: left;
+    vertical-align: top
+}
+
+#app-boot-bg .module, .loading-bg .module {
+    background: #FFF
+}
+
+#app-boot-bg .circle, #app-boot-bg .line, #app-boot-bg .rect, .loading-bg .circle,
+.loading-bg .line, .loading-bg .rect {
+    background: #E1E9EE;
+    -webkit-animation: pulse .65s infinite alternate;
+    animation: pulse .65s infinite alternate
+}
+
+#app-boot-bg .line, .loading-bg .line {
+    height: 10px;
+    margin: 10px 0
+}
+
+#app-boot-bg .line-wrapper, .loading-bg .line-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px
+}
+
+#app-boot-bg .circle, .loading-bg .circle {
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    width: 56px;
+    height: 56px
+}
+
+#app-boot-bg .rect, .loading-bg .rect {
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 48px;
+    height: 48px
+}
+
+#app-boot-bg .line.white, #app-boot-bg .rect.white, .loading-bg .line.white,
+.loading-bg .rect.white {
+    background: #FFF;
+    -webkit-animation: none;
+    animation: none
+}
+
+#app-boot-bg .width60, .loading-bg .width60 {
+    width: 60px
+}
+
+#app-boot-bg .width90, .loading-bg .width90 {
+    width: 90px
+}
+
+#app-boot-bg .width110, .loading-bg .width110 {
+    width: 110px
+}
+
+#app-boot-bg .width120, .loading-bg .width120 {
+    width: 120px
+}
+
+#app-boot-bg .width160, .loading-bg .width160 {
+    width: 160px
+}
+
+#app-boot-bg .width190, .loading-bg .width190 {
+    width: 190px
+}
+
+#app-boot-bg .width220, .loading-bg .width220 {
+    width: 220px
+}
+
+#app-boot-bg .width250, .loading-bg .width250 {
+    width: 250px
+}
+
+#app-boot-bg .width270, .loading-bg .width270 {
+    width: 270px
+}
+
+#app-boot-bg .width300, .loading-bg .width300 {
+    width: 300px
+}
+
+#app-boot-bg .width340, .loading-bg .width340 {
+    width: 340px
+}
+
+#app-boot-bg .width470, .loading-bg .width470 {
+    width: 470px
+}
+
+#app-boot-bg .width500, .loading-bg .width500 {
+    width: 500px
+}
+
+#app-boot-bg .height10, .loading-bg .height10 {
+    height: 10px
+}
+
+#app-boot-bg .height15, .loading-bg .height15 {
+    height: 15px
+}
+
+#app-boot-bg .height20, .loading-bg .height20 {
+    height: 20px
+}
+
+#app-boot-bg .height32, .loading-bg .height32 {
+    height: 32px
+}
+
+#app-boot-bg .height40, .loading-bg .height40 {
+    height: 40px
+}
+
+#app-boot-bg .height49, .loading-bg .height49 {
+    height: 49px
+}
+
+#app-boot-bg .height50, .loading-bg .height50 {
+    height: 50px
+}
+
+#app-boot-bg .height100, .loading-bg .height100 {
+    height: 100px
+}
+
+#app-boot-bg .height250, .loading-bg .height250 {
+    height: 250px
+}
+
+#app-boot-bg .height300, .loading-bg .height300 {
+    height: 300px
+}
+
+#app-boot-bg .height610, .loading-bg .height610 {
+    height: 610px
+}
+
+#app-boot-bg .padding-12-20, .loading-bg .padding-12-20 {
+    padding: 12px 20px
+}
+
+#app-boot-bg .padding-20, .loading-bg .padding-20 {
+    padding: 20px
+}
+
+#app-boot-bg .delay140, #app-boot-bg .delay200, #app-boot-bg .delay260,
+#app-boot-bg .delay320, #app-boot-bg .delay380, .loading-bg .delay140,
+.loading-bg .delay200, .loading-bg .delay260, .loading-bg .delay320,
+.loading-bg .delay380 {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+    -webkit-animation: fade-slide-in 334ms cubic-bezier(0, 0, .2, 1) forwards;
+    animation: fade-slide-in 334ms cubic-bezier(0, 0, .2, 1) forwards
+}
+
+#app-boot-bg .delay140, .loading-bg .delay140 {
+    -webkit-animation-delay: 140ms;
+    animation-delay: 140ms
+}
+
+#app-boot-bg .delay200, .loading-bg .delay200 {
+    -webkit-animation-delay: .2s;
+    animation-delay: .2s
+}
+
+#app-boot-bg .delay260, .loading-bg .delay260 {
+    -webkit-animation-delay: 260ms;
+    animation-delay: 260ms
+}
+
+#app-boot-bg .delay320, .loading-bg .delay320 {
+    -webkit-animation-delay: 320ms;
+    animation-delay: 320ms
+}
+
+#app-boot-bg .delay380, .loading-bg .delay380 {
+    -webkit-animation-delay: 380ms;
+    animation-delay: 380ms
+}
+
+#app-boot-bg .feed-profile, .loading-bg .feed-profile {
+    border-top: 80px solid #D3DCE2;
+    height: 330px;
+    background: #FFF;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center
+}
+
+#app-boot-bg .feed-profile .line, .loading-bg .feed-profile .line {
+    margin: 10px auto;
+    -webkit-animation: pulse .65s infinite alternate;
+    animation: pulse .65s infinite alternate
+}
+
+#app-boot-bg .feed-circle, .loading-bg .feed-circle {
+    margin-top: -35px;
+    width: 70px;
+    height: 70px;
+    -webkit-animation: none;
+    animation: none
+}
+
+#app-boot-bg .post-feed, .loading-bg .post-feed {
+    margin-bottom: 12px;
+    padding: 16px 16px 42px;
+    border-radius: 4px
+}
+
+#app-boot-bg .share-box, .loading-bg .share-box {
+    margin-bottom: 15px;
+    padding: 25px 16px
+}
+
+#app-boot-bg .me-left-line-1, .loading-bg .me-left-line-1 {
+    margin: auto auto 10px;
+    width: 100px
+}
+
+#app-boot-bg .me-left-line-2, .loading-bg .me-left-line-2 {
+    margin: 20px auto 10px;
+    width: 120px
+}
+
+#app-boot-bg .prof-views-left-rail, .loading-bg .prof-views-left-rail {
+    margin-right: 0;
+    width: 296px
+}
+
+#app-boot-bg .prof-views-core-rail, .loading-bg .prof-views-core-rail {
+    width: 492px
+}
+
+#app-boot-bg .msg-sidebar, .loading-bg .msg-sidebar {
+    width: 334px;
+    display: inline-block;
+    vertical-align: top;
+    margin-right: -1px
+}
+
+#app-boot-bg .msg-sidebar-top, .loading-bg .msg-sidebar-top {
+    height: 50px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    margin-bottom: 2px
+}
+
+#app-boot-bg .msg-content, .loading-bg .msg-content {
+    width: 453px;
+    display: inline-block;
+    vertical-align: top
+}
+
+#app-boot-bg .msg-content-top, .loading-bg .msg-content-top {
+    height: 50px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    margin-bottom: 2px
+}
+
+#app-boot-bg .msg-circle, .loading-bg .msg-circle {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px
+}
+
+#app-boot-bg .my-float-right, .loading-bg .my-float-right {
+    float: right;
+    margin-top: 15px
+}
+
+#app-boot-bg .my-rect, .loading-bg .my-rect {
+    width: 70px;
+    height: 30px
+}
+
+#app-boot-bg .my-weird-module, .loading-bg .my-weird-module {
+    text-align: center;
+    padding: 22px 0
+}
+
+#app-boot-bg .my-weird-module .line, .loading-bg .my-weird-module .line {
+    display: inline-block;
+    margin: 5px 0
+}
+
+#app-boot-bg .prof-wallpaper, .loading-bg .prof-wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    z-index: -1;
+    background: #e9e9e9
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        opacity: .5
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: .5
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@-webkit-keyframes fade-slide-in {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@keyframes fade-slide-in {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@-webkit-keyframes initial-loading {
+    0%, 100% {
+        -webkit-transform: translate(-34px, 0);
+        transform: translate(-34px, 0)
+    }
+
+    50% {
+        -webkit-transform: translate(96px, 0);
+        transform: translate(96px, 0)
+    }
+}
+
+@keyframes initial-loading {
+    0%, 100% {
+        -webkit-transform: translate(-34px, 0);
+        transform: translate(-34px, 0)
+    }
+
+    50% {
+        -webkit-transform: translate(96px, 0);
+        transform: translate(96px, 0)
+    }
+}

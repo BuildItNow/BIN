@@ -1253,6 +1253,9 @@ var transition = Object.freeze({
    */
 
   function replace(target, el) {
+    if(target === el){
+      return ;
+    }
     var parent = target.parentNode;
     if (parent) {
       parent.replaceChild(el, target);

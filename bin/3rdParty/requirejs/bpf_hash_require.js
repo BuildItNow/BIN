@@ -2084,6 +2084,8 @@ var requirejs, require, define;
         return eval(text);
     };
 
+    req.makeError = makeError;
+
     //Set up with config info.
     req(cfg);
 }(this));

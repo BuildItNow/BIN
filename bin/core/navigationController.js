@@ -145,74 +145,77 @@ function(effecters, Vue)
 			this._defaultIOEffecter = effecters["rightIO"];
 		}
 
-		// Add directive to Vue
-		var NUMBER_REG = /^[0-9]*$/;
-		Vue.directive("navigation", 
+		if(Vue)
 		{
-			priority:700,
-			bind:function()
+			// Add directive to Vue
+			var NUMBER_REG = /^[0-9]*$/;
+			Vue.directive("navigation", 
 			{
-				var dirc = this;
-				var arg  = this.arg;
-				var data = undefined;
-				var func = undefined;
-				var hand = undefined;
-				var view = undefined;
-				var effe = undefined;
-				if(arg === "push")
+				priority:700,
+				bind:function()
 				{
-					view = this.expression;
-					data = this.el.getAttribute("pushData");
-					effe = this.el.getAttribute("ioEffect");
-					func = "push";
-				}
-				else if(arg === "pop")
-				{
-					view = this.expression;
-					func = "pop";
-					if(view)
+					var dirc = this;
+					var arg  = this.arg;
+					var data = undefined;
+					var func = undefined;
+					var hand = undefined;
+					var view = undefined;
+					var effe = undefined;
+					if(arg === "push")
 					{
-						if(NUMBER_REG.test(view))
-						{
-							view = parseInt(view);
-						}
-						else
-						{
-							func = "popTo";
-						}
+						view = this.expression;
+						data = this.el.getAttribute("pushData");
+						effe = this.el.getAttribute("ioEffect");
+						func = "push";
 					}
-					data = this.el.getAttribute("popData");
-				}
-				else if(arg === "start")
-				{
-					view = this.expression;
-					data = this.el.getAttribute("pushData");
-					func = "startWith";
-					effe = this.el.getAttribute("ioEffect");
-				}
+					else if(arg === "pop")
+					{
+						view = this.expression;
+						func = "pop";
+						if(view)
+						{
+							if(NUMBER_REG.test(view))
+							{
+								view = parseInt(view);
+							}
+							else
+							{
+								func = "popTo";
+							}
+						}
+						data = this.el.getAttribute("popData");
+					}
+					else if(arg === "start")
+					{
+						view = this.expression;
+						data = this.el.getAttribute("pushData");
+						func = "startWith";
+						effe = this.el.getAttribute("ioEffect");
+					}
 
-				if(view && typeof view === "string")
-				{
-					view = Vue.b_makeValueFunction(view);
-				}
-				
-				if(data)
-				{
-					data = Vue.b_makeValueFunction(data);
-				}
+					if(view && typeof view === "string")
+					{
+						view = Vue.b_makeValueFunction(view);
+					}
+					
+					if(data)
+					{
+						data = Vue.b_makeValueFunction(data);
+					}
 
-				this.handler = function()
-				{
-					self[func](view && typeof view === "function" ? view(dirc.vm._b_view, dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm._b_view, dirc.vm, dirc.el) : data, {effect:effe});
-				}
+					this.handler = function()
+					{
+						self[func](view && typeof view === "function" ? view(dirc.vm._b_view, dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm._b_view, dirc.vm, dirc.el) : data, {effect:effe});
+					}
 
-				this.el.addEventListener("click", this.handler);
-			},
-			unbind:function()
-			{
-				this.el.removeEventListener("click", this.handler);
-			},
-		});
+					this.el.addEventListener("click", this.handler);
+				},
+				unbind:function()
+				{
+					this.el.removeEventListener("click", this.handler);
+				},
+			});
+		}
 
 		console.info("NavigationController module initialize");
 	}

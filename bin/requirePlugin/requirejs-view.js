@@ -99,7 +99,9 @@ define([], function ()
         el.innerHTML = html;
         if(el.childElementCount != 1)
         {
-            fail();
+            var error = requirejs.makeError("binerror_multiplerootnode", "view只能拥有一个根节点,而["+name+".html]中却包含多个根节点", null, name);
+            fail(error);
+
             return ;
         }
         el = el.firstElementChild;
