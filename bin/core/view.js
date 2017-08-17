@@ -1,8 +1,7 @@
 define(["bin/core/util", "vue"], 
 function(util, Vue)
 {
-    var vueEnable = Vue;
-    if(vueEnable)
+    if(Vue)
     {
         var ViewModel = bin.extend.call(Vue, 
         {
@@ -71,7 +70,7 @@ function(util, Vue)
                 var opts = null;
                 var otherOpts = {};
                 var hide = false;
-                var async = false;
+                var isAsync = false;
 
                 // parse attrs
                 var attrs = el.attributes;
@@ -108,7 +107,7 @@ function(util, Vue)
                     }
                     else if(attrName === "async")
                     {
-                        async = true;
+                        isAsync = true;
                     }
                 }
 
@@ -117,6 +116,30 @@ function(util, Vue)
                     if(this.b_unbinded)
                     {
                         return ;
+                    }
+
+                    var fragment     = null;
+                    var fragmentElem = null;
+                    var fragmentComp = false;
+
+                    if(ViewClass.__html_plugin || bin.isString(ViewClass))
+                    {
+                        fragmentElem = $(ViewClass.__html_plugin ? ViewClass() : ViewClass);
+
+                        if(fragmentElem.length === 0)
+                        {
+                            return ;
+                        }
+
+                        fragment = $(document.createDocumentFragment());
+                        fragment.append(fragmentElem);
+
+                        if(fragmentElem[0].getAttribute("vm") != null)
+                        {
+                            fragmentElem[0].removeAttribute("vm");
+
+                            fragmentComp = true;
+                        }
                     }
                     
                     var removeEl = false;
@@ -141,7 +164,7 @@ function(util, Vue)
                         {
                             otherOpts.elemParent = function(v)
                             {
-                                el.parentNode && el.parentNode.replaceChild(v.$()[0], el);
+                                el.parentNode && el.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], el);
                             }
                         }
                         else if(otherOpts.elemParent === "replace-parent") // just replace the parent of view
@@ -150,7 +173,7 @@ function(util, Vue)
                             {
                                 var elParent = el.parentNode;
 
-                                elParent && elParent.parentNode && elParent.parentNode.replaceChild(v.$()[0], elParent);
+                                elParent && elParent.parentNode && elParent.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], elParent);
                             }
                         }
                         else if(otherOpts.elemParent.startsWith("replace-element:")) // replace any element
@@ -165,26 +188,44 @@ function(util, Vue)
                                     elAny = elAny[0];
                                 }
 
-                                elAny && elAny.parentNode && elAny.parentNode.replaceChild(v.$()[0], elAny);
+                                elAny && elAny.parentNode && elAny.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], elAny);
                             }
                         }
                     }
 
-                    var v = ViewClass.create(otherOpts);
+                    if(fragment)
+                    {
+                        if(otherOpts.elemParent)
+                        {
+                            if(bin.isFunction(otherOpts.elemParent))
+                            {
+                                otherOpts.elemParent();
+                            }
+                            else
+                            {
+                                otherOpts.elemParent.append(fragment);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var v = ViewClass.create(otherOpts);
+                    }
+
                     if(removeEl)
                     {
                         el.parentNode && el.parentNode.removeChild(el);
                     }
                     else
                     {
-                        el.parentNode && el.parentNode.replaceChild(v.$()[0], el);
+                        el.parentNode && el.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], el);
                     }  
 
-                    if(name)
+                    if(name && v)
                     {
                         if(view[name])
                         {
-                            console.warning("Injected view name confliction with "+name);
+                            console.warning("页面注入名称冲突["+name+"]");
                         }
 
                         view[name] = v;
@@ -193,37 +234,43 @@ function(util, Vue)
                     this.b_view = v;
                     this.b_name = name;
 
-                    if(hide)
+                    if(fragmentComp)
+                    {
+                        view.compile(fragmentElem);
+                    }
+
+                    if(v && hide)
                     {
                         v.hide();
                     }
 
                     if(view.onViewInject)
                     {
-                        view.onViewInject(path, v, name);
+                        view.onViewInject(path, v || fragmentElem, name);
                     }
                 }
 
                 var self = this;
-                var ViewClass = view.__$class.deps && view.__$class.deps[path];
+                var ViewClass = (view.__$class.deps && view.__$class.deps[path]) || bin.viewInjectGlobalDeps[path];
                 if(!ViewClass)
                 {
-                    if(async)
+                    if(isAsync)
                     {
+                        console.log(path);
+
                         require([path], function(ViewClass)
                         {
                             createView.call(self, ViewClass);
-
                         }, function()
                         {
-                            console.error("Can't load class for view "+path+", inject fail");
+                            console.error("加载页面类失败["+path+"], 页面注入失败");
 
                             el.parentNode.removeChild(el);
                         });
                     }
                     else
                     {
-                        console.error("Can't find class for view "+path+", inject fail");
+                        console.error("查找不到页面类["+path+"], 页面注入失败");
 
                         el.parentNode.removeChild(el);
                     }
@@ -240,6 +287,98 @@ function(util, Vue)
                 this.b_unbinded = true;
             }
         });
+
+        bin.viewInjectGlobalDeps = {};
+
+        var resolveViewInjectDependencies = function(el, cb, filter)
+        {
+            var viewEls = el.getElementsByTagName("view");
+            if(!viewEls || viewEls.length === 0)
+            {
+                cb();
+                return ;
+            }
+
+            var loading = {};
+            var deps = bin.viewInjectGlobalDeps;
+            var oldFilter = filter;
+            filter = function(path)
+            {
+                if(loading[path] || deps[path])
+                {
+                    return true;
+                }
+
+                return oldFilter && oldFilter(path);
+            }
+
+            var loadTasks = [];
+            var c = 0;
+
+            var onLoadDone = function()
+            {
+                if(loadTasks.length === ++c)
+                {
+                    cb();
+                }
+            }
+
+            var genLoadTask = function(viewEl, viewPath)
+            {
+                return function()
+                {
+                    require([viewPath], function(viewClass)
+                    {   
+                        deps[viewPath] = viewClass;
+
+                        onLoadDone();
+                    }, function()
+                    {
+                        onLoadDone();
+                    });
+                }
+            }
+
+            var viewEl   = null;
+            var viewPath = null;
+            var isAsync  = false;
+            for(var i=0,i_sz=viewEls.length; i<i_sz; ++i)
+            {   
+                viewEl = viewEls[i];
+                viewEl.style.display = "none";  
+                viewPath = viewEl.getAttribute("path");
+
+                isAsync = viewEl.getAttribute("async") != null;
+
+                if(viewPath && viewPath.indexOf("{") < 0)   // not vue bind
+                {
+                    if(!isAsync && !filter(viewPath))
+                    {
+                        loading[viewPath] = true;
+
+                        loadTasks.push(genLoadTask(viewEl, viewPath));
+                    }
+                }
+                else// maybe vue runtime bind {{}} or :path
+                {
+                    viewEl.setAttribute("async", "");   
+                }
+            }
+
+            if(loadTasks.length > 0)
+            {
+                for(var i=0,i_sz=loadTasks.length; i<i_sz; ++i)
+                {   
+                    loadTasks[i]();
+                }
+            }
+            else
+            {
+                cb();
+            }
+        }
+
+        bin.resolveViewInjectDependencies = resolveViewInjectDependencies;
     }
 
     var Base = Backbone.View;
@@ -329,7 +468,7 @@ function(util, Vue)
             delete this._elemParent;
         }
 
-        if(vueEnable)
+        if(Vue)
         {
             var VMOptions = undefined;
             if(this.__$class.VMOptions)
@@ -801,7 +940,7 @@ function(util, Vue)
         }
     });
 
-    if(vueEnable)
+    if(Vue)
     {
         var extend = View.extend;
         View.extend = function(cls, sta)
@@ -827,6 +966,11 @@ function(util, Vue)
             if(!VMOptions.methods)
             {
                 VMOptions.methods = {};
+            }
+
+            if(!VMOptions.filters)
+            {
+                VMOptions.filters = {};
             }
 
             var hasVM = false;
@@ -857,6 +1001,11 @@ function(util, Vue)
                 else if(key.indexOf("Watch_", 2) === 2)
                 {
                     VMOptions.watch[key.substring(8)] = cls[key];
+                    hasVM = true;
+                }
+                else if(key.indexOf("Filter_", 2) === 2)
+                {
+                    VMOptions.filters[key.substring(9)] = cls[key];
                     hasVM = true;
                 }
             }

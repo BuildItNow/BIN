@@ -14,10 +14,8 @@ function(CHLoader)
 			// Load page classes
 			loader.load(function()
 			{
-				require(["documentdependencies!"], function(documentDependencies)
+				var onDone = function()
 				{
-					bin.runtimeConfig.documentDependencies = documentDependencies;
-
 					var app = new bin.core.Application({});
 					app.init();
 
@@ -45,7 +43,16 @@ function(CHLoader)
 					}
 
 					console.info("BIN start cost "+(new Date().getTime()-__bin__start__time)+" ms");
-				});
+				}
+
+				if(bin.resolveViewInjectDependencies)
+				{
+					bin.resolveViewInjectDependencies(document.body, onDone);
+				}
+				else
+				{
+					onDone();
+				}
 			})
 		});
 	}

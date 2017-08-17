@@ -27,8 +27,8 @@ define(["plupload"], function(plupload)
 			container : this.$()[0],
 			browse_button : this.$("#browse_button")[0],
 			url : bin.runtimeConfig.server+this._api,
-			flash_swf_url : "3rdParty/plupload-2.3.1/js/Moxie.swf",
-			silverlight_xap_url : "3rdParty/plupload-2.3.1/js/Moxie.xap",
+			flash_swf_url : "bin/web/3rdParty/plupload-2.3.1/js/Moxie.swf",
+			silverlight_xap_url : "bin/web/3rdParty/plupload-2.3.1/js/Moxie.xap",
 			filters : 
 			{
 				max_file_size : this._maxFileSize,

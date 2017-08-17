@@ -24,75 +24,6 @@ define([], function ()
         success(ViewClass);
     }
 
-    var loadViewDependencies = function(el, cb)
-    {
-        var viewEls = el.getElementsByTagName("view");
-        if(!viewEls || viewEls.length === 0)
-        {
-            cb();
-            return ;
-        }
-
-        var deps = {};
-        var c = 0;
-        var s = false;
-
-        var onLoadViewDone = function(error, viewEl, viewPath, viewClass)
-        {
-            if(!error)
-            {
-                s = true;
-                deps[viewPath] = viewClass;
-            }
-
-            if(viewEls.length === ++c)
-            {
-                cb(s ? deps : null);
-            }
-        }
-
-        var genLoadTask = function(viewEl, viewPath)
-        {
-            return function()
-            {
-                require([viewPath], function(viewClass)
-                {   
-                    onLoadViewDone(false, viewEl, viewPath, viewClass);
-                }, function()
-                {
-                    onLoadViewDone(true, viewEl, viewPath);
-                });
-            }
-        }
-
-        var loadTasks = [];
-
-        var viewEl   = null;
-        var viewPath = null;
-        for(var i=0,i_sz=viewEls.length; i<i_sz; ++i)
-        {   
-            viewEl = viewEls[i];
-            viewEl.style.display = "none";  
-            viewPath = viewEl.getAttribute("path");
-            if(viewEl.getAttribute("async") == null && viewPath && viewPath.indexOf("{") < 0)   // not vue bind
-            {
-                loadTasks.push(genLoadTask(viewEl, viewPath));
-            }
-            else // maybe vue runtime bind {{}} or :path
-            {
-                onLoadViewDone(true, viewEl, viewPath);
-            }
-        }
-
-        if(loadTasks.length > 0)
-        {
-            for(var i=0,i_sz=loadTasks.length; i<i_sz; ++i)
-            {   
-                loadTasks[i]();
-            }
-        }
-    }
-
     var loadFromHtml = function(ViewClass, html, require, name, success, fail)
     {
         var el = document.createElement('div');
@@ -106,48 +37,47 @@ define([], function ()
         }
         el = el.firstElementChild;
 
-        loadViewDependencies(el, function(deps)
+        // Spawn a new class, avoid change the source class create method
+        ViewClass = ViewClass.extend({});
+
+        var oldCreate = ViewClass.create;
+        ViewClass.create = function(options)
         {
+            options = options || {};
 
-            // Spawn a new class, avoid change the source class create method
-            ViewClass = ViewClass.extend({});
-
-            if(deps)
+            if(!options.html && !options.elem)
             {
-                ViewClass.deps = ViewClass.deps ? _.extend(deps, ViewClass.deps) : deps;
+                options.el = el.cloneNode(true);
             }
-                
-            var oldCreate = ViewClass.create;
-            ViewClass.create = function(options)
-            {
-                options = options || {};
 
-                if(!options.html && !options.elem)
+            return oldCreate ? oldCreate.call(this, options) : new this(options);
+        }
+
+        if(bin.resolveViewInjectDependencies)
+        {
+            var oldSuccess = success;
+            success = function(ViewClass)
+            {
+                bin.viewInjectGlobalDeps["view!"+name] = ViewClass;
+                bin.resolveViewInjectDependencies(el, function()
                 {
-                    options.el = el.cloneNode(true);
-                }
-
-                return oldCreate ? oldCreate.call(this, options) : new this(options);
+                    oldSuccess(ViewClass);
+                });
             }
+        }
 
-            var cssName = el.getAttribute('data-css') || ViewClass.style;
-            if(cssName === '$')
-            {
-                cssName = name+".css";
-            }
-           
-            if(!cssName)
-            {
-                success(ViewClass);
+        var cssName = ViewClass.style;
+        if(!cssName)
+        {
+            success(ViewClass);
 
-                return ;
-            }
+            return ;
+        }
 
-            require(["css!"+toLeftSlash(cssName)], function()
-            {
-                success(ViewClass);
-            }, fail);
-        });
+        require(["css!"+toLeftSlash(cssName)], function()
+        {
+            success(ViewClass);
+        }, fail);
     }
 
     var loadViewClass = function(require, name, success, fail)

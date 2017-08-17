@@ -1,29 +1,3 @@
-// Define document depencies plugin
-define("documentdependencies", ["view"], function(ViewPlugin)
-{
-	var Class = {};
-	var deps  = null;
-
-	Class.load = function(name, req, onLoad, config)
-    {
-    	if(deps)
-    	{
-    		onLoad(deps);
-
-    		return ;
-    	}
-
-    	ViewPlugin.resolveViewInjectionDependencies(document.body, function(data)
-    	{
-    		deps = data;
-
-    		onLoad(deps);
-    	});
-    }
-
-	return Class;
-});
-
 define(["bin/core/application"], 
 	function(Application)
 	{
@@ -86,8 +60,6 @@ define(["bin/core/application"],
 			{
 				BodyView = bin.ui.View.extend({});
 			}
-
-			BodyView.deps = bin.runtimeConfig.documentDependencies;
 
 			document.body.setAttribute("vm", "");
 			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies

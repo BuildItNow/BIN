@@ -134,15 +134,13 @@ require.config(
 	packages:[],
 	paths: 
 	{
-		// 3rdParty path
-		"3rdParty": "bin/3rdParty",
-
-		// equirejs plugins
+		// requirejs plugins
 		text: 'bin/3rdParty/requirejs-text/text',
 		domReady: 'bin/3rdParty/requirejs-domready/domReady',
 		i18n: 'bin/3rdParty/requirejs-i18n/i18n',
 		css: 'bin/3rdParty/require-css/css',
 		view: 'bin/requirePlugin/requirejs-view',
+		html: 'bin/requirePlugin/requirejs-html',
 		map: 'bin/requirePlugin/requirejs-map',
 
 		// 3rdParty libs

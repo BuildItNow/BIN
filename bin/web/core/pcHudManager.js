@@ -1,4 +1,4 @@
- define(["layer"], function()
+ define(["layerui"], function()
 	{
 		var HUDManager = function()
 		{
