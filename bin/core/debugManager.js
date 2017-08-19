@@ -76,7 +76,7 @@ define(
                 self._appendMessage("[ERROR]", msg);
             }
 
-            console.warning = function(msg)
+            console.warn = function(msg)
             {
                 self._appendMessage("[WARNING]", msg);
             }

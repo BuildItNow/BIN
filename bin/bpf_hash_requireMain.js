@@ -169,6 +169,8 @@ require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 	bin.classConfig   = globalConfig.classConfig;
 	bin.componentConfig = globalConfig.componentConfig || {};
 
+	require.config(globalConfig.requireConfig);
+
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
 	{
@@ -203,8 +205,6 @@ require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 
 			var start = function()
 			{
-				require.config(globalConfig.requireConfig);
-
 				require(['domReady!', 'bin/core/main'], function(domReady, main) 
 				{
 					//ios7 issue fix

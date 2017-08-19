@@ -262,7 +262,7 @@ function(effecters, Vue)
 		var now = _.now();
 		if(now - this._popTime < 500)	// Too fast, reject
 		{
-			console.warning("pop too fast");
+			console.warn("pop too fast");
 			
 			return false;
 		}
@@ -301,7 +301,7 @@ function(effecters, Vue)
 		var now = _.now();
 		if(now - this._pushTime < 500)	// Too fast, reject
 		{
-			console.warning("push too fast");
+			console.warn("push too fast");
 			
 			return false;
 		}

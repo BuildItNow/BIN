@@ -62,8 +62,8 @@ define(["bin/core/application"],
 			}
 
 			document.body.setAttribute("vm", "");
-			this._bodyView = BodyView.create({elem:$("body")});	// Fix document dependencies
-
+			this._bodyView = BodyView.create({elem:$("body")});
+		
 			var elemAppBoot = $("#app-boot-bg");
 			elemAppBoot.remove();
 		}

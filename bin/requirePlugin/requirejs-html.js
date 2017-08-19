@@ -28,8 +28,12 @@ define([], function ()
                         var el = document.createElement("div");
                         el.innerHTML = html;
                     }
-
-                    var ret = el.children;
+                    var cld = el.children;
+                    var ret = [];
+                    for(var i=0,i_sz=cld.length; i<i_sz; ++i)
+                    {
+                        ret.push(cld[i]);
+                    }
                     el = null;
 
                     return ret;

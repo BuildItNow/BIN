@@ -31,15 +31,41 @@ function(util, Vue)
             },
             b_compile:function(elem)
             {
+                if(elem.length === 0)
+                {
+                    return ;
+                }
+
                 if(!this._b_unLinks)
                 {
                     this._b_unLinks = [];
                 }
 
+                var unlinks = [];
+        
                 for(var i=0,i_sz=elem.length; i<i_sz; ++i)
                 {
-                    this._b_unLinks.push(this.$compile(elem[i]));
+                    unlinks.push(this.$compile(elem[i]));
                 }
+
+                var unlinker = function()
+                {
+                    if(!unlinks)
+                    {
+                        return ;
+                    }
+
+                    for(var i=0,i_sz=unlinks.length; i<i_sz; ++i)
+                    {
+                        unlinks[i].apply(this, arguments);
+                    }
+
+                    unlinks = null;
+                }
+
+                this._b_unLinks.push(unlinker);
+
+                return unlinker;
             }
         });
 
@@ -225,7 +251,7 @@ function(util, Vue)
                     {
                         if(view[name])
                         {
-                            console.warning("页面注入名称冲突["+name+"]");
+                            console.warn("页面注入名称冲突["+name+"]");
                         }
 
                         view[name] = v;
@@ -283,7 +309,7 @@ function(util, Vue)
             unbind:function()
             {
                 this.b_view && this.b_view.remove();
-                this.b_name && (this.vm._b_view[name] = null);
+                this.b_name && (this.vm._b_view[this.b_name] = null);
                 this.b_unbinded = true;
             }
         });
@@ -658,7 +684,7 @@ function(util, Vue)
             return ;
         }
 
-        this.vm.b_compile(elem);
+        return this.vm.b_compile(elem);
     }
 
     Class.isShow = function()
