@@ -41,27 +41,36 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.genHTML = function()
 	{
-		this.$().addClass("swiper-container");
-		var children = this.$().children();
+		Base.prototype.genHTML.call(this);
 
-		// Generate wrapper and slide holder
-		var wrapperHtml = '<div class="swiper-wrapper">';
-		for(var i=0,i_sz=children.length; i<i_sz; ++i)
+		if(!this.$().hasClass("swiper-container"))
 		{
-			this.$()[0].removeChild(children[i]);
+			this.$().addClass("swiper-container");
+			var children = this.$().children();
 
-			wrapperHtml += '<div class="swiper-slide" style="background-color:transparent"></div>';
+			// Generate wrapper and slide holder
+			var wrapperHtml = '<div class="swiper-wrapper">';
+			for(var i=0,i_sz=children.length; i<i_sz; ++i)
+			{
+				this.$()[0].removeChild(children[i]);
+
+				wrapperHtml += '<div class="swiper-slide" style="background-color:transparent"></div>';
+			}
+			wrapperHtml += '</div>'
+			
+			this.$swiperContent = $(wrapperHtml);
+			var slideHolders = this.$swiperContent.children();
+			for(var i=0,i_sz=children.length; i<i_sz; ++i)
+			{
+				slideHolders[i].appendChild(children[i]);
+			}
+			
+			this.$().append(this.$swiperContent);
 		}
-		wrapperHtml += '</div>'
-		
-		this.$swiperContent = $(wrapperHtml);
-		var slideHolders = this.$swiperContent.children();
-		for(var i=0,i_sz=children.length; i<i_sz; ++i)
+		else
 		{
-			slideHolders[i].appendChild(children[i]);
+			this.$swiperContent = this.$(".swiper-wrapper");
 		}
-		
-		this.$().append(this.$swiperContent);
 	}
 
 	// Class.appendSlide = function(slide, refresh)
@@ -128,7 +137,6 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 
 	Class.getCurrent = function()
 	{
-
 		return this.swiper.activeIndex; 
 	}
 
@@ -142,17 +150,33 @@ define(["bin/core/view", "swiper"], function(Base, Swiper)
 		this.swiper.slidePrev(!noTrigger);
 	}
 
-	Class.refreshUI = function()
+	Class.refreshUI = function(reset)
 	{
-		this.swiper.update(true);
+		if(reset)
+		{
+			if(this.swiper)
+			{
+				this.swiper.destroy(true, true);
+			}
+
+			this._swiperOptions.initialSlide = 0;
+			this.swiper = new Swiper(this.$(), this._swiperOptions);
+			if(!this._swiperOptions.loop)	// Swiper don't trigger event when initialSlide is 0
+			{
+				this._onSwiperSwipe(0);
+			}
+		}
+		else
+		{
+			this.swiper.update(true);
+		}
 	}
 
 	Class.onRemove = function()
 	{
 		if(this.swiper)
 		{
-			this.swiper.destroy(false);
-
+			this.swiper.destroy(true);
 			delete this.swiper;
 		}
 	}

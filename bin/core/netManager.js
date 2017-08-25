@@ -26,6 +26,14 @@ define(["bin/core/util"], function(util)
 		this._sendCheckPolicy = new Net.SendCheckPolicy(this);
 		this._sendCheckPolicy.init();
 
+		this._fixRuntimeServer();
+
+		var self = this;
+		bin.app.on("RUNTIME_CONFIG_CHANGED", function()
+		{
+			self._fixRuntimeServer();
+		});
+
 		console.info("Net module initialize");
 	}
 
@@ -159,6 +167,34 @@ define(["bin/core/util"], function(util)
 	Class.ajax = function(netParams)
 	{
 		return $.ajax(netParams);
+	}
+
+	Class._fixRuntimeServer = function()
+	{
+		var server = bin.runtimeConfig.server || "$HOST/";
+
+		var host = window.location.protocol+"//"+window.location.host;
+		var path = window.location.pathname;
+		if(path)
+		{
+			path = path.substring(0, path.lastIndexOf("/"));
+		}
+
+		path = path || "/";
+
+		var newServer = server.replace(/\$HOST_PATH/g, host+path);
+		if(newServer.length === server.length)
+		{
+			newServer = newServer.replace(/\$HOST/g, host);
+			newServer = newServer.replace(/\$PATH/g, path);
+		}
+
+		if(newServer.length > 0 && newServer.charAt(newServer.length-1) !== "/")
+		{
+			newServer += "/" ;
+		}
+
+		bin.runtimeConfig.server = newServer;
 	}
 
 	Class._genUrlKey = function(url, data)

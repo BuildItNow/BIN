@@ -3062,12 +3062,12 @@ var expression = Object.freeze({
       }
 
       var vms = wvms.vms;
+      resetBatcherState();
+      
       for(var i=0,i_sz=vms.length; i<i_sz; ++i)
       {
         vms[i].$emit("flush");
       }
-
-      resetBatcherState();
     }
   }
 
@@ -7353,6 +7353,7 @@ var template = Object.freeze({
     var def = resolveAsset(options, 'elementDirectives', tag);
     if (def) {
       var tf = makeTerminalNodeLinkFn(el, tag, '', options, def);
+      // Still compile the attr directives in element 
       if(def.compileDirective){
         var df = compileDirectives(attrs, options);
         if(!df) return tf;

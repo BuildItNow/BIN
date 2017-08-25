@@ -162,14 +162,12 @@ require.config(
 	shim: {}
 });
 
-require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
+require(["config/bpf_hash_globalConfig", "bin/bpf_hash_polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
-	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
-	bin.classConfig   = globalConfig.classConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"] || {};
+	bin.classConfig   = globalConfig.classConfig || {};
 	bin.componentConfig = globalConfig.componentConfig || {};
-
-	require.config(globalConfig.requireConfig);
 
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
@@ -178,8 +176,9 @@ require(["config/globalConfig", "bin/polyfill"], function(globalConfig)
 		{
 			return ;
 		}
-
 		onPackageLoadedOnce = true;
+
+		require.config(globalConfig.requireConfig);
 		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;

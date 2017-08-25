@@ -62,8 +62,8 @@ define(["bin/core/application"],
 			}
 
 			document.body.setAttribute("vm", "");
-			this._bodyView = BodyView.create({elem:$("body")});
-		
+			this.bodyView = BodyView.create({elem:$("body")});
+
 			var elemAppBoot = $("#app-boot-bg");
 			elemAppBoot.remove();
 		}
@@ -95,7 +95,6 @@ define(["bin/core/application"],
 
 		Class.back = function(n)
 		{
-
 			window.history.back(n);
 		}
 

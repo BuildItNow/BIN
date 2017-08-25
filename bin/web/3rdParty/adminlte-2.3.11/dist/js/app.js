@@ -11,6 +11,9 @@
  * @license MIT <http://opensource.org/licenses/MIT>
  */
 
+ define(["jquery"], function()
+ {
+
 //Make sure jQuery has been loaded before app.js
 if (typeof jQuery === "undefined") {
   throw new Error("AdminLTE requires jQuery");
@@ -770,3 +773,5 @@ function _init() {
     });
   };
 }(jQuery));
+
+});

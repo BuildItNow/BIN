@@ -4,6 +4,9 @@
  * Licensed under the MIT license
  */
 
+define(["jquery"], function()
+{
+
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery')
 }
@@ -2375,3 +2378,5 @@ if (typeof jQuery === 'undefined') {
   })
 
 }(jQuery);
+
+});

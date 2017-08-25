@@ -47,7 +47,7 @@ define(["bin/core/view"], function(View)
 		var nc = false;
 		if(arguments.length > 0)
 		{
-			nc = this._onSubmit.apply(null, [this].concat(arguments));
+			nc = this._onSubmit.apply(null, Array.prototype.concat.apply([this], arguments));
 		}
 		else
 		{
@@ -72,7 +72,7 @@ define(["bin/core/view"], function(View)
 		var nc = false;
 		if(arguments.length > 0)
 		{
-			nc = this._onCancel.apply(null, [this].concat(arguments));
+			nc = this._onCancel.apply(null, Array.prototype.concat.apply([this], arguments));
 		}
 		else
 		{

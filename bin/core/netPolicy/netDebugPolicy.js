@@ -1,5 +1,5 @@
 define(
-	["config/netLocalConfig", "bin/core/util"],
+	["config/bpf_hash_netLocalConfig", "bin/core/util"],
 	function(config, util)
 	{
 		var NetDebugPolicy = function(netManager)

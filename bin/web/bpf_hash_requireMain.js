@@ -150,98 +150,17 @@ require.config({
 	}
 });
 
-require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
+require(["config/bpf_hash_globalConfig", "bin/web/bpf_hash_polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
-	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"];
-	bin.classConfig = globalConfig.classConfig;
+	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"] || {};
+	bin.classConfig = globalConfig.classConfig || {};
 	bin.componentConfig = globalConfig.componentConfig || {};
 
 	page.pageConfig   = pageConfig;
 	page.classConfig  = pageConfig.classConfig;
 	page.onInit = pageConfig.onInit;
 	page.onRun  = pageConfig.onRun;
-
-	require.config(globalConfig.requireConfig);
-	if(pageConfig.requireConfig)
-	{
-		require.config(pageConfig.requireConfig);
-	}
-
-	var config = {paths:{}};
-	if(bin.platform.ie && bin.platform.ie < 9)
-	{
-		if(bin.isNU(pageConfig.jquery))
-		{
-			pageConfig.jquery = "1.x";
-
-			console.warn("Browser is too low, use JQuery 1.x");
-		}
-
-		if(bin.isNU(pageConfig.bootstrap))
-		{
-			pageConfig.bootstrap = "2.x";
-
-			console.warn("Browser is too low, use Bootstrap 2.x");
-		}
-
-		if(bin.isNU(pageConfig.vue))
-		{
-			pageConfig.vue = false;
-
-			console.warn("Browser is too low, disable Vue");
-		}
-	}
-
-	if(bin.isNU(pageConfig.jquery))
-	{
-
-	}
-	else if(pageConfig.jquery === "1.x")
-	{
-		config.paths["jquery"] = "bin/3rdParty/jquery/1.12.4/jquery";
-	}
-	else if(pageConfig.jquery === "2.x")
-	{
-
-	}
-	else if(pageConfig.jquery)
-	{
-		config.paths["jquery"] = pageConfig.jquery;
-	}
-
-	if(bin.isNU(pageConfig.bootstrap))
-	{
-
-	}
-	if(pageConfig.bootstrap === "2.x")
-	{
-		config.paths["bootstrap"] = "bin/web/3rdParty/bootstrap/2.3.2/js/bootstrap";
-	}
-	else if(pageConfig.bootstrap === "3.x")
-	{
-
-	}
-	else if(pageConfig.bootstrap)
-	{
-		config.paths["bootstrap"] = pageConfig.bootstrap;
-	}
-
-	if(bin.isNU(pageConfig.vue))
-	{
-
-	}
-	else if(!pageConfig.vue)
-	{
-		define("vue", null);
-		delete config.paths["vue"];
-	}
-	else if(bin.isString(pageConfig.vue))
-	{
-		config.paths["vue"] = pageConfig.vue;
-	}
-
-	require.config(config);
 
 	var onPackageLoadedOnce = false;
 	var onPackageLoaded = function()
@@ -250,8 +169,89 @@ require(["config/globalConfig", "bin/web/polyfill"], function(globalConfig)
 		{
 			return ;
 		}
-
 		onPackageLoadedOnce = true;
+
+		require.config(globalConfig.requireConfig);
+		if(pageConfig.requireConfig)
+		{
+			require.config(pageConfig.requireConfig);
+		}
+
+		var config = {paths:{}};
+		if(bin.platform.ie && bin.platform.ie < 9)
+		{
+			if(bin.isNU(pageConfig.jquery))
+			{
+				pageConfig.jquery = "1.x";
+
+				console.warn("Browser is too low, use JQuery 1.x");
+			}
+
+			if(bin.isNU(pageConfig.bootstrap))
+			{
+				pageConfig.bootstrap = "2.x";
+
+				console.warn("Browser is too low, use Bootstrap 2.x");
+			}
+
+			if(bin.isNU(pageConfig.vue))
+			{
+				pageConfig.vue = false;
+
+				console.warn("Browser is too low, disable Vue");
+			}
+		}
+
+		if(bin.isNU(pageConfig.jquery))
+		{
+
+		}
+		else if(pageConfig.jquery === "1.x")
+		{
+			config.paths["jquery"] = "bin/3rdParty/jquery/1.12.4/jquery";
+		}
+		else if(pageConfig.jquery === "2.x")
+		{
+
+		}
+		else if(pageConfig.jquery)
+		{
+			config.paths["jquery"] = pageConfig.jquery;
+		}
+
+		if(bin.isNU(pageConfig.bootstrap))
+		{
+
+		}
+		if(pageConfig.bootstrap === "2.x")
+		{
+			config.paths["bootstrap"] = "bin/web/3rdParty/bootstrap/2.3.2/js/bootstrap";
+		}
+		else if(pageConfig.bootstrap === "3.x")
+		{
+
+		}
+		else if(pageConfig.bootstrap)
+		{
+			config.paths["bootstrap"] = pageConfig.bootstrap;
+		}
+
+		if(bin.isNU(pageConfig.vue))
+		{
+
+		}
+		else if(!pageConfig.vue)
+		{
+			define("vue", null);
+			delete config.paths["vue"];
+		}
+		else if(bin.isString(pageConfig.vue))
+		{
+			config.paths["vue"] = pageConfig.vue;
+		}
+
+		require.config(config);
+
 		require(["jquery", "underscore", "backbone", "lzstring"], function(jquery, underscore, backbone, lzString)
 		{
 			$ = jquery;

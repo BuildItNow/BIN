@@ -33,7 +33,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		},
 		createItemView:function(listView, i, data)
 		{
-			return this._generator(i, data);
+			return this._generator(listView, i, data);
 		}
 	});
 
@@ -50,6 +50,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		
 		this._refreshFooter = options.footerClass ? options.footerClass.create() : RefreshFooterView.create();
 		this._dataProvider  = options.dataProvider;
+		this._autoLoadMore  = !bin.isUndefined(options.autoLoadMore) ? options.autoLoadMore : true;
 
 		var t = typeof(options.itemProvider);
 		if(t === "string") // template
@@ -87,6 +88,21 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		}
 	 
 		Base.prototype.constructor.call(this, options);
+	}
+
+	Class.genHTML = function()
+	{
+		Base.prototype.genHTML.call(this);
+		if(this._autoLoadMore)
+		{
+			if(!this.$().hasClass("bin-lazyload-container"))
+			{
+				this.$().addClass("bin-lazyload-container");
+			}
+
+			this._refreshFooter.$().addClass("bin-lazyload");
+			this._refreshFooter.$().attr("data-bin-type", "autoLoadMore");
+		}
 	}
 
 	Class.posGenHTML = function()
@@ -137,6 +153,10 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		if(!selector)
 		{
 			selector = ".bin-list-view-item";
+		}
+		else
+		{
+			selector = ".bin-list-view-item "+selector;
 		}
 
 		if(!handler)
