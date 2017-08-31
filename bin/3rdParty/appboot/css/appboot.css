@@ -1,10 +1,15 @@
-#app-boot-bg {
+.app-boot
+{
+    overflow: hidden;
+}
+
+#app-boot-bg, .loading-bg{
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000000000;
+    z-index: 100000;
 }
 
 #app-boot-bg .content, .loading-bg .content {
@@ -121,113 +126,123 @@
 
 #app-boot-bg .line.white, #app-boot-bg .rect.white, .loading-bg .line.white,
 .loading-bg .rect.white {
-    background: #FFF;
-    -webkit-animation: none;
-    animation: none
+    background: #FFF !important;
+}
+
+#app-boot-bg .width-auto, .loading-bg .width-auto {
+    width: auto !important;
 }
 
 #app-boot-bg .width60, .loading-bg .width60 {
-    width: 60px
+    width: 60px !important;
 }
 
 #app-boot-bg .width90, .loading-bg .width90 {
-    width: 90px
+    width: 90px !important;
 }
 
 #app-boot-bg .width110, .loading-bg .width110 {
-    width: 110px
+    width: 110px !important;
 }
 
 #app-boot-bg .width120, .loading-bg .width120 {
-    width: 120px
+    width: 120px !important;
 }
 
 #app-boot-bg .width160, .loading-bg .width160 {
-    width: 160px
+    width: 160px !important;
 }
 
 #app-boot-bg .width190, .loading-bg .width190 {
-    width: 190px
+    width: 190px !important;
 }
 
 #app-boot-bg .width220, .loading-bg .width220 {
-    width: 220px
+    width: 220px !important;
 }
 
 #app-boot-bg .width250, .loading-bg .width250 {
-    width: 250px
+    width: 250px !important;
 }
 
 #app-boot-bg .width270, .loading-bg .width270 {
-    width: 270px
+    width: 270px !important;
 }
 
 #app-boot-bg .width300, .loading-bg .width300 {
-    width: 300px
+    width: 300px !important;
 }
 
 #app-boot-bg .width340, .loading-bg .width340 {
-    width: 340px
+    width: 340px !important;
 }
 
 #app-boot-bg .width470, .loading-bg .width470 {
-    width: 470px
+    width: 470px !important;
 }
 
 #app-boot-bg .width500, .loading-bg .width500 {
-    width: 500px
+    width: 500px !important;
+}
+
+#app-boot-bg .heigth-auto, .loading-bg .height-auto {
+    height: auto !important;
+}
+
+#app-boot-bg .height1, .loading-bg .height1 {
+    height: 1px !important;
 }
 
 #app-boot-bg .height10, .loading-bg .height10 {
-    height: 10px
+    height: 10px !important;
 }
 
 #app-boot-bg .height15, .loading-bg .height15 {
-    height: 15px
+    height: 15px !important;
 }
 
 #app-boot-bg .height20, .loading-bg .height20 {
-    height: 20px
+    height: 20px !important;
 }
 
 #app-boot-bg .height32, .loading-bg .height32 {
-    height: 32px
+    height: 32px !important;
 }
 
 #app-boot-bg .height40, .loading-bg .height40 {
-    height: 40px
+    height: 40px !important;
 }
 
 #app-boot-bg .height49, .loading-bg .height49 {
-    height: 49px
+    height: 49px !important;
 }
 
 #app-boot-bg .height50, .loading-bg .height50 {
-    height: 50px
+    height: 50px !important;
 }
 
 #app-boot-bg .height100, .loading-bg .height100 {
-    height: 100px
+    height: 100px !important;
 }
 
 #app-boot-bg .height250, .loading-bg .height250 {
-    height: 250px
+    height: 250px !important;
 }
 
 #app-boot-bg .height300, .loading-bg .height300 {
-    height: 300px
+    height: 300px !important;
 }
 
 #app-boot-bg .height610, .loading-bg .height610 {
-    height: 610px
+    height: 610px !important;
 }
 
 #app-boot-bg .padding-12-20, .loading-bg .padding-12-20 {
-    padding: 12px 20px
+    padding: 12px 20px !important;
 }
 
 #app-boot-bg .padding-20, .loading-bg .padding-20 {
-    padding: 20px
+    padding: 20px !important;
 }
 
 #app-boot-bg .delay140, #app-boot-bg .delay200, #app-boot-bg .delay260,
@@ -242,145 +257,30 @@
 }
 
 #app-boot-bg .delay140, .loading-bg .delay140 {
-    -webkit-animation-delay: 140ms;
-    animation-delay: 140ms
+    -webkit-animation-delay: 140ms !important;
+    animation-delay: 140ms !important;
 }
 
 #app-boot-bg .delay200, .loading-bg .delay200 {
-    -webkit-animation-delay: .2s;
-    animation-delay: .2s
+    -webkit-animation-delay: .2s !important;
+    animation-delay: .2s !important;
 }
 
 #app-boot-bg .delay260, .loading-bg .delay260 {
-    -webkit-animation-delay: 260ms;
-    animation-delay: 260ms
+    -webkit-animation-delay: !important;
+    animation-delay: 260ms !important;
 }
 
 #app-boot-bg .delay320, .loading-bg .delay320 {
-    -webkit-animation-delay: 320ms;
-    animation-delay: 320ms
+    -webkit-animation-delay: 320ms !important;
+    animation-delay: 320ms !important;
 }
 
 #app-boot-bg .delay380, .loading-bg .delay380 {
-    -webkit-animation-delay: 380ms;
-    animation-delay: 380ms
+    -webkit-animation-delay: 380ms !important;
+    animation-delay: 380ms !important;
 }
 
-#app-boot-bg .feed-profile, .loading-bg .feed-profile {
-    border-top: 80px solid #D3DCE2;
-    height: 330px;
-    background: #FFF;
-    border-radius: 4px;
-    box-sizing: border-box;
-    text-align: center
-}
-
-#app-boot-bg .feed-profile .line, .loading-bg .feed-profile .line {
-    margin: 10px auto;
-    -webkit-animation: pulse .65s infinite alternate;
-    animation: pulse .65s infinite alternate
-}
-
-#app-boot-bg .feed-circle, .loading-bg .feed-circle {
-    margin-top: -35px;
-    width: 70px;
-    height: 70px;
-    -webkit-animation: none;
-    animation: none
-}
-
-#app-boot-bg .post-feed, .loading-bg .post-feed {
-    margin-bottom: 12px;
-    padding: 16px 16px 42px;
-    border-radius: 4px
-}
-
-#app-boot-bg .share-box, .loading-bg .share-box {
-    margin-bottom: 15px;
-    padding: 25px 16px
-}
-
-#app-boot-bg .me-left-line-1, .loading-bg .me-left-line-1 {
-    margin: auto auto 10px;
-    width: 100px
-}
-
-#app-boot-bg .me-left-line-2, .loading-bg .me-left-line-2 {
-    margin: 20px auto 10px;
-    width: 120px
-}
-
-#app-boot-bg .prof-views-left-rail, .loading-bg .prof-views-left-rail {
-    margin-right: 0;
-    width: 296px
-}
-
-#app-boot-bg .prof-views-core-rail, .loading-bg .prof-views-core-rail {
-    width: 492px
-}
-
-#app-boot-bg .msg-sidebar, .loading-bg .msg-sidebar {
-    width: 334px;
-    display: inline-block;
-    vertical-align: top;
-    margin-right: -1px
-}
-
-#app-boot-bg .msg-sidebar-top, .loading-bg .msg-sidebar-top {
-    height: 50px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    margin-bottom: 2px
-}
-
-#app-boot-bg .msg-content, .loading-bg .msg-content {
-    width: 453px;
-    display: inline-block;
-    vertical-align: top
-}
-
-#app-boot-bg .msg-content-top, .loading-bg .msg-content-top {
-    height: 50px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    margin-bottom: 2px
-}
-
-#app-boot-bg .msg-circle, .loading-bg .msg-circle {
-    width: 35px;
-    height: 35px;
-    margin-right: 10px
-}
-
-#app-boot-bg .my-float-right, .loading-bg .my-float-right {
-    float: right;
-    margin-top: 15px
-}
-
-#app-boot-bg .my-rect, .loading-bg .my-rect {
-    width: 70px;
-    height: 30px
-}
-
-#app-boot-bg .my-weird-module, .loading-bg .my-weird-module {
-    text-align: center;
-    padding: 22px 0
-}
-
-#app-boot-bg .my-weird-module .line, .loading-bg .my-weird-module .line {
-    display: inline-block;
-    margin: 5px 0
-}
-
-#app-boot-bg .prof-wallpaper, .loading-bg .prof-wallpaper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 220px;
-    z-index: -1;
-    background: #e9e9e9
-}
 
 @-webkit-keyframes pulse {
     0% {

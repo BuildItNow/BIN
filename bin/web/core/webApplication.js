@@ -51,6 +51,16 @@ define(["bin/core/application"],
 			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
 			bin.hudManager  = this._hudManager;
+
+			this._elemAppBoot = $("#app-boot-bg");
+			if(this._elemAppBoot.length > 0)
+			{
+				this._elemAppBoot.attr("v-pre", "");
+				if(document.body.className.indexOf(" app-boot") < 0)
+				{
+					document.body.className += " app-boot";
+				}
+			}
 		}
 
 		Class.run = function()
@@ -64,8 +74,15 @@ define(["bin/core/application"],
 			document.body.setAttribute("vm", "");
 			this.bodyView = BodyView.create({elem:$("body")});
 
-			var elemAppBoot = $("#app-boot-bg");
-			elemAppBoot.remove();
+			if(this._elemAppBoot)
+			{
+				if(document.body.className.indexOf(" app-boot") >= 0)
+				{
+					document.body.className = document.body.className.replace(" app-boot", "");
+				}
+
+				this._elemAppBoot.remove();
+			}
 		}
 
 		Class.goto = function(url, data)

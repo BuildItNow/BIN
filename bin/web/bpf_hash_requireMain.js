@@ -137,7 +137,10 @@ require.config({
 		adminlte:"bin/web/3rdParty/adminlte-2.3.11/dist/js/app",
 		icheck:"bin/web/3rdParty/adminlte-2.3.11/plugins/iCheck/icheck",
 		jquery_datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/jquery.dataTables",
-		datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/dataTables.bootstrap"
+		datatable:"bin/web/3rdParty/adminlte-2.3.11/plugins/datatables/dataTables.bootstrap",
+	
+		es5shim:"bin/web/3rdParty/es5-shims/es5-shim",
+		es5sham:"bin/web/3rdParty/es5-shims/es5-sham"
 	},
 	waitSeconds: 5,
 	shim: 
@@ -146,7 +149,8 @@ require.config({
 		adminlte:["jquery", "bootstrap"],
 		icheck:["jquery"],
 		jquery_datatable:["jquery"],
-		datatable:["jquery_datatable", "bootstrap"]
+		datatable:["jquery_datatable", "bootstrap"],
+		es5sham:"es5shim",
 	}
 });
 

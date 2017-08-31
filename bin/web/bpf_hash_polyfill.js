@@ -1,5 +1,75 @@
 (function()
 {
+    // Adds Document & DocumentFragment support for IE9 & Safari.
+    (function(constructor) 
+    {
+        if (!constructor || !constructor.prototype)
+        {
+            return ;
+        }
+
+        var pro = constructor.prototype;
+        if(pro.lastElementChild == null)
+        {
+            Object.defineProperty(pro, 'lastElementChild', {
+                get: function() {
+                    var node, nodes = this.childNodes, i = nodes.length - 1;
+                    while (node = nodes[i--]) {
+                        if (node.nodeType === 1) {
+                            return node;
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
+
+        if(pro.firstElementChild == null)
+        {
+            Object.defineProperty(pro, 'firstElementChild', {
+                get: function() {
+                    var node, nodes = this.childNodes, i = 0;
+                    while (node = nodes[i++]) {
+                        if (node.nodeType === 1) {
+                            return node;
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
+
+        if(pro.childElementCount == null)
+        {
+            Object.defineProperty(pro, 'childElementCount', {
+                get: function() 
+                {
+                    var i = 0, count = 0, node, nodes = this.childNodes;
+                    while (node = nodes[i++]) 
+                    {
+                        if (node.nodeType === 1) count++;
+                    }
+                    return count;
+                }
+            });
+        }
+
+        if(pro.children == null)
+        {
+            Object.defineProperty(pro, 'children', {
+                get: function() {
+                    var i = 0, node, nodes = this.childNodes, children = [];
+                    while (node = nodes[i++]) {
+                        if (node.nodeType === 1) {
+                            children.push(node);
+                        }
+                    }
+                    return children;
+                }
+            });
+        }
+    })(window.Node || window.Element);
+
     // Fix IE 8 : Object.keys
     if(!Object.keys)
     {
@@ -67,6 +137,16 @@
 	{
 		deps.push("bin/3rdParty/promise/promise");
 	}
+
+    if(bin.platform.ie < 9 || pageConfig.es5shim)
+    {
+        deps.push("es5shim");
+    }
+
+    if(pageConfig.es5sham)
+    {
+        deps.push("es5sham");
+    }
 
 	define(deps, function()
 	{

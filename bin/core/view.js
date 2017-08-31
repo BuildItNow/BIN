@@ -282,10 +282,9 @@ function(util, Vue)
                 {
                     if(isAsync)
                     {
-                        console.log(path);
-
                         require([path], function(ViewClass)
                         {
+                            console.log("异步注入页面["+path+"]");
                             createView.call(self, ViewClass);
                         }, function()
                         {
