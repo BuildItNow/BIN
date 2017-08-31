@@ -105,6 +105,110 @@ define([],
 					bin.mapManager = self._mapManager;
 				});
 			}
+
+			var elem = $("#appBootBg");
+			if(elem.length > 0)
+			{
+				var appBootBg  = {elem:elem};
+				appBootBg.init = function()
+				{
+					this.elem.attr("v-pre", "");
+					if(document.body.className.indexOf(" app-boot") < 0)
+					{
+						document.body.className += " app-boot";
+					}
+
+					this.time = this.elem.attr("time");
+				}
+
+				appBootBg.dismiss = function()
+				{
+					if(document.body.className.indexOf(" app-boot") >= 0)
+					{
+						document.body.className = document.body.className.replace(" app-boot", "");
+					}
+
+					this.elem.remove();
+
+					delete bin.app.appBootBg;
+				}
+
+				appBootBg.init();
+
+				this.appBootBg = appBootBg;
+			}
+		}
+
+		/**
+		 * running operation of application, you'd better alwayse override it in SPA so that your application can launch from the right page.
+		 * @memberof Application#
+		 * @name run
+		 * @type {Function}
+		 */
+		Class.run = function()
+		{
+			var BodyView = bin.ui.BodyView;
+			if(typeof page !== "undefined" && page.BodyView)
+			{
+				BodyView = page.BodyView;
+			}
+			
+			if(!BodyView)
+			{
+				BodyView = bin.ui.View.extend({});
+			}
+
+			document.body.setAttribute("vm", "");
+			this.bodyView = BodyView.create({elem:$("body")});
+
+			if(this.appBootBg)
+			{
+				var appBootBg = this.appBootBg;
+				var time = appBootBg.time;
+				if(!time)
+				{
+					appBootBg.dismiss();
+				}
+				else if(time === "custom")
+				{
+					return ;
+				}
+				else if(time.startsWith("delay"))
+				{
+					time = parseInt(time.substring(5)) || 100;
+					setTimeout(function()
+					{
+						appBootBg.dismiss();
+					}, time);
+				}
+				else
+				{
+					time = parseInt(time)-(_.now()-__bin__start__time);
+					if(time<50)
+					{
+						appBootBg.dismiss();
+					}
+					else
+					{
+						setTimeout(function()
+						{
+							appBootBg.dismiss();
+						}, time);
+					}
+				}
+			}
+		}
+
+		/**
+		 * release operation of application, you can override it do your release work.
+		 * NB: Only available for SPA.
+		 * @memberof Application#
+		 * @name exit
+		 * @type {Function}
+		 */
+		Class.exit = function()
+		{
+			
 		}
 
 		/**
@@ -213,29 +317,6 @@ define([],
 		Class.clientHeight = function()
 		{
 			return this.height();
-		}
-
-		/**
-		 * running operation of application, you'd better alwayse override it in SPA so that your application can launch from the right page.
-		 * @memberof Application#
-		 * @name run
-		 * @type {Function}
-		 */
-		Class.run = function()
-		{
-			
-		}
-
-		/**
-		 * release operation of application, you can override it do your release work.
-		 * NB: Only available for SPA.
-		 * @memberof Application#
-		 * @name exit
-		 * @type {Function}
-		 */
-		Class.exit = function()
-		{
-			
 		}
 
 		_.extend(Class, Backbone.Events);

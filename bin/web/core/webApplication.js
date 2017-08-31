@@ -1,87 +1,19 @@
 define(["bin/core/application"], 
 	function(Application)
 	{
-		var queryParams = function() 
-	  	{
-	  		var ret = {};
-
-	  		var i = window.location.href.indexOf("?");
-	  		if(i<0)
-	  		{
-	  			return ret;
-	  		}
-	  		var queryString = window.location.href.substring(i+1);
-	  		i = queryString.lastIndexOf("#");
-	  		if(i>=0)
-	  		{
-	  			queryString = queryString.substring(0, i);
-	  		}
-
-	  		if(!queryString)
-	  		{
-	  			return ret;
-	  		}
-
-			var pairs = queryString.split("&");
-			var k = null;
-			var v = null;
-			var pair = null;
-			for(i = 0; i < pairs.length; ++i) 
-			{
-				pair = pairs[i].split('=');
-				if(pair.length === 2)
-				{
-					ret[pair[0]] = pair[1];
-				}
-			}
-
-			return ret;
-		}
-
 		var Class = {};
 
 		Class.init = function()
 		{
-			// Parse query params
-			this._queryParams = queryParams();
-			bin.queryParams = this._queryParams;
-
 			Application.prototype.init.apply(this);
 
 			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
 			bin.hudManager  = this._hudManager;
 
-			this._elemAppBoot = $("#app-boot-bg");
-			if(this._elemAppBoot.length > 0)
+			if(this.appBootBg && !this.appBootBg.time)
 			{
-				this._elemAppBoot.attr("v-pre", "");
-				if(document.body.className.indexOf(" app-boot") < 0)
-				{
-					document.body.className += " app-boot";
-				}
-			}
-		}
-
-		Class.run = function()
-		{
-			var BodyView = page.BodyView || bin.ui.BodyView;
-			if(!BodyView)
-			{
-				BodyView = bin.ui.View.extend({});
-			}
-
-			document.body.setAttribute("vm", "");
-			this.bodyView = BodyView.create({elem:$("body")});
-
-			if(this._elemAppBoot)
-			{
-				if(document.body.className.indexOf(" app-boot") >= 0)
-				{
-					document.body.className = document.body.className.replace(" app-boot", "");
-				}
-
-				this._elemAppBoot.remove();
+				this.appBootBg.time = page.pageConfig.appBootBgTime || bin.globalConfig.appBootBgTime;
 			}
 		}
 

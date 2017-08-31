@@ -3,7 +3,7 @@
     overflow: hidden;
 }
 
-#app-boot-bg, .loading-bg{
+#appBootBg, .loading-bg{
     position: absolute;
     top: 0;
     left: 0;
@@ -12,12 +12,12 @@
     z-index: 100000;
 }
 
-#app-boot-bg .content, .loading-bg .content {
+#appBootBg .content, .loading-bg .content {
     box-sizing: content-box;
     display: block
 }
 
-#app-boot-bg .initial-load-animation, .loading-bg .initial-load-animation {
+#appBootBg .initial-load-animation, .loading-bg .initial-load-animation {
     padding-top: 96px;
     width: 200px;
     margin: 0 auto;
@@ -28,19 +28,19 @@
     transition: transform .5s ease, -webkit-transform .5s ease
 }
 
-#app-boot-bg .initial-load-animation.fade-load .linkedin-image,
+#appBootBg .initial-load-animation.fade-load .linkedin-image,
 .loading-bg .initial-load-animation.fade-load .linkedin-image {
     -webkit-transform: translate(0, 10px);
     transform: translate(0, 10px);
     opacity: 0
 }
 
-#app-boot-bg .initial-load-animation.fade-load .loading-bar, .loading-bg .initial-load-animation.fade-load .loading-bar {
+#appBootBg .initial-load-animation.fade-load .loading-bar, .loading-bg .initial-load-animation.fade-load .loading-bar {
     -webkit-transform: rotateY(90deg);
     transform: rotateY(90deg)
 }
 
-#app-boot-bg .initial-load-animation .linkedin-image, .loading-bg .initial-load-animation .linkedin-image {
+#appBootBg .initial-load-animation .linkedin-image, .loading-bg .initial-load-animation .linkedin-image {
     height: 48px;
     width: 48px;
     margin: 0 auto 32px;
@@ -50,7 +50,7 @@
     transition: all .5s ease-out
 }
 
-#app-boot-bg .initial-load-animation .loading-bar, .loading-bg .initial-load-animation .loading-bar {
+#appBootBg .initial-load-animation .loading-bar, .loading-bg .initial-load-animation .loading-bar {
     width: 130px;
     height: 2px;
     margin: 0 auto;
@@ -66,7 +66,7 @@
     transition: transform .3s ease-in, -webkit-transform .3s ease-in
 }
 
-#app-boot-bg .initial-load-animation .loading-bar .blue-bar, .loading-bg .initial-load-animation .loading-bar .blue-bar {
+#appBootBg .initial-load-animation .loading-bar .blue-bar, .loading-bg .initial-load-animation .loading-bar .blue-bar {
     height: 100%;
     width: 68px;
     position: absolute;
@@ -78,37 +78,37 @@
     animation: initial-loading 1.5s infinite ease
 }
 
-#app-boot-bg .l1-core-rail, #app-boot-bg .l1-left-rail, #app-boot-bg .l1-right-rail,
-#app-boot-bg .l2-core-rail, #app-boot-bg .l2-right-rail, .loading-bg .l1-core-rail,
+#appBootBg .l1-core-rail, #appBootBg .l1-left-rail, #appBootBg .l1-right-rail,
+#appBootBg .l2-core-rail, #appBootBg .l2-right-rail, .loading-bg .l1-core-rail,
 .loading-bg .l1-left-rail, .loading-bg .l1-right-rail, .loading-bg .l2-core-rail,
 .loading-bg .l2-right-rail {
     float: left;
     vertical-align: top
 }
 
-#app-boot-bg .module, .loading-bg .module {
+#appBootBg .module, .loading-bg .module {
     background: #FFF
 }
 
-#app-boot-bg .circle, #app-boot-bg .line, #app-boot-bg .rect, .loading-bg .circle,
+#appBootBg .circle, #appBootBg .line, #appBootBg .rect, .loading-bg .circle,
 .loading-bg .line, .loading-bg .rect {
     background: #E1E9EE;
     -webkit-animation: pulse .65s infinite alternate;
     animation: pulse .65s infinite alternate
 }
 
-#app-boot-bg .line, .loading-bg .line {
+#appBootBg .line, .loading-bg .line {
     height: 10px;
     margin: 10px 0
 }
 
-#app-boot-bg .line-wrapper, .loading-bg .line-wrapper {
+#appBootBg .line-wrapper, .loading-bg .line-wrapper {
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px
 }
 
-#app-boot-bg .circle, .loading-bg .circle {
+#appBootBg .circle, .loading-bg .circle {
     border-radius: 50%;
     display: inline-block;
     vertical-align: middle;
@@ -116,7 +116,7 @@
     height: 56px
 }
 
-#app-boot-bg .rect, .loading-bg .rect {
+#appBootBg .rect, .loading-bg .rect {
     border-radius: 4px;
     display: inline-block;
     vertical-align: middle;
@@ -124,129 +124,129 @@
     height: 48px
 }
 
-#app-boot-bg .line.white, #app-boot-bg .rect.white, .loading-bg .line.white,
+#appBootBg .line.white, #appBootBg .rect.white, .loading-bg .line.white,
 .loading-bg .rect.white {
     background: #FFF !important;
 }
 
-#app-boot-bg .width-auto, .loading-bg .width-auto {
+#appBootBg .width-auto, .loading-bg .width-auto {
     width: auto !important;
 }
 
-#app-boot-bg .width60, .loading-bg .width60 {
+#appBootBg .width60, .loading-bg .width60 {
     width: 60px !important;
 }
 
-#app-boot-bg .width90, .loading-bg .width90 {
+#appBootBg .width90, .loading-bg .width90 {
     width: 90px !important;
 }
 
-#app-boot-bg .width110, .loading-bg .width110 {
+#appBootBg .width110, .loading-bg .width110 {
     width: 110px !important;
 }
 
-#app-boot-bg .width120, .loading-bg .width120 {
+#appBootBg .width120, .loading-bg .width120 {
     width: 120px !important;
 }
 
-#app-boot-bg .width160, .loading-bg .width160 {
+#appBootBg .width160, .loading-bg .width160 {
     width: 160px !important;
 }
 
-#app-boot-bg .width190, .loading-bg .width190 {
+#appBootBg .width190, .loading-bg .width190 {
     width: 190px !important;
 }
 
-#app-boot-bg .width220, .loading-bg .width220 {
+#appBootBg .width220, .loading-bg .width220 {
     width: 220px !important;
 }
 
-#app-boot-bg .width250, .loading-bg .width250 {
+#appBootBg .width250, .loading-bg .width250 {
     width: 250px !important;
 }
 
-#app-boot-bg .width270, .loading-bg .width270 {
+#appBootBg .width270, .loading-bg .width270 {
     width: 270px !important;
 }
 
-#app-boot-bg .width300, .loading-bg .width300 {
+#appBootBg .width300, .loading-bg .width300 {
     width: 300px !important;
 }
 
-#app-boot-bg .width340, .loading-bg .width340 {
+#appBootBg .width340, .loading-bg .width340 {
     width: 340px !important;
 }
 
-#app-boot-bg .width470, .loading-bg .width470 {
+#appBootBg .width470, .loading-bg .width470 {
     width: 470px !important;
 }
 
-#app-boot-bg .width500, .loading-bg .width500 {
+#appBootBg .width500, .loading-bg .width500 {
     width: 500px !important;
 }
 
-#app-boot-bg .heigth-auto, .loading-bg .height-auto {
+#appBootBg .heigth-auto, .loading-bg .height-auto {
     height: auto !important;
 }
 
-#app-boot-bg .height1, .loading-bg .height1 {
+#appBootBg .height1, .loading-bg .height1 {
     height: 1px !important;
 }
 
-#app-boot-bg .height10, .loading-bg .height10 {
+#appBootBg .height10, .loading-bg .height10 {
     height: 10px !important;
 }
 
-#app-boot-bg .height15, .loading-bg .height15 {
+#appBootBg .height15, .loading-bg .height15 {
     height: 15px !important;
 }
 
-#app-boot-bg .height20, .loading-bg .height20 {
+#appBootBg .height20, .loading-bg .height20 {
     height: 20px !important;
 }
 
-#app-boot-bg .height32, .loading-bg .height32 {
+#appBootBg .height32, .loading-bg .height32 {
     height: 32px !important;
 }
 
-#app-boot-bg .height40, .loading-bg .height40 {
+#appBootBg .height40, .loading-bg .height40 {
     height: 40px !important;
 }
 
-#app-boot-bg .height49, .loading-bg .height49 {
+#appBootBg .height49, .loading-bg .height49 {
     height: 49px !important;
 }
 
-#app-boot-bg .height50, .loading-bg .height50 {
+#appBootBg .height50, .loading-bg .height50 {
     height: 50px !important;
 }
 
-#app-boot-bg .height100, .loading-bg .height100 {
+#appBootBg .height100, .loading-bg .height100 {
     height: 100px !important;
 }
 
-#app-boot-bg .height250, .loading-bg .height250 {
+#appBootBg .height250, .loading-bg .height250 {
     height: 250px !important;
 }
 
-#app-boot-bg .height300, .loading-bg .height300 {
+#appBootBg .height300, .loading-bg .height300 {
     height: 300px !important;
 }
 
-#app-boot-bg .height610, .loading-bg .height610 {
+#appBootBg .height610, .loading-bg .height610 {
     height: 610px !important;
 }
 
-#app-boot-bg .padding-12-20, .loading-bg .padding-12-20 {
+#appBootBg .padding-12-20, .loading-bg .padding-12-20 {
     padding: 12px 20px !important;
 }
 
-#app-boot-bg .padding-20, .loading-bg .padding-20 {
+#appBootBg .padding-20, .loading-bg .padding-20 {
     padding: 20px !important;
 }
 
-#app-boot-bg .delay140, #app-boot-bg .delay200, #app-boot-bg .delay260,
-#app-boot-bg .delay320, #app-boot-bg .delay380, .loading-bg .delay140,
+#appBootBg .delay140, #appBootBg .delay200, #appBootBg .delay260,
+#appBootBg .delay320, #appBootBg .delay380, .loading-bg .delay140,
 .loading-bg .delay200, .loading-bg .delay260, .loading-bg .delay320,
 .loading-bg .delay380 {
     opacity: 0;
@@ -256,27 +256,27 @@
     animation: fade-slide-in 334ms cubic-bezier(0, 0, .2, 1) forwards
 }
 
-#app-boot-bg .delay140, .loading-bg .delay140 {
+#appBootBg .delay140, .loading-bg .delay140 {
     -webkit-animation-delay: 140ms !important;
     animation-delay: 140ms !important;
 }
 
-#app-boot-bg .delay200, .loading-bg .delay200 {
+#appBootBg .delay200, .loading-bg .delay200 {
     -webkit-animation-delay: .2s !important;
     animation-delay: .2s !important;
 }
 
-#app-boot-bg .delay260, .loading-bg .delay260 {
+#appBootBg .delay260, .loading-bg .delay260 {
     -webkit-animation-delay: !important;
     animation-delay: 260ms !important;
 }
 
-#app-boot-bg .delay320, .loading-bg .delay320 {
+#appBootBg .delay320, .loading-bg .delay320 {
     -webkit-animation-delay: 320ms !important;
     animation-delay: 320ms !important;
 }
 
-#app-boot-bg .delay380, .loading-bg .delay380 {
+#appBootBg .delay380, .loading-bg .delay380 {
     -webkit-animation-delay: 380ms !important;
     animation-delay: 380ms !important;
 }

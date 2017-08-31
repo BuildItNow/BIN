@@ -70,6 +70,43 @@ if(!window.pageConfig)
   		return bin.isUndefined(obj) || bin.isNull(obj);
   	}
 
+  	bin.queryParams = (function() 
+  	{
+  		var ret = {};
+
+  		var i = window.location.href.indexOf("?");
+  		if(i<0)
+  		{
+  			return ret;
+  		}
+  		var queryString = window.location.href.substring(i+1);
+  		i = queryString.lastIndexOf("#");
+  		if(i>=0)
+  		{
+  			queryString = queryString.substring(0, i);
+  		}
+
+  		if(!queryString)
+  		{
+  			return ret;
+  		}
+
+		var pairs = queryString.split("&");
+		var k = null;
+		var v = null;
+		var pair = null;
+		for(i = 0; i < pairs.length; ++i) 
+		{
+			pair = pairs[i].split('=');
+			if(pair.length === 2)
+			{
+				ret[pair[0]] = pair[1];
+			}
+		}
+
+		return ret;
+	})();
+
   	// From http://keenwon.com/demo/201402/js-check-browser.html
   	var Sys = {};
     var ua = navigator.userAgent.toLowerCase();
@@ -83,6 +120,7 @@ if(!window.pageConfig)
     
     bin.platform = Sys;
     bin.platform.browser = true;
+    
 })();
 
 require.onError = function(err)

@@ -6,6 +6,15 @@ var __bin__start__time = new Date().getTime();
  */
 var bin = {};
 
+/**
+ * The root namespace of cordova framework.
+ * NB: Only available for hybrid app. 
+ * @namespace 
+ * @see {@link http://cordova.apache.org/|Cordova}
+ */
+var cordova = typeof cordova === "undefined" ? undefined : cordova;
+
+
 (function()
 {
 	var toString = Object.prototype.toString;
@@ -66,53 +75,83 @@ var bin = {};
   	{
   		return bin.isUndefined(obj) || bin.isNull(obj);
   	}
+
+  	bin.queryParams = (function() 
+  	{
+  		var ret = {};
+
+  		var i = window.location.href.indexOf("?");
+  		if(i<0)
+  		{
+  			return ret;
+  		}
+  		var queryString = window.location.href.substring(i+1);
+  		i = queryString.lastIndexOf("#");
+  		if(i>=0)
+  		{
+  			queryString = queryString.substring(0, i);
+  		}
+
+  		if(!queryString)
+  		{
+  			return ret;
+  		}
+
+		var pairs = queryString.split("&");
+		var k = null;
+		var v = null;
+		var pair = null;
+		for(i = 0; i < pairs.length; ++i) 
+		{
+			pair = pairs[i].split('=');
+			if(pair.length === 2)
+			{
+				ret[pair[0]] = pair[1];
+			}
+		}
+
+		return ret;
+	})();
+
+	// Setup platform info
+	/**
+	 * Platform information, you can use it to check what system your code is running on, android, ios or browser.
+	 * NB: Only available for SPA.
+	 * @memberof bin
+	 * @namespace
+	 */
+	bin.platform = {};
+	if(cordova)
+	{
+		/**
+		 * Platform type, available values are "android","ios","browser"
+		 * @memberof bin.platform
+		 */
+		bin.platform.type = cordova.platformId;
+
+		/**
+		 * Quick type checking for android, equivalent to bin.platform.type === "android"
+		 * @memberof bin.platform
+		 */
+		bin.platform.android = bin.platform.type === "android";
+
+		/**
+		 * Quick type checking for ios, equivalent to bin.platform.type === "ios"
+		 * @memberof bin.platform
+		 */
+		bin.platform.ios     = bin.platform.type === "ios";
+	}
+	else
+	{
+		bin.platform.type = "browser";
+		/**
+		 * Quick type checking for browser, equivalent to bin.platform.type === "browser"
+		 * @memberof bin.platform
+		 */
+		bin.platform.browser = true;
+	}
+
 })();
-
-/**
- * The root namespace of cordova framework.
- * NB: Only available for hybrid app. 
- * @namespace 
- * @see {@link http://cordova.apache.org/|Cordova}
- */
-var cordova = typeof cordova === "undefined" ? undefined : cordova;
-
-// Setup platform info
-/**
- * Platform information, you can use it to check what system your code is running on, android, ios or browser.
- * NB: Only available for SPA.
- * @memberof bin
- * @namespace
- */
-bin.platform = {};
-if(cordova)
-{
-	/**
-	 * Platform type, available values are "android","ios","browser"
-	 * @memberof bin.platform
-	 */
-	bin.platform.type = cordova.platformId;
-
-	/**
-	 * Quick type checking for android, equivalent to bin.platform.type === "android"
-	 * @memberof bin.platform
-	 */
-	bin.platform.android = bin.platform.type === "android";
-
-	/**
-	 * Quick type checking for ios, equivalent to bin.platform.type === "ios"
-	 * @memberof bin.platform
-	 */
-	bin.platform.ios     = bin.platform.type === "ios";
-}
-else
-{
-	bin.platform.type = "browser";
-	/**
-	 * Quick type checking for browser, equivalent to bin.platform.type === "browser"
-	 * @memberof bin.platform
-	 */
-	bin.platform.browser = true;
-}
 
 require.onError = function(err)
 {
