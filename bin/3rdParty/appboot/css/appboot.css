@@ -12,45 +12,7 @@
     z-index: 100000;
 }
 
-#appBootBg .content, .loading-bg .content {
-    box-sizing: content-box;
-    display: block
-}
-
-#appBootBg .initial-load-animation, .loading-bg .initial-load-animation {
-    padding-top: 96px;
-    width: 200px;
-    margin: 0 auto;
-    -webkit-transform: scale(1);
-    transform: scale(1);
-    transition: -webkit-transform .5s ease;
-    transition: transform .5s ease;
-    transition: transform .5s ease, -webkit-transform .5s ease
-}
-
-#appBootBg .initial-load-animation.fade-load .linkedin-image,
-.loading-bg .initial-load-animation.fade-load .linkedin-image {
-    -webkit-transform: translate(0, 10px);
-    transform: translate(0, 10px);
-    opacity: 0
-}
-
-#appBootBg .initial-load-animation.fade-load .loading-bar, .loading-bg .initial-load-animation.fade-load .loading-bar {
-    -webkit-transform: rotateY(90deg);
-    transform: rotateY(90deg)
-}
-
-#appBootBg .initial-load-animation .linkedin-image, .loading-bg .initial-load-animation .linkedin-image {
-    height: 48px;
-    width: 48px;
-    margin: 0 auto 32px;
-    -webkit-transform: translate(0, 0);
-    transform: translate(0, 0);
-    opacity: 1;
-    transition: all .5s ease-out
-}
-
-#appBootBg .initial-load-animation .loading-bar, .loading-bg .initial-load-animation .loading-bar {
+#appBootBg .loading-bar, .loading-bg .loading-bar {
     width: 130px;
     height: 2px;
     margin: 0 auto;
@@ -66,7 +28,7 @@
     transition: transform .3s ease-in, -webkit-transform .3s ease-in
 }
 
-#appBootBg .initial-load-animation .loading-bar .blue-bar, .loading-bg .initial-load-animation .loading-bar .blue-bar {
+#appBootBg .loading-bar .blue-bar, .loading-bg .loading-bar .blue-bar {
     height: 100%;
     width: 68px;
     position: absolute;
@@ -76,6 +38,32 @@
     border-radius: 2px;
     -webkit-animation: initial-loading 1.5s infinite ease;
     animation: initial-loading 1.5s infinite ease
+}
+
+#appBootBg .loading-spinner, .loading-bg .loading-spinner
+{
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+}
+
+#appBootBg .spinner-icon, .loading-bg .spinner-icon
+{
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    border-top-color: #0073b1;
+    border-left-color: #0073b1;
+    border-radius: 50%;
+    -webkit-animation: rotating .4s linear infinite;
+    animation: rotating .4s linear infinite;
+}
+
+#appBootBg .loading-spinner .spinner-icon, .loading-bg .loading-spinner .spinner-icon
+{
+    width: 100%;
+    height: 100%;
 }
 
 #appBootBg .l1-core-rail, #appBootBg .l1-left-rail, #appBootBg .l1-right-rail,
@@ -379,5 +367,27 @@
     50% {
         -webkit-transform: translate(96px, 0);
         transform: translate(96px, 0)
+    }
+}
+
+@-webkit-keyframes rotating {
+    0% {
+        -webkit-transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn)
+    }
+}
+
+@keyframes rotating {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
     }
 }

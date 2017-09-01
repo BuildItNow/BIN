@@ -101,6 +101,11 @@ define([
 			document.addEventListener("resume", function(){self.onResume()}, false);
 			document.addEventListener("hidekeyboard", function(){self.onHideKeyboard()}, false);
 			document.addEventListener("showkeyboard", function(){self.onShowKeyboard()}, false);
+		
+			if(this.appBootBg && !this.appBootBg.time)
+			{
+				this.appBootBg.time = bin.globalConfig.appBootBgTime;
+			}
 		}
 
 		Class.fixWindow = function()

@@ -120,7 +120,7 @@ if(!window.pageConfig)
     
     bin.platform = Sys;
     bin.platform.browser = true;
-    
+
 })();
 
 require.onError = function(err)
@@ -188,7 +188,7 @@ require.config({
 		icheck:["jquery"],
 		jquery_datatable:["jquery"],
 		datatable:["jquery_datatable", "bootstrap"],
-		es5sham:"es5shim",
+		es5sham:"es5shim"
 	}
 });
 
