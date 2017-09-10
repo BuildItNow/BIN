@@ -89,6 +89,15 @@ function(util, Vue)
                 var vm   = this.vm;
                 var view = vm._b_view;
                 var el   = this.el;
+
+                if(el.getAttribute("import") != null)
+                {
+                    el.style.display = "none";
+                    el.parentNode && el.parentNode.removeChild(el);
+
+                    return ;
+                }
+
                 var elCtn = el.children[0];
                 var name = null;
                 var path = null;
@@ -96,7 +105,7 @@ function(util, Vue)
                 var opts = null;
                 var otherOpts = {};
                 var hide = false;
-                var isAsync = false;
+                var isAsync  = false;
 
                 // parse attrs
                 var attrs = el.attributes;
@@ -313,6 +322,62 @@ function(util, Vue)
             }
         });
 
+        var partial = Vue.options.elementDirectives.partial;
+        var vIf     = Vue.options.directives["if"];
+
+        var oldBind = partial.bind;
+        partial.bind = function()
+        {
+            this.b_local = this.el.getAttribute("local") !== null;
+
+            return oldBind.apply(this, arguments);
+        }
+
+        var oldInsert = partial.insert;
+        partial.insert = function(id)
+        {
+            var template = null;
+            if(this.b_local)
+            {
+                template = this.vm._b_view.$("#"+id).html();
+                if(!template)
+                {
+                    console.error("页面本地partial查找失败["+id+"]");
+                }
+            }
+            else
+            {
+                template = bin.viewInjectGlobalDeps[id];
+                if(template && template.__html_plugin)
+                {
+                    var els = template();
+                    if(els.length === 1)
+                    {
+                        template = els[0];
+                    }
+                    else
+                    {
+                        template = template.html;
+                    }
+                }
+                else if(!template)
+                {
+                    template = Vue.util.resolveAsset(this.vm.$options, "partials", id, true);
+                }
+
+                if(!template)
+                {
+                    console.error("页面partial查找失败["+id+"]");
+                }
+            }
+            
+            if(template)
+            {
+                this.factory = new Vue.FragmentFactory(this.vm, template);
+                vIf.insert.call(this);
+            }
+        }
+
         bin.viewInjectGlobalDeps = {};
 
         var resolveViewInjectDependencies = function(el, cb, filter)
@@ -415,10 +480,28 @@ function(util, Vue)
 
     Class.constructor = function(options)
     {
+        options = options || {};
+
         this._show  = null;
-        this._elemParent = options ? options.elemParent : null;
-        
-        if(options && options.el)   // Load by BIN, BIN will auto set element by html content
+        this._elemParent = options.elemParent;
+
+        // Pick up the member variables in options
+        if(options.mvs)
+        {
+            var mvs = options.mvs;
+            for(var i=0,i_sz=mvs.length; i<i_sz; ++i)
+            {
+                this["_"+mvs[i]] = options[mvs[i]];
+            }  
+        }
+
+        // Pick up vmData in options
+        if(options.vmData)
+        {
+            this.vmData = options.vmData;
+        }
+
+        if(options.el)   // Load by BIN, BIN will auto set element by html content
         {
             this._html = null;
             
@@ -433,7 +516,7 @@ function(util, Vue)
             return ;
         }
 
-        if(options && options.elem)       // Init from a element
+        if(options.elem)       // Init from a element
         {
             options.el = options.elem;
             options.elem = null;
@@ -449,7 +532,7 @@ function(util, Vue)
             return ;
         }
 
-        this._html = options && options.html ? options.html : this.__$class.html;
+        this._html = options.html ? options.html : this.__$class.html;
 
         Base.call(this, options);
 

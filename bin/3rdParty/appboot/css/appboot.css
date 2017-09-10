@@ -79,8 +79,13 @@
 }
 
 #appBootBg .circle, #appBootBg .line, #appBootBg .rect, .loading-bg .circle,
-.loading-bg .line, .loading-bg .rect {
+.loading-bg .line, .loading-bg .rect 
+{
     background: #E1E9EE;
+}
+
+#appBootBg .animation-pulse
+{
     -webkit-animation: pulse .65s infinite alternate;
     animation: pulse .65s infinite alternate
 }

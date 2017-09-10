@@ -323,7 +323,6 @@ require(["config/bpf_hash_globalConfig", "bin/bpf_hash_polyfill"], function(glob
 		});
 	};
 
-	//var packages = ["bin/bpf_hash_3party.bundle.js", "bin/bpf_hash_bin.bundle.js"];
 	if(bin.globalConfig.packages)
 	{
 		require([].concat(bin.globalConfig.packages), function()

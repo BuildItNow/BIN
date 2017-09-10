@@ -35,51 +35,17 @@ define(["bin/core/view"], function(View)
 		});
 	}
 
-	Class.vmMethod_submit = function()
+	Class.vmMethod_submit = function(data)
 	{
-		if(!this._onSubmit)
-		{
-			this.close();
-
-			return ;
-		}
-
-		var nc = false;
-		if(arguments.length > 0)
-		{
-			nc = this._onSubmit.apply(null, Array.prototype.concat.apply([this], arguments));
-		}
-		else
-		{
-			nc = this._onSubmit.call(null, this);
-		}
-
-		if(!nc)
+		if(!this._onSubmit || !this._onSubmit.call(null, this, data))
 		{
 			this.close();
 		}
 	}
 
-	Class.vmMethod_cancel = function()
+	Class.vmMethod_cancel = function(data)
 	{
-		if(!this._onCancel)
-		{
-			this.close();
-
-			return ;
-		}
-
-		var nc = false;
-		if(arguments.length > 0)
-		{
-			nc = this._onCancel.apply(null, Array.prototype.concat.apply([this], arguments));
-		}
-		else
-		{
-			nc = this._onCancel.call(null, this);
-		}
-		
-		if(!nc)
+		if(!this._onCancel || !this._onCancel.call(null, this, data))
 		{
 			this.close();
 		}

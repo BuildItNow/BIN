@@ -39,6 +39,7 @@ define([], function ()
                     return ret;
                 }
 
+                factory.html = html;
                 factory.__html_plugin = true;
 
                 if(el.firstElementChild && el.firstElementChild.getAttribute("vm") != null)
