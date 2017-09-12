@@ -1,13 +1,478 @@
 define(["bin/core/util", "vue"], 
 function(util, Vue)
 {
+    if(Vue)
+    {
+        var ViewModel = bin.extend.call(Vue, 
+        {
+            constructor:function()  // two-phase to create view-model
+            {
+
+            },
+            b_init:function(view, options)
+            {
+                this._b_view = view;
+                Vue.call(this, options);
+            },
+            b_release:function()
+            {
+                if(this._b_unLinks)
+                {
+                    for(var i=this._b_unLinks.length-1; i>=0; --i)
+                    {
+                        this._b_unLinks[i](true);
+                    }
+
+                    delete this._b_unLinks;
+                }
+
+                this.$destroy();
+                this._b_view = null;
+            },
+            b_compile:function(elem)
+            {
+                if(elem.length === 0)
+                {
+                    return ;
+                }
+
+                if(!this._b_unLinks)
+                {
+                    this._b_unLinks = [];
+                }
+
+                var unlinks = [];
+        
+                for(var i=0,i_sz=elem.length; i<i_sz; ++i)
+                {
+                    unlinks.push(this.$compile(elem[i]));
+                }
+
+                var unlinker = function()
+                {
+                    if(!unlinks)
+                    {
+                        return ;
+                    }
+
+                    for(var i=0,i_sz=unlinks.length; i<i_sz; ++i)
+                    {
+                        unlinks[i].apply(this, arguments);
+                    }
+
+                    unlinks = null;
+                }
+
+                this._b_unLinks.push(unlinker);
+
+                return unlinker;
+            }
+        });
+
+        var camelizeRE = /-(\w)/g;
+        function camelize(str) 
+        {
+            return str.replace(camelizeRE, toUpper);
+        }
+
+        function toUpper(_, c)
+        {
+            return c ? c.toUpperCase() : '';
+        }
+
+        Vue.elementDirective("view", 
+        {
+            priority:500,
+            compileDirective:true,
+            bind:function()
+            {   
+                var vm   = this.vm;
+                var view = vm._b_view;
+                var el   = this.el;
+
+                if(el.getAttribute("import") != null)
+                {
+                    el.style.display = "none";
+                    el.parentNode && el.parentNode.removeChild(el);
+
+                    return ;
+                }
+
+                var elCtn = el.children[0];
+                var name = null;
+                var path = null;
+                    
+                var opts = null;
+                var otherOpts = {};
+                var hide = false;
+                var isAsync  = false;
+
+                // parse attrs
+                var attrs = el.attributes;
+                var attrName  = null;
+                var attrVale  = null;
+                for(var i=0,i_sz=attrs.length; i<i_sz; ++i)
+                {
+                    attrVale = attrs[i].value;
+                    attrName = attrs[i].name;
+
+                    if(attrName === "name")
+                    {
+                        name = attrVale;
+                    }
+                    else if(attrName === "path")
+                    {
+                        path = attrVale;
+                    }
+                    else if(attrName === "hide")
+                    {
+                        hide = true;
+                    }
+                    else if(attrName.startsWith("opts"))
+                    {
+                        if(attrName.length === 4)
+                        {
+                            opts = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
+                        }
+                        else
+                        {
+                            var optsName = camelize(attrName.substring(5));
+                            otherOpts[optsName] = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
+                        }
+                    }
+                    else if(attrName === "async")
+                    {
+                        isAsync = true;
+                    }
+                }
+
+                var createView = function(ViewClass)
+                {
+                    if(this.b_unbinded)
+                    {
+                        return ;
+                    }
+
+                    var fragment     = null;
+                    var fragmentElem = null;
+                    var fragmentComp = false;
+
+                    if(ViewClass.__html_plugin || bin.isString(ViewClass))
+                    {
+                        fragmentElem = $(ViewClass.__html_plugin ? ViewClass() : ViewClass);
+
+                        if(fragmentElem.length === 0)
+                        {
+                            return ;
+                        }
+
+                        fragment = $(document.createDocumentFragment());
+                        fragment.append(fragmentElem);
+
+                        if(fragmentElem[0].getAttribute("vm") != null)
+                        {
+                            fragmentElem[0].removeAttribute("vm");
+
+                            fragmentComp = true;
+                        }
+                    }
+                    
+                    var removeEl = false;
+                    if(opts)
+                    {
+                        otherOpts = _.extend(opts, otherOpts);
+                    }
+
+                    if(otherOpts.elem)
+                    {
+                        removeEl = true;
+                    }
+                    else
+                    {
+                        otherOpts.elem = elCtn;
+                    }
+
+                    if(otherOpts.elemParent)
+                    {
+                        removeEl = true;
+                        if(otherOpts.elemParent === "replace")  // just replace view element
+                        {
+                            otherOpts.elemParent = function(v)
+                            {
+                                el.parentNode && el.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], el);
+                            }
+                        }
+                        else if(otherOpts.elemParent === "replace-parent") // just replace the parent of view
+                        {
+                            otherOpts.elemParent = function(v)
+                            {
+                                var elParent = el.parentNode;
+
+                                elParent && elParent.parentNode && elParent.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], elParent);
+                            }
+                        }
+                        else if(otherOpts.elemParent.startsWith("replace-element:")) // replace any element
+                        {
+                            var selector = otherOpts.elemParent.substring("replace-element:".length);
+                            otherOpts.elemParent = function(v)
+                            {
+                                var elAny    = view.$(selector);
+
+                                if(elAny && elAny.length > 0)
+                                {
+                                    elAny = elAny[0];
+                                }
+
+                                elAny && elAny.parentNode && elAny.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], elAny);
+                            }
+                        }
+                    }
+
+                    if(fragment)
+                    {
+                        if(otherOpts.elemParent)
+                        {
+                            if(bin.isFunction(otherOpts.elemParent))
+                            {
+                                otherOpts.elemParent();
+                            }
+                            else
+                            {
+                                otherOpts.elemParent.append(fragment);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var v = ViewClass.create(otherOpts);
+                    }
+
+                    if(removeEl)
+                    {
+                        el.parentNode && el.parentNode.removeChild(el);
+                    }
+                    else
+                    {
+                        el.parentNode && el.parentNode.replaceChild(fragment ? fragment[0] : v.$()[0], el);
+                    }  
+
+                    if(name && v)
+                    {
+                        if(view[name])
+                        {
+                            console.warn("页面注入名称冲突["+name+"]");
+                        }
+
+                        view[name] = v;
+                    }
+
+                    this.b_view = v;
+                    this.b_name = name;
+
+                    if(fragmentComp)
+                    {
+                        view.compile(fragmentElem);
+                    }
+
+                    if(v && hide)
+                    {
+                        v.hide();
+                    }
+
+                    if(view.onViewInject)
+                    {
+                        view.onViewInject(path, v || fragmentElem, name);
+                    }
+                }
+
+                var self = this;
+                var ViewClass = (view.__$class.deps && view.__$class.deps[path]) || bin.viewInjectGlobalDeps[path];
+                if(!ViewClass)
+                {
+                    if(isAsync)
+                    {
+                        require([path], function(ViewClass)
+                        {
+                            console.log("异步注入页面["+path+"]");
+                            createView.call(self, ViewClass);
+                        }, function()
+                        {
+                            console.error("加载页面类失败["+path+"], 页面注入失败");
+
+                            el.parentNode.removeChild(el);
+                        });
+                    }
+                    else
+                    {
+                        console.error("查找不到页面类["+path+"], 页面注入失败");
+
+                        el.parentNode.removeChild(el);
+                    }
+                }
+                else
+                {
+                    createView.call(this, ViewClass);
+                }
+            },
+            unbind:function()
+            {
+                this.b_view && this.b_view.remove();
+                this.b_name && (this.vm._b_view[this.b_name] = null);
+                this.b_unbinded = true;
+            }
+        });
+
+        var partial = Vue.options.elementDirectives.partial;
+        var vIf     = Vue.options.directives["if"];
+
+        var oldBind = partial.bind;
+        partial.bind = function()
+        {
+            this.b_local = this.el.getAttribute("local") !== null;
+
+            return oldBind.apply(this, arguments);
+        }
+
+        var oldInsert = partial.insert;
+        partial.insert = function(id)
+        {
+            var template = null;
+            if(this.b_local)
+            {
+                template = this.vm._b_view.$("#"+id).html();
+                if(!template)
+                {
+                    console.error("页面本地partial查找失败["+id+"]");
+                }
+            }
+            else
+            {
+                template = bin.viewInjectGlobalDeps[id];
+                if(template && template.__html_plugin)
+                {
+                    var els = template();
+                    if(els.length === 1)
+                    {
+                        template = els[0];
+                    }
+                    else
+                    {
+                        template = template.html;
+                    }
+                }
+                else if(!template)
+                {
+                    template = Vue.util.resolveAsset(this.vm.$options, "partials", id, true);
+                }
+
+                if(!template)
+                {
+                    console.error("页面partial查找失败["+id+"]");
+                }
+            }
+            
+            if(template)
+            {
+                this.factory = new Vue.FragmentFactory(this.vm, template);
+                vIf.insert.call(this);
+            }
+        }
+
+        bin.viewInjectGlobalDeps = {};
+
+        var resolveViewInjectDependencies = function(el, cb, filter)
+        {
+            var viewEls = el.getElementsByTagName("view");
+            if(!viewEls || viewEls.length === 0)
+            {
+                cb();
+                return ;
+            }
+
+            var loading = {};
+            var deps = bin.viewInjectGlobalDeps;
+            var oldFilter = filter;
+            filter = function(path)
+            {
+                if(loading[path] || deps[path])
+                {
+                    return true;
+                }
+
+                return oldFilter && oldFilter(path);
+            }
+
+            var loadTasks = [];
+            var c = 0;
+
+            var onLoadDone = function()
+            {
+                if(loadTasks.length === ++c)
+                {
+                    cb();
+                }
+            }
+
+            var genLoadTask = function(viewEl, viewPath)
+            {
+                return function()
+                {
+                    require([viewPath], function(viewClass)
+                    {   
+                        deps[viewPath] = viewClass;
+
+                        onLoadDone();
+                    }, function()
+                    {
+                        onLoadDone();
+                    });
+                }
+            }
+
+            var viewEl   = null;
+            var viewPath = null;
+            var isAsync  = false;
+            for(var i=0,i_sz=viewEls.length; i<i_sz; ++i)
+            {   
+                viewEl = viewEls[i];
+                viewEl.style.display = "none";  
+                viewPath = viewEl.getAttribute("path");
+
+                isAsync = viewEl.getAttribute("async") != null;
+
+                if(viewPath && viewPath.indexOf("{") < 0)   // not vue bind
+                {
+                    if(!isAsync && !filter(viewPath))
+                    {
+                        loading[viewPath] = true;
+
+                        loadTasks.push(genLoadTask(viewEl, viewPath));
+                    }
+                }
+                else// maybe vue runtime bind {{}} or :path
+                {
+                    viewEl.setAttribute("async", "");   
+                }
+            }
+
+            if(loadTasks.length > 0)
+            {
+                for(var i=0,i_sz=loadTasks.length; i<i_sz; ++i)
+                {   
+                    loadTasks[i]();
+                }
+            }
+            else
+            {
+                cb();
+            }
+        }
+
+        bin.resolveViewInjectDependencies = resolveViewInjectDependencies;
+    }
+
     var Base = Backbone.View;
     var View = undefined;
-
-    // Static Properties
-    //__$html:null, // View from class html string
-    //__$view:null, // View from html file
-    //__$native:{ios:null, android:null},  // View from native
 
     var Class =  
     {
@@ -15,14 +480,32 @@ function(util, Vue)
 
     Class.constructor = function(options)
     {
+        options = options || {};
+
         this._show  = null;
-        this._elemParent = options ? options.elemParent : null;
-        
-        if(options && options.el)   // Load by BIN, BIN will auto set element by html content
+        this._elemParent = options.elemParent;
+
+        // Pick up the member variables in options
+        if(options.mvs)
+        {
+            var mvs = options.mvs;
+            for(var i=0,i_sz=mvs.length; i<i_sz; ++i)
+            {
+                this["_"+mvs[i]] = options[mvs[i]];
+            }  
+        }
+
+        // Pick up vmData in options
+        if(options.vmData)
+        {
+            this.vmData = options.vmData;
+        }
+
+        if(options.el)   // Load by BIN, BIN will auto set element by html content
         {
             this._html = null;
             
-            Backbone.View.call(this, options);
+            Base.call(this, options);
 
             if(!options.manualRender)
             {
@@ -33,12 +516,12 @@ function(util, Vue)
             return ;
         }
 
-        if(options && options.elem)       // Init from a element
+        if(options.elem)       // Init from a element
         {
             options.el = options.elem;
             options.elem = null;
 
-            Backbone.View.call(this, options);
+            Base.call(this, options);
 
             if(!options.manualRender)
             {
@@ -49,9 +532,9 @@ function(util, Vue)
             return ;
         }
 
-        this._html = options && options.html ? options.html : this.__$class.html;
+        this._html = options.html ? options.html : this.__$class.html;
 
-        Backbone.View.call(this, options);
+        Base.call(this, options);
 
         if(this._html || !options || !options.manualRender)
         {
@@ -64,7 +547,6 @@ function(util, Vue)
     {
         return function()
         {
-            self.vm = self.vm || this;
             return impl.apply(self, arguments);
         }
     }
@@ -94,66 +576,117 @@ function(util, Vue)
             delete this._elemParent;
         }
 
-        var VMOptions = undefined;
-        if(this.__$class.VMOptions)
+        if(Vue)
         {
-            VMOptions = util.clone(this.__$class.VMOptions, true);
-
-            // Fix vm functions
-            var methods = VMOptions.methods;
-            for(var key in methods)
+            var VMOptions = undefined;
+            if(this.__$class.VMOptions)
             {
-                methods[key] = methodWrapper(self, methods[key]);
+                VMOptions = util.clone(this.__$class.VMOptions, true);
+
+                // Fix vm functions
+                var methods = VMOptions.methods;
+                for(var key in methods)
+                {
+                    methods[key] = methodWrapper(self, methods[key]);
+                }
+
+                var computed = VMOptions.computed;
+                for(var key in computed)
+                {
+                    if(typeof computed[key] === "function")
+                    {
+                        computed[key] = methodWrapper(self, computed[key]);
+                    }
+                    else
+                    {
+                        if(computed[key].set)
+                        {
+                            computed[key].set = methodWrapper(self, computed[key].set);
+                        }
+
+                        if(computed[key].get)
+                        {
+                            computed[key].get = methodWrapper(self, computed[key].get);
+                        }
+                    }
+                }
+
+                var watch = VMOptions.watch;
+                for(var key in watch)
+                {
+                    if(typeof watch[key] === "function")
+                    {
+                        watch[key] = methodWrapper(self, watch[key]);
+                    }
+                    else
+                    {
+                        watch[key].handler = methodWrapper(self, watch[key].handler);
+                    }
+                }
+            }
+            else if(this.hasOwnProperty("vmData"))
+            {
+                VMOptions = {};
+            }
+            else if(this.$()[0].getAttribute("vm") !== null)
+            {
+                VMOptions = {};
             }
 
-            var computed = VMOptions.computed;
-            for(var key in computed)
+            if(this.prepareVMOptions)
             {
-                if(typeof computed[key] === "function")
+                VMOptions = this.prepareVMOptions(VMOptions);
+            }
+
+            if(VMOptions)
+            {
+                if(this.hasOwnProperty("vmData"))
                 {
-                    computed[key] = methodWrapper(self, computed[key]);
+                    VMOptions.data = _.extend(VMOptions.data || {}, this.vmData);
                 }
-                else
+
+                var el = this.$()[0];
+                if(el)
                 {
-                    if(computed[key].set)
+                    if(!el.__v_pre__)
                     {
-                        computed[key].set = methodWrapper(self, computed[key].set);
+                        el.nodeType === 1 && el.removeAttribute("v-pre");
+                        el.__v_pre__ = true;
                     }
 
-                    if(computed[key].get)
-                    {
-                        computed[key].get = methodWrapper(self, computed[key].get);
-                    }
+                    VMOptions.el = this.$()[0];
                 }
-            }
-
-            var watch = VMOptions.watch;
-            for(var key in watch)
-            {
-                if(typeof watch[key] === "function")
-                {
-                    watch[key] = methodWrapper(self, watch[key]);
-                }
-                else
-                {
-                    watch[key].handler = methodWrapper(self, watch[key].handler);
-                }
+                
+                this.vm = new ViewModel();
+                this.vm.b_init(this, VMOptions);
             }
         }
-
-        if(this.prepareVMOptions)
-        {
-            VMOptions = this.prepareVMOptions(VMOptions);
-        }
-
-        if(VMOptions)
-        {
-            VMOptions.el = this.$()[0];
-            this.vm = new Vue(VMOptions);
-        }
-       
+           
         this.posGenHTML();
-        
+
+        var elemContent = this.$content();
+        if(elemContent.hasClass("bin-lazyload-container"))
+        {
+            this.lazyLoadContainer(elemContent);
+
+            if(this.vm && !elemContent.hasClass("bin-no-vm-flush"))
+            {
+                this.vm.$on("flush", function()
+                {
+                    self.lazyLoadContainer(elemContent);
+                });
+            }
+        }
+
+        if(this.vm && this.onViewModelFlush)
+        {
+            this.vm.$on("flush", function()
+            {
+                self.onViewModelFlush();
+            });
+        }
+
+
         if(this.asyncPosGenHTML)
         {
             setTimeout(function(){self.asyncPosGenHTML();}, 0);
@@ -180,15 +713,11 @@ function(util, Vue)
     // called after genHTML(), do some work after the view's dom tree is done. 
     Class.posGenHTML = function()
     {
-        if(this.$().hasClass("bin-lazyload-container"))
-        {
-            this.lazyLoadContainer();
-        }
     }
 
     Class.remove = function()
     {
-        Backbone.View.prototype.remove.call(this);
+        Base.prototype.remove.call(this);
 
         if(this._llViews && this._llViews.length > 0)
         {
@@ -202,7 +731,7 @@ function(util, Vue)
 
         if(this.vm)
         {
-            this.vm.$destroy();
+            this.vm.b_release();
         }
 
         this.onRemove();
@@ -230,6 +759,18 @@ function(util, Vue)
         this._show = false;
         this.$().hide();
         this.onHide();
+    }
+
+    // Only handle jquery elements
+    Class.compile = function(elem)
+    {
+        if(!this.vm)
+        {
+            console.warm("ViewModel not created for this view, can't compile the element");
+            return ;
+        }
+
+        return this.vm.b_compile(elem);
     }
 
     Class.isShow = function()
@@ -262,6 +803,11 @@ function(util, Vue)
         {
             return sel ? this.$el.find(sel) : this.$el;
         }
+    }
+
+    Class.$content = function()
+    {
+        return this.$();
     }
 
     Class.$html = function(sel, html)
@@ -302,12 +848,6 @@ function(util, Vue)
         var elem = this.$(sel, fromSel);
         return elem ? util.newFragment(elem) : null;
     }
-
-    Class.$content = function()
-    {
-        return this.$(".bin-page-content");
-    }
-
 
     // Lazy load feature
 
@@ -414,7 +954,7 @@ function(util, Vue)
 
     Class._llTryLazyLoad = function()
     {
-        if(this._llViews.length === 0)
+        if(!this._llViews || this._llViews.length === 0)
         {
             return ;
         }
@@ -436,7 +976,7 @@ function(util, Vue)
 
     Class.lazyLoadContainer = function(container)
     {
-        this._llContainer = container || this.$();
+        this._llContainer = container || this.$content();
         var self = this;
         require(["bin/common/lazyLoadView"], function(LazyLoadView)
         {
@@ -505,81 +1045,94 @@ function(util, Vue)
     }
 
     View = Base.extend(Class, 
-        {
-            create:function(options)
-            {
-                return new this(options);
-            }
-        });
-
-    var extend = View.extend;
-    View.extend = function(cls, sta)
     {
-        // Generate View-Model options
-        var VMOptions = util.clone(this.VMOptions, true) || {};
-
-        if(!VMOptions.data)
+        create:function(options)
         {
-            VMOptions.data = {};
+            return new this(options);
         }
+    });
 
-        if(!VMOptions.computed)
+    if(Vue)
+    {
+        var extend = View.extend;
+        View.extend = function(cls, sta)
         {
-            VMOptions.computed = {};
-        }
+            // Generate View-Model options
+            var VMOptions = util.clone(this.VMOptions, true) || {};
 
-        if(!VMOptions.watch)
-        {
-            VMOptions.watch = {};
-        }
-
-        if(!VMOptions.methods)
-        {
-            VMOptions.methods = {};
-        }
-
-        var hasVM = false;
-
-        if(cls.vmData)
-        {
-            VMOptions.data = _.extend(VMOptions.data, cls.vmData);
-            hasVM = true;
-        }
-
-        for(var key in cls)
-        {
-            if(key.indexOf("vm") !== 0)
+            if(!VMOptions.data)
             {
-                continue;
+                VMOptions.data = {};
             }
 
-            if(key.indexOf("Method_", 2) === 2)
+            if(!VMOptions.computed)
             {
-                VMOptions.methods[key.substring(9)] = cls[key];
+                VMOptions.computed = {};
+            }
+
+            if(!VMOptions.watch)
+            {
+                VMOptions.watch = {};
+            }
+
+            if(!VMOptions.methods)
+            {
+                VMOptions.methods = {};
+            }
+
+            if(!VMOptions.filters)
+            {
+                VMOptions.filters = {};
+            }
+
+            var hasVM = false;
+
+            if(cls.vmData)
+            {
+                VMOptions.data = _.extend(VMOptions.data, cls.vmData);
                 hasVM = true;
             }
-            else if(key.indexOf("Computed_", 2) === 2)
+
+            for(var key in cls)
             {
-                VMOptions.computed[key.substring(11)] = cls[key];
-                hasVM = true;
+                if(key.indexOf("vm") !== 0)
+                {
+                    continue;
+                }
+
+                if(key.indexOf("Method_", 2) === 2)
+                {
+                    VMOptions.methods[key.substring(9)] = cls[key];
+                    hasVM = true;
+                }
+                else if(key.indexOf("Computed_", 2) === 2)
+                {
+                    VMOptions.computed[key.substring(11)] = cls[key];
+                    hasVM = true;
+                }
+                else if(key.indexOf("Watch_", 2) === 2)
+                {
+                    VMOptions.watch[key.substring(8)] = cls[key];
+                    hasVM = true;
+                }
+                else if(key.indexOf("Filter_", 2) === 2)
+                {
+                    VMOptions.filters[key.substring(9)] = cls[key];
+                    hasVM = true;
+                }
             }
-            else if(key.indexOf("Watch_", 2) === 2)
+
+            hasVM = hasVM || this.VMOptions;
+
+            var ret = extend.apply(this, arguments);
+
+            if(hasVM)
             {
-                VMOptions.watch[key.substring(8)] = cls[key];
-                hasVM = true;
+                ret.VMOptions = VMOptions;
             }
+
+            return ret;
         }
-
-        hasVM = hasVM || this.VMOptions;
-
-        var ret = extend.apply(this, arguments);
-
-        if(hasVM)
-        {
-            ret.VMOptions = VMOptions;
-        }
-
-        return ret;
     }
 
     return View;

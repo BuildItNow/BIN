@@ -30,7 +30,7 @@ function(Base, iscroll)
 		this._elemScroller.append(this.$scrollerContent);
 		this.$().append(this._elemScroller);
 
-		this._lazyLoadEnable = this.$().hasClass("bin-lazyload-container"); 
+		this._lazyLoadEnable = this.$content().hasClass("bin-lazyload-container"); 
 	}
 
 	Class.posGenHTML = function()

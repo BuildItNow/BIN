@@ -92,13 +92,6 @@ define([
 
 			bin.naviController = this._naviController;
 			bin.hudManager  = this._hudManager;
-			
-			if(cordova)
-			{
-				this._nativeManager = new bin.core.NativeManager();
-				this._nativeManager.init();
-				bin.nativeManager = this._nativeManager;
-			}
 
 			var self = this;
 			document.addEventListener("backbutton", function(){self.onDeviceBack()}, false);
@@ -108,6 +101,11 @@ define([
 			document.addEventListener("resume", function(){self.onResume()}, false);
 			document.addEventListener("hidekeyboard", function(){self.onHideKeyboard()}, false);
 			document.addEventListener("showkeyboard", function(){self.onShowKeyboard()}, false);
+		
+			if(this.appBootBg && !this.appBootBg.time)
+			{
+				this.appBootBg.time = bin.globalConfig.appBootBgTime;
+			}
 		}
 
 		Class.fixWindow = function()

@@ -39,7 +39,7 @@ define(
 				}
 				else if(reqMethod && !apiDebugConfig.options.method)
 				{
-					console.WARNING("API ["+api+"] method not configed in debugNetConfig");
+					console.warn("API ["+api+"] method not configed in debugNetConfig");
 				}
 				else
 				{

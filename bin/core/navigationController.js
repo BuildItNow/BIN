@@ -1,6 +1,6 @@
 define(
-	["bin/core/navigationController-ioEffecters"],
-function(effecters)
+	["bin/core/navigationController-ioEffecters", "vue"],
+function(effecters, Vue)
 {
 	var toLeftSlash = function(path)
 	{
@@ -145,6 +145,78 @@ function(effecters)
 			this._defaultIOEffecter = effecters["rightIO"];
 		}
 
+		if(Vue)
+		{
+			// Add directive to Vue
+			var NUMBER_REG = /^[0-9]*$/;
+			Vue.directive("navigation", 
+			{
+				priority:700,
+				bind:function()
+				{
+					var dirc = this;
+					var arg  = this.arg;
+					var data = undefined;
+					var func = undefined;
+					var hand = undefined;
+					var view = undefined;
+					var effe = undefined;
+					if(arg === "push")
+					{
+						view = this.expression;
+						data = this.el.getAttribute("pushData");
+						effe = this.el.getAttribute("ioEffect");
+						func = "push";
+					}
+					else if(arg === "pop")
+					{
+						view = this.expression;
+						func = "pop";
+						if(view)
+						{
+							if(NUMBER_REG.test(view))
+							{
+								view = parseInt(view);
+							}
+							else
+							{
+								func = "popTo";
+							}
+						}
+						data = this.el.getAttribute("popData");
+					}
+					else if(arg === "start")
+					{
+						view = this.expression;
+						data = this.el.getAttribute("pushData");
+						func = "startWith";
+						effe = this.el.getAttribute("ioEffect");
+					}
+
+					if(view && typeof view === "string")
+					{
+						view = Vue.b_makeValueFunction(view);
+					}
+					
+					if(data)
+					{
+						data = Vue.b_makeValueFunction(data);
+					}
+
+					this.handler = function()
+					{
+						self[func](view && typeof view === "function" ? view(dirc.vm._b_view, dirc.vm, dirc.el) : view, data && typeof data === "function" ? data(dirc.vm._b_view, dirc.vm, dirc.el) : data, {effect:effe});
+					}
+
+					this.el.addEventListener("click", this.handler);
+				},
+				unbind:function()
+				{
+					this.el.removeEventListener("click", this.handler);
+				},
+			});
+		}
+
 		console.info("NavigationController module initialize");
 	}
 
@@ -171,13 +243,26 @@ function(effecters)
 		return false;
 	}
 
+	cls.extendIOEffects = function(effects)
+	{
+		for(var k in effects)
+		{
+			effecters[k] = effects[k];
+		}
+
+		if(typeof bin.globalConfig.pageIOAnim === "string" && effecters[bin.globalConfig.pageIOAnim])
+		{
+			this._defaultIOEffecter = effecters[bin.globalConfig.pageIOAnim];
+		}
+	}
+
 	// NB. Can't call pop many times once, Because Backbone route only once.  
 	cls.pop = function(count, popData, options)
 	{
 		var now = _.now();
 		if(now - this._popTime < 500)	// Too fast, reject
 		{
-			console.warning("pop too fast");
+			console.warn("pop too fast");
 			
 			return false;
 		}
@@ -216,7 +301,7 @@ function(effecters)
 		var now = _.now();
 		if(now - this._pushTime < 500)	// Too fast, reject
 		{
-			console.warning("push too fast");
+			console.warn("push too fast");
 			
 			return false;
 		}

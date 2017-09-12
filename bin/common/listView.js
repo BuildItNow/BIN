@@ -33,7 +33,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		},
 		createItemView:function(listView, i, data)
 		{
-			return this._generator(i, data);
+			return this._generator(listView, i, data);
 		}
 	});
 
@@ -50,6 +50,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		
 		this._refreshFooter = options.footerClass ? options.footerClass.create() : RefreshFooterView.create();
 		this._dataProvider  = options.dataProvider;
+		this._autoLoadMore  = !bin.isUndefined(options.autoLoadMore) ? options.autoLoadMore : true;
 
 		var t = typeof(options.itemProvider);
 		if(t === "string") // template
@@ -70,8 +71,38 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 		{
 			self._loadMore();
 		};
+
+		this._defaultDelegateHandler = function(event, i, listView)
+		{
+			var itemView = listView.getItem(i);
+
+			if(event.type === "click" && itemView.onClick)
+			{
+				return itemView.onClick(event, i, listView);
+			}
+
+			if(itemView.onEvent)
+			{
+				return itemView.onEvent(event, i, listView);
+			}
+		}
 	 
 		Base.prototype.constructor.call(this, options);
+	}
+
+	Class.genHTML = function()
+	{
+		Base.prototype.genHTML.call(this);
+		if(this._autoLoadMore)
+		{
+			if(!this.$().hasClass("bin-lazyload-container"))
+			{
+				this.$().addClass("bin-lazyload-container");
+			}
+
+			this._refreshFooter.$().addClass("bin-lazyload");
+			this._refreshFooter.$().attr("data-bin-type", "autoLoadMore");
+		}
 	}
 
 	Class.posGenHTML = function()
@@ -104,6 +135,53 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 	Class.getItem = function(i)
 	{
 		return this._items[i];
+	}
+
+	Class.getData = function(i)
+	{
+		return this._dataProvider.data(i);
+	}
+
+	Class.delegateItemEvent = function(event, selector, handler)
+	{
+		if(typeof selector === "function")
+		{
+			handler  = selector;
+			selector = undefined;
+		}
+
+		if(!selector)
+		{
+			selector = ".bin-list-view-item";
+		}
+		else
+		{
+			selector = ".bin-list-view-item "+selector;
+		}
+
+		if(!handler)
+		{
+			handler = this._defaultDelegateHandler;
+		}
+
+		var self = this;
+		this.$().on(event, selector, function(event)
+		{
+			var el = event.currentTarget;
+			var i  = -1;
+
+			while(el && !(el.__liIndex >= 0))
+			{
+				el = el.parentNode;
+			}
+
+			i = el && el.__liIndex;
+			
+			if(i >= 0)
+			{
+				return handler(event, i, self);
+			}
+		});
 	}
 
 	Class._reload = function()
@@ -146,7 +224,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 			var v = null;
 			for(var i=beg;i<end; ++i)
 			{
-				v = this._itemProvider.createItemView(this, i, this._dataProvider.data(i));
+				v = this._createItemView(i);
 				this._items.push(v);
 
 				f.append(v.$());
@@ -197,7 +275,7 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 			var v = null;
 			for(var i=beg;i<end; ++i)
 			{
-				v = this._itemProvider.createItemView(this, i, this._dataProvider.data(i));
+				v = this._createItemView(i);
 				this._items.push(v);
 
 				f.append(v.$());
@@ -225,6 +303,17 @@ function(Base, RefreshFooterView, util, ItemProvider, DataProvider, View)
 	Class._unhookFooterClick = function()
 	{
 		this._refreshFooter.$().off("click");
+	}
+
+	Class._createItemView = function(i)
+	{
+		var v = this._itemProvider.createItemView(this, i, this._dataProvider.data(i));
+		
+		// Add for event delegation
+		v.$().addClass("bin-list-view-item");
+		v.$()[0].__liIndex = i;
+
+		return v;	
 	}
 
 	return Base.extend(Class, {DataProvider:DataProvider, ItemProvider:ItemProvider, TemplateItemProvider:TemplateItemProvider});

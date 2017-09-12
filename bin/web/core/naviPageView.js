@@ -5,9 +5,10 @@ define(
         ],
         function (defaultNavigationTemplate, View)
         {
+            var DEFAULT_NAVIBACK_IMAGE = bin.globalConfig.navibackImage || "bin/res/img/bpf_hash_back.png";
+
             var Base = View;
             
-
             var Class =
             {
                 elemNaviProto:$(defaultNavigationTemplate),
@@ -40,6 +41,11 @@ define(
                 elem.removeClass("bin-page-navi-text");
                 elem.addClass('bin-page-navi-image');
 
+                if(img && !img.startsWith("url("))
+                {
+                    img = "url('"+img+"')";
+                }
+
                 elem.text("");
                 elem.css("background-image", img);
             }
@@ -68,6 +74,11 @@ define(
                 
                 elem.removeClass("bin-page-navi-text");
                 elem.addClass("bin-page-navi-image");
+
+                if(img && !img.startsWith("url("))
+                {
+                    img = "url('"+img+"')";
+                }
 
                 elem.text("");
                 elem.css("background-image", img);
@@ -142,7 +153,10 @@ define(
                 return ret;
             }
 
-        
+            Class.$content = function()
+            {
+                return this.$(".bin-page-content");
+            }
 
             Class._setupNavigationBar = function()
             {
@@ -202,6 +216,10 @@ define(
                             this.setLeftVisible(false);
                         }
                     }
+                    else
+                    {
+                        this.setLeftImage(DEFAULT_NAVIBACK_IMAGE);
+                    }
 
                     if(rightConfig)
                     {
@@ -219,6 +237,11 @@ define(
                             this.setRightVisible(false);
                         }
                     }
+                    else
+                    {
+                        this.setRightVisible(false);
+                    }
+
                     navContainer.setup();
                 }
                 else

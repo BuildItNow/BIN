@@ -1,4 +1,4 @@
-define(["bin/core/util"], function(util)
+define(["bin/core/util", (bin.runtimeConfig.useNetLocal ? "bin/core/netPolicy/netDebugPolicy" : "")], function(util, NetDebugPolicy)
 {
 	var DEFAULT_NET_OPTIONS = {loading:"MODEL", silent:false};
 	var Net  = function()
@@ -10,24 +10,25 @@ define(["bin/core/util"], function(util)
 
 	Class.init = function()
 	{
-		var self = this;
-		if(bin.runtimeConfig.useNetLocal)
+		if(NetDebugPolicy)
 		{
-			require(["bin/core/netPolicy/netDebugPolicy"], function(NetDebugPolicy)
-			{
-				self._debugPolicy = new NetDebugPolicy(self);
-				self._debugPolicy.init();
-			});
+			this._debugPolicy = new NetDebugPolicy(this);
+			this._debugPolicy.init();
 		}
 		
 		this._callbackPolicy = new Net.CallbackPolicy(this);
 		this._callbackPolicy.init();
 
-		this._cachePolicy = new Net.CachePolicy(this);
-		this._cachePolicy.init();
-
 		this._sendCheckPolicy = new Net.SendCheckPolicy(this);
 		this._sendCheckPolicy.init();
+
+		this._fixRuntimeServer();
+
+		var self = this;
+		bin.app.on("RUNTIME_CONFIG_CHANGED", function()
+		{
+			self._fixRuntimeServer();
+		});
 
 		console.info("Net module initialize");
 	}
@@ -40,11 +41,6 @@ define(["bin/core/util"], function(util)
 	Class.setCallbackPolicy = function(policy)
 	{
 		this._callbackPolicy = policy;
-	}
-
-	Class.setCachePolicy = function(policy)
-	{
-		this._cachePolicy = policy;
 	}
 
 	Class.setSendCheckPolicy = function(policy)
@@ -90,6 +86,13 @@ define(["bin/core/util"], function(util)
 		var netParams = this._genNetParams(params);
 		if(!netParams)
 		{
+			if(params.error)
+			{
+				setTimeout(function()
+				{
+					params.error({status:0, statusText:"invalid"}, "invalid:_genNetParams", params);
+				}, 0);
+			}
 			return ;
 		}
 
@@ -153,31 +156,6 @@ define(["bin/core/util"], function(util)
 			}
 		}
 
-		// Try cache policy
-		{
-			var checkResult = this._cachePolicy.check(netParams);
-			if(checkResult)
-			{
-				netParams.userdatas.from = "CACHE";
-
-				this._beforeSend(null, netParams);
-
-				this._cachePolicy.getData(checkResult, netParams, function(data)
-				{
-					self._success(data, "success", null, netParams);
-					self._complete(null, "success", netParams);
-				},
-				function(error)
-				{
-					self._error(error, "error", netParams);
-					self._complete(null, "error", netParams);
-				});
-
-				return ;
-			}
-
-		}
-
 		netParams.userdatas.from = "NET";
 		netParams.userdatas.request = this.ajax(netParams);
 	}
@@ -185,6 +163,34 @@ define(["bin/core/util"], function(util)
 	Class.ajax = function(netParams)
 	{
 		return $.ajax(netParams);
+	}
+
+	Class._fixRuntimeServer = function()
+	{
+		var server = bin.runtimeConfig.server || "$HOST/";
+
+		var host = window.location.protocol+"//"+window.location.host;
+		var path = window.location.pathname;
+		if(path)
+		{
+			path = path.substring(0, path.lastIndexOf("/"));
+		}
+
+		path = path || "/";
+
+		var newServer = server.replace(/\$HOST_PATH/g, host+path);
+		if(newServer.length === server.length)
+		{
+			newServer = newServer.replace(/\$HOST/g, host);
+			newServer = newServer.replace(/\$PATH/g, path);
+		}
+
+		if(newServer.length > 0 && newServer.charAt(newServer.length-1) !== "/")
+		{
+			newServer += "/" ;
+		}
+
+		bin.runtimeConfig.server = newServer;
 	}
 
 	Class._genUrlKey = function(url, data)
@@ -210,6 +216,11 @@ define(["bin/core/util"], function(util)
 		if(!params.url && !params.api)
 		{
 			return null;
+		}
+
+		if(params.userdatas)	// It's generated, just return self
+		{
+			return params;
 		}
 
 		params.userdatas = {};
@@ -273,11 +284,6 @@ define(["bin/core/util"], function(util)
 					data = JSON.parse(data);
 				}
 			}
-		}
-
-		if(netParams.userdatas.from === "NET")
-		{
-			this._cachePolicy.setData(netParams, data);
 		}
 
 		return this._callbackPolicy.success(data, textStatus, xhr, netParams);

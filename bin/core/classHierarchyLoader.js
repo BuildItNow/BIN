@@ -1,9 +1,7 @@
 define([], function()
 {
-	var hierarchyDone = false;
-
 	var load = null;
-
+	
 	var genLoadTask = function(name, config, cb)
 	{
 		return function()
@@ -80,11 +78,16 @@ define([], function()
 		}
 	}
 
+	var ClassHierarchyLoader = function(config, holder)
+	{
+		this._config = config;
+		this._holder = holder || bin;
+		this._hierarchyDone = false;
+		this._cbs = [];
+	}
+
 	
-
-	var Class = {};
-
-	Class._cbs = [];
+	var Class = ClassHierarchyLoader.prototype;
 
 	Class.load = function(cb)
 	{
@@ -92,7 +95,7 @@ define([], function()
 
 		var onDone = function()
 		{
-			hierarchyDone = true;
+			self._hierarchyDone = true;
 			var cbs = self._cbs;
 			self._cbs = [];
 
@@ -110,17 +113,24 @@ define([], function()
 			this._cbs.push(cb);
 		}
 
-		load(bin.classConfig, function(ret)
+		if(this._config)
 		{
-			_.extend(bin, ret);
+			load(this._config, function(ret)
+			{
+				_.extend(self._holder, ret);
 
+				onDone();
+			});
+		}
+		else
+		{
 			onDone();
-		});
+		}
 	}
 
 	Class.onLoad = function(cb)
 	{
-		if(hierarchyDone)
+		if(this._hierarchyDone)
 		{
 			setTimeout(cb, 0);
 		}
@@ -130,5 +140,5 @@ define([], function()
 		}
 	}
 
-	return Class;
+	return ClassHierarchyLoader;
 });

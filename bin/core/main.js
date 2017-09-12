@@ -1,11 +1,12 @@
 define(["bin/core/classHierarchyLoader"], 
 function(CHLoader)
 {
-	CHLoader.load();
+	var loader = new CHLoader(bin.classConfig);
+	loader.load();
 	
 	var main = function()
 	{	
-		CHLoader.onLoad(function()
+		loader.onLoad(function()
 		{
 			var app = new bin.core.Application({});
 			app.init();

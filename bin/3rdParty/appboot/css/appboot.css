@@ -1,0 +1,398 @@
+.app-boot
+{
+    overflow: hidden;
+}
+
+#appBootBg, .loading-bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100000;
+}
+
+#appBootBg .loading-bar, .loading-bg .loading-bar {
+    width: 130px;
+    height: 2px;
+    margin: 0 auto;
+    border-radius: 2px;
+    background-color: #cfcfcf;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    -webkit-transform: rotateY(0);
+    transform: rotateY(0);
+    transition: -webkit-transform .3s ease-in;
+    transition: transform .3s ease-in;
+    transition: transform .3s ease-in, -webkit-transform .3s ease-in
+}
+
+#appBootBg .loading-bar .blue-bar, .loading-bg .loading-bar .blue-bar {
+    height: 100%;
+    width: 68px;
+    position: absolute;
+    -webkit-transform: translate(-34px, 0);
+    transform: translate(-34px, 0);
+    background-color: #0073b1;
+    border-radius: 2px;
+    -webkit-animation: initial-loading 1.5s infinite ease;
+    animation: initial-loading 1.5s infinite ease
+}
+
+#appBootBg .loading-spinner, .loading-bg .loading-spinner
+{
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+}
+
+#appBootBg .spinner-icon, .loading-bg .spinner-icon
+{
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border: 2px solid transparent;
+    border-top-color: #0073b1;
+    border-left-color: #0073b1;
+    border-radius: 50%;
+    -webkit-animation: rotating .4s linear infinite;
+    animation: rotating .4s linear infinite;
+}
+
+#appBootBg .loading-spinner .spinner-icon, .loading-bg .loading-spinner .spinner-icon
+{
+    width: 100%;
+    height: 100%;
+}
+
+#appBootBg .l1-core-rail, #appBootBg .l1-left-rail, #appBootBg .l1-right-rail,
+#appBootBg .l2-core-rail, #appBootBg .l2-right-rail, .loading-bg .l1-core-rail,
+.loading-bg .l1-left-rail, .loading-bg .l1-right-rail, .loading-bg .l2-core-rail,
+.loading-bg .l2-right-rail {
+    float: left;
+    vertical-align: top
+}
+
+#appBootBg .module, .loading-bg .module {
+    background: #FFF
+}
+
+#appBootBg .circle, #appBootBg .line, #appBootBg .rect, .loading-bg .circle,
+.loading-bg .line, .loading-bg .rect 
+{
+    background: #E1E9EE;
+}
+
+#appBootBg .animation-pulse
+{
+    -webkit-animation: pulse .65s infinite alternate;
+    animation: pulse .65s infinite alternate
+}
+
+#appBootBg .line, .loading-bg .line {
+    height: 10px;
+    margin: 10px 0
+}
+
+#appBootBg .line-wrapper, .loading-bg .line-wrapper {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px
+}
+
+#appBootBg .circle, .loading-bg .circle {
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    width: 56px;
+    height: 56px
+}
+
+#appBootBg .rect, .loading-bg .rect {
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    width: 48px;
+    height: 48px
+}
+
+#appBootBg .line.white, #appBootBg .rect.white, .loading-bg .line.white,
+.loading-bg .rect.white {
+    background: #FFF !important;
+}
+
+#appBootBg .width-auto, .loading-bg .width-auto {
+    width: auto !important;
+}
+
+#appBootBg .width60, .loading-bg .width60 {
+    width: 60px !important;
+}
+
+#appBootBg .width90, .loading-bg .width90 {
+    width: 90px !important;
+}
+
+#appBootBg .width110, .loading-bg .width110 {
+    width: 110px !important;
+}
+
+#appBootBg .width120, .loading-bg .width120 {
+    width: 120px !important;
+}
+
+#appBootBg .width160, .loading-bg .width160 {
+    width: 160px !important;
+}
+
+#appBootBg .width190, .loading-bg .width190 {
+    width: 190px !important;
+}
+
+#appBootBg .width220, .loading-bg .width220 {
+    width: 220px !important;
+}
+
+#appBootBg .width250, .loading-bg .width250 {
+    width: 250px !important;
+}
+
+#appBootBg .width270, .loading-bg .width270 {
+    width: 270px !important;
+}
+
+#appBootBg .width300, .loading-bg .width300 {
+    width: 300px !important;
+}
+
+#appBootBg .width340, .loading-bg .width340 {
+    width: 340px !important;
+}
+
+#appBootBg .width470, .loading-bg .width470 {
+    width: 470px !important;
+}
+
+#appBootBg .width500, .loading-bg .width500 {
+    width: 500px !important;
+}
+
+#appBootBg .heigth-auto, .loading-bg .height-auto {
+    height: auto !important;
+}
+
+#appBootBg .height1, .loading-bg .height1 {
+    height: 1px !important;
+}
+
+#appBootBg .height10, .loading-bg .height10 {
+    height: 10px !important;
+}
+
+#appBootBg .height15, .loading-bg .height15 {
+    height: 15px !important;
+}
+
+#appBootBg .height20, .loading-bg .height20 {
+    height: 20px !important;
+}
+
+#appBootBg .height32, .loading-bg .height32 {
+    height: 32px !important;
+}
+
+#appBootBg .height40, .loading-bg .height40 {
+    height: 40px !important;
+}
+
+#appBootBg .height49, .loading-bg .height49 {
+    height: 49px !important;
+}
+
+#appBootBg .height50, .loading-bg .height50 {
+    height: 50px !important;
+}
+
+#appBootBg .height100, .loading-bg .height100 {
+    height: 100px !important;
+}
+
+#appBootBg .height250, .loading-bg .height250 {
+    height: 250px !important;
+}
+
+#appBootBg .height300, .loading-bg .height300 {
+    height: 300px !important;
+}
+
+#appBootBg .height610, .loading-bg .height610 {
+    height: 610px !important;
+}
+
+#appBootBg .padding-12-20, .loading-bg .padding-12-20 {
+    padding: 12px 20px !important;
+}
+
+#appBootBg .padding-20, .loading-bg .padding-20 {
+    padding: 20px !important;
+}
+
+#appBootBg .delay140, #appBootBg .delay200, #appBootBg .delay260,
+#appBootBg .delay320, #appBootBg .delay380, .loading-bg .delay140,
+.loading-bg .delay200, .loading-bg .delay260, .loading-bg .delay320,
+.loading-bg .delay380 {
+    opacity: 0;
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+    -webkit-animation: fade-slide-in 334ms cubic-bezier(0, 0, .2, 1) forwards;
+    animation: fade-slide-in 334ms cubic-bezier(0, 0, .2, 1) forwards
+}
+
+#appBootBg .delay140, .loading-bg .delay140 {
+    -webkit-animation-delay: 140ms !important;
+    animation-delay: 140ms !important;
+}
+
+#appBootBg .delay200, .loading-bg .delay200 {
+    -webkit-animation-delay: .2s !important;
+    animation-delay: .2s !important;
+}
+
+#appBootBg .delay260, .loading-bg .delay260 {
+    -webkit-animation-delay: !important;
+    animation-delay: 260ms !important;
+}
+
+#appBootBg .delay320, .loading-bg .delay320 {
+    -webkit-animation-delay: 320ms !important;
+    animation-delay: 320ms !important;
+}
+
+#appBootBg .delay380, .loading-bg .delay380 {
+    -webkit-animation-delay: 380ms !important;
+    animation-delay: 380ms !important;
+}
+
+
+@-webkit-keyframes pulse {
+    0% {
+        opacity: .5
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: .5
+    }
+
+    100% {
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@-webkit-keyframes fade-slide-in {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@keyframes fade-slide-in {
+    from {
+        opacity: 0;
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px)
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+        transform: translateY(0)
+    }
+}
+
+@-webkit-keyframes initial-loading {
+    0%, 100% {
+        -webkit-transform: translate(-34px, 0);
+        transform: translate(-34px, 0)
+    }
+
+    50% {
+        -webkit-transform: translate(96px, 0);
+        transform: translate(96px, 0)
+    }
+}
+
+@keyframes initial-loading {
+    0%, 100% {
+        -webkit-transform: translate(-34px, 0);
+        transform: translate(-34px, 0)
+    }
+
+    50% {
+        -webkit-transform: translate(96px, 0);
+        transform: translate(96px, 0)
+    }
+}
+
+@-webkit-keyframes rotating {
+    0% {
+        -webkit-transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn)
+    }
+}
+
+@keyframes rotating {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+
+    to {
+        -webkit-transform: rotate(1turn);
+        transform: rotate(1turn)
+    }
+}

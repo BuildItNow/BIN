@@ -117,10 +117,17 @@ define(['require', 'bin/3rdParty/require-css/normalize'], function(req, normaliz
     //store config
     config = config || _config;
 
+
+
     if (!siteRoot) {
-      siteRoot = path.resolve(config.dir || path.dirname(config.out), config.siteRoot || '.') + '/';
+      siteRoot = process.cwd();//req.toUrl("./");// path.resolve(config.dir || path.dirname(config.out), config.siteRoot || '.') + '/';
       if (isWindows)
         siteRoot = siteRoot.replace(/\\/g, '/');
+      if(!siteRoot.endsWith("/"))
+      {
+          siteRoot += "/";
+      }
+
     }
 
     //external URLS don't get added (just like JS requires)
@@ -179,15 +186,15 @@ define(['require', 'bin/3rdParty/require-css/normalize'], function(req, normaliz
       var style = cssBuffer[moduleName];
 
       if (config.writeCSSModule && style) {
- 	    if (writeCSSForLayer) {
-    	  writeCSSForLayer = false;
+      if (writeCSSForLayer) {
+        writeCSSForLayer = false;
           write(writeCSSDefinition);
         }
 
         cssModule = 'define(["@writecss"], function(writeCss){\n writeCss("'+ escape(compress(style)) +'");\n})';
       }
       else {
-		cssModule = 'define(function(){})';
+    cssModule = 'define(function(){})';
       }
 
       write.asModule(pluginName + '!' + moduleName, cssModule);

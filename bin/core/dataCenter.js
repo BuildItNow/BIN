@@ -94,7 +94,6 @@ function()
 
 	Class.init = function()
 	{
-		this._globalSession = {};	
 	}
 
 	Class.onUserLogin = function(identify)
@@ -169,13 +168,13 @@ function()
 
 	Class.setGlobalSessionValue = function(key, value)
 	{
-		this._globalSession[key] = value;
+        ssUtil.save(bin.globalConfig.appID+"s-"+key, value);
 	}
 
 	Class.getGlobalSessionValue = function(key, def)
 	{
-		var ret = this._globalSession[key];
-		return ret === null || ret === undefined ? def : ret;
+        var ret = ssUtil.load(bin.globalConfig.appID+"s-"+key);
+        return ret === null || ret === undefined ? def : ret;
 	}
 	
 	_.extend(Class, Backbone.Events);

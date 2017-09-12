@@ -30,14 +30,16 @@ define([], function ()
         el.innerHTML = html;
         if(el.childElementCount != 1)
         {
-            fail();
+            var error = requirejs.makeError("binerror_multiplerootnode", "view只能拥有一个根节点,而["+name+".html]中却包含多个根节点", null, name);
+            fail(error);
+
             return ;
         }
         el = el.firstElementChild;
 
         // Spawn a new class, avoid change the source class create method
         ViewClass = ViewClass.extend({});
-            
+
         var oldCreate = ViewClass.create;
         ViewClass.create = function(options)
         {
@@ -51,12 +53,20 @@ define([], function ()
             return oldCreate ? oldCreate.call(this, options) : new this(options);
         }
 
-        var cssName = el.getAttribute('data-css') || ViewClass.style;
-        if(cssName === '$')
+        if(bin.resolveViewInjectDependencies)
         {
-            cssName = name+".css";
+            var oldSuccess = success;
+            success = function(ViewClass)
+            {
+                bin.viewInjectGlobalDeps["view!"+name] = ViewClass;
+                bin.resolveViewInjectDependencies(el, function()
+                {
+                    oldSuccess(ViewClass);
+                });
+            }
         }
-       
+
+        var cssName = ViewClass.style;
         if(!cssName)
         {
             success(ViewClass);
@@ -75,20 +85,20 @@ define([], function ()
         require([name], function(ViewClass)
         {
             // Native
-            if(ViewClass.native)
-            {
-                loadFromNative(ViewClass, require, name, success, fail);
-
-                return ;
-            }
-
-            // Class html
-            // if(ViewClass.html)
+            // if(ViewClass.native)
             // {
-            //     loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
+            //     loadFromNative(ViewClass, require, name, success, fail);
 
             //     return ;
             // }
+
+            // Class html
+            if(ViewClass.html)
+            {
+                loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
+
+                return ;
+            }
 
             // From view html
             var view = ViewClass.view || name+".html";
@@ -127,6 +137,10 @@ define([], function ()
                     onLoad.error(err);
                 }
             );
+        },
+        resolveViewInjectionDependencies:function(el, cb)
+        {
+            return loadViewDependencies(el, cb);
         }
     }
 

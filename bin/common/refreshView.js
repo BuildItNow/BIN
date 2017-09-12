@@ -44,12 +44,12 @@ function(Base, iscroll, RefreshHeaderView)
 
 		this._elemScroller.append(this.$scrollerContent);
 		this.$().append(this._elemScroller);
-
-		this._lazyLoadEnable = this.$().hasClass("bin-lazyload-container"); 
 	}
 
 	Class.posGenHTML = function()
 	{
+		this._lazyLoadEnable = this.$content().hasClass("bin-lazyload-container"); 
+
 		this.scroller = new IScroll(this.el, {alwaysScrollY:true, probeType:this._lazyLoadEnable ? 3 : 2, bounce:true, bounceTime:200, useTransition:false, mouseWheel:false});
 		
 		var self = this;
