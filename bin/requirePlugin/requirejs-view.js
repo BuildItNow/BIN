@@ -85,20 +85,20 @@ define([], function ()
         require([name], function(ViewClass)
         {
             // Native
-            if(ViewClass.native)
-            {
-                loadFromNative(ViewClass, require, name, success, fail);
-
-                return ;
-            }
-
-            // Class html
-            // if(ViewClass.html)
+            // if(ViewClass.native)
             // {
-            //     loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
+            //     loadFromNative(ViewClass, require, name, success, fail);
 
             //     return ;
             // }
+
+            // Class html
+            if(ViewClass.html)
+            {
+                loadFromHtml(ViewClass, ViewClass.html, require, name, success, fail);
+
+                return ;
+            }
 
             // From view html
             var view = ViewClass.view || name+".html";

@@ -24,24 +24,7 @@
             <div id="HUDContainer" class="bin-HUD-container">
             </div>
         </div>
-        <script>
-            if(typeof __windowLoading === "boolean")
-            {
-                (function()
-                {
-                    var cw = document.documentElement.clientWidth;
-                    var r  = cw/320*20;
-                    var w  = 1.5*r;
-                    var h  = w;
-                    var mt = -0.75*r;
-                    var ml = mt;
-                    var style = "width:"+w+"px;height:"+h+"px;margin-top:"+mt+"px;margin-left:"+ml+"px;";
-                    document.write('<div id="windowLoading" class="bin-window-loading bin-loading-dark-image bin-loading-active" style="'+style+'"></div>'); 
-                })();
-            }           
-        </script> 
         <script type="text/javascript" src="./bin/3rdParty/requirejs/bpf_hash_require.js" data-main="./bin/bpf_hash_requireMain.js"></script>
-
         <!-- comment cordova for web app(not hybrid)-->
         <script type="text/javascript" src="./cordova.js"></script>  
     </body>

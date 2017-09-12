@@ -1,4 +1,4 @@
-define(["bin/core/util"], function(util)
+define(["bin/core/util", (bin.runtimeConfig.useNetLocal ? "bin/core/netPolicy/netDebugPolicy" : "")], function(util, NetDebugPolicy)
 {
 	var DEFAULT_NET_OPTIONS = {loading:"MODEL", silent:false};
 	var Net  = function()
@@ -10,14 +10,10 @@ define(["bin/core/util"], function(util)
 
 	Class.init = function()
 	{
-		var self = this;
-		if(bin.runtimeConfig.useNetLocal)
+		if(NetDebugPolicy)
 		{
-			require(["bin/core/netPolicy/netDebugPolicy"], function(NetDebugPolicy)
-			{
-				self._debugPolicy = new NetDebugPolicy(self);
-				self._debugPolicy.init();
-			});
+			this._debugPolicy = new NetDebugPolicy(this);
+			this._debugPolicy.init();
 		}
 		
 		this._callbackPolicy = new Net.CallbackPolicy(this);

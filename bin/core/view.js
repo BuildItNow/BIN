@@ -624,6 +624,10 @@ function(util, Vue)
                     }
                 }
             }
+            else if(this.hasOwnProperty("vmData"))
+            {
+                VMOptions = {};
+            }
             else if(this.$()[0].getAttribute("vm") !== null)
             {
                 VMOptions = {};
