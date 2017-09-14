@@ -471,6 +471,8 @@ function(util, Vue)
         bin.resolveViewInjectDependencies = resolveViewInjectDependencies;
     }
 
+    bin.globalViews = {};
+
     var Base = Backbone.View;
     var View = undefined;
 
@@ -484,6 +486,17 @@ function(util, Vue)
 
         this._show  = null;
         this._elemParent = options.elemParent;
+
+        if(options.globalView)
+        {
+            if(bin.globalViews[options.globalView])
+            {
+                console.warn("全局页面名称冲突["+options.globalView+"]");
+            }
+
+            bin.globalViews[options.globalView] = this;
+            this.__globalView = options.globalView;
+        }
 
         // Pick up the member variables in options
         if(options.mvs)
@@ -588,6 +601,12 @@ function(util, Vue)
                 for(var key in methods)
                 {
                     methods[key] = methodWrapper(self, methods[key]);
+                }
+
+                var filters = VMOptions.filters;
+                for(var key in filters)
+                {
+                    filters[key] = methodWrapper(self, filters[key]);
                 }
 
                 var computed = VMOptions.computed;
@@ -732,6 +751,12 @@ function(util, Vue)
         if(this.vm)
         {
             this.vm.b_release();
+        }
+
+        if(this.__globalView)
+        {
+            bin.globalViews[this.__globalView] = null;
+            delete bin.globalViews[this.__globalView];
         }
 
         this.onRemove();
