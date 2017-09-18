@@ -59,9 +59,7 @@ define(
 			NetManager:
 			{
 				_path:"bin/core/netManager",
-				CachePolicy:"bin/core/netPolicy/netCachePolicy",
 				CallbackPolicy:"bin/core/netPolicy/netCallbackPolicy",
-				DebugPolicy:"bin/core/netPolicy/netDebugPolicy",
 				SendCheckPolicy:"bin/core/netPolicy/netSendCheckPolicy",	
 			},
 			DataCenter:"bin/core/dataCenter",

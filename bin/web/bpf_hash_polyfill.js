@@ -39,6 +39,21 @@
             });
         }
 
+        if(pro.nextElementSibling == null)
+        {
+            Object.defineProperty(pro, 'nextElementSibling', {
+                get: function() {
+                    var el = this;
+                    while (el = el.nextSibling) {
+                      if (el.nodeType === 1) {
+                          return el;
+                      }
+                    }
+                    return null;
+                }
+            });
+        }
+
         if(pro.childElementCount == null)
         {
             Object.defineProperty(pro, 'childElementCount', {
@@ -138,14 +153,14 @@
 		deps.push("bin/3rdParty/promise/promise");
 	}
 
-    if(bin.platform.ie < 9 || pageConfig.es5shim)
+    if(bin.platform.ie < 9 || pageConfig.es5sham)
     {
         deps.push("es5shim");
-    }
-
-    if(pageConfig.es5sham)
-    {
         deps.push("es5sham");
+    }
+    else if(pageConfig.es5shim)
+    {
+        deps.push("es5shim");
     }
 
 	define(deps, function()
