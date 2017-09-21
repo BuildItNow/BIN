@@ -339,10 +339,18 @@ function(util, Vue)
             var template = null;
             if(this.b_local)
             {
-                template = this.vm._b_view.$("#"+id).html();
+                template = this.vm._b_view.$("#"+id)[0];
                 if(!template)
                 {
                     console.error("页面本地partial查找失败["+id+"]");
+                }
+                else if(template.tagName === "TEXTAREA")
+                {
+                    template = template.innerText;
+                }
+                else
+                {
+                    template = template.innerHTML;
                 }
             }
             else

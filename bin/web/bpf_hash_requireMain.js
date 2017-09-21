@@ -183,12 +183,12 @@ require.config({
 	waitSeconds: 5,
 	shim: 
 	{
-		plupload:"moxie",
+		plupload:["moxie"],
 		adminlte:["jquery", "bootstrap"],
 		icheck:["jquery"],
 		jquery_datatable:["jquery"],
 		datatable:["jquery_datatable", "bootstrap"],
-		es5sham:"es5shim"
+		es5sham:["es5shim"]
 	}
 });
 
@@ -289,6 +289,11 @@ require(["config/bpf_hash_globalConfig", "bin/web/bpf_hash_polyfill"], function(
 		}
 		else if(bin.isString(pageConfig.vue))
 		{
+			if(pageConfig.vue === "ie8")
+			{
+				pageConfig.vue = "bin/3rdParty/vue/vue-ie8";
+			}
+            
 			config.paths["vue"] = pageConfig.vue;
 		}
 

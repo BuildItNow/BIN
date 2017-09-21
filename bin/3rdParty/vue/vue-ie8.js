@@ -1465,7 +1465,7 @@ var transition = Object.freeze({
    */
 
   function isTemplate(el) {
-    return el.tagName && el.tagName.toLowerCase() === 'template';
+    return el.nodeType === 1 && el.getAttribute("template") !== null;
   }
 
   /**
@@ -2152,6 +2152,11 @@ var transition = Object.freeze({
 
   function Observer(value) {
     this.value = value;
+    value.__$val = function()
+    {
+      return reactToValue(this);
+    }
+
     this.dep = new Dep();
     def(value, '__ob__', this);
     if (isArray(value)) {
@@ -2291,6 +2296,90 @@ var transition = Object.freeze({
     return ob;
   }
 
+  function reactToObject(obj)
+  {
+    if(!(hasOwn(obj, "__ob__") && obj.__ob__ instanceof Observer))
+    {
+      return obj;
+    }
+
+    var r = {};
+    var v = null;
+
+    for(var key in obj)
+    {
+      if(key.startsWith("__"))
+      {
+        continue;
+      }
+
+      v = get(obj, key);
+      if(isArray(v))
+      {
+        v = reactToArray(v);
+      }
+      else if(isObject(v))
+      {
+        v = reactToObject(v);
+      }
+
+      r[key] = v;
+    }
+
+    return r;
+  }
+
+  function reactToArray(arr)
+  {
+    if(!(hasOwn(arr, "__ob__") && arr.__ob__ instanceof Observer))
+    {
+      return arr;
+    }
+
+    var r = [];
+    var v = null;
+
+    for(var i=0,i_sz=arr.length; i<i_sz; ++i)
+    {
+      v = arr[i];
+      if(isArray(v))
+      {
+        v = reactToArray(v);
+      }
+      else if(isObject(v))
+      {
+        v = reactToObject(v);
+      }
+
+      r.push(v);
+    }
+
+    return r;
+  }
+
+  function reactToValue(val)
+  {
+    if(isArray(val))
+    {
+      return reactToArray(val);
+    }
+    else if(isObject(val))
+    {
+      return reactToObject(val);
+    }
+
+    return val;
+  }
+
+  function setupReactiveFunction(rf)
+  {
+    rf._reactive = true;
+    rf.__$val = function()
+    {
+      return reactToValue(rf());
+    }
+  }
+
   /**
    * Define a reactive property on an Object.
    *
@@ -2365,7 +2454,7 @@ var transition = Object.freeze({
       }
     }
 
-    obj[key]._reactive = true;
+    setupReactiveFunction(obj[key]);
   }
 
 
@@ -3556,7 +3645,15 @@ var expression = Object.freeze({
       } else if (isO) {
         keys = Object.keys(val);
         i = keys.length;
-        while (i--) traverse(val[keys[i]], seen);
+        while (i--)
+        {
+          if(keys[i].startsWith("__"))
+          {
+            continue;
+          }
+
+          traverse(get(val, keys[i]), seen);
+        }
       }
     }
   }
@@ -5372,7 +5469,8 @@ var template = Object.freeze({
       if (typeof value === 'string') {
         this.el.style.cssText = value;
       } else if (isArray(value)) {
-        this.handleObject(value.reduce(extend, {}));
+        console.warn("VUE-IE8 style不支持数组语法");
+        //this.handleObject(value.reduce(extend, {}));
       } else {
         this.handleObject(value || {});
       }
@@ -5390,7 +5488,12 @@ var template = Object.freeze({
         }
       }
       for (name in value) {
-        val = value[name];
+        if(name.startsWith("__"))
+        {
+          continue;
+        }
+
+        val = get(value, name);
         if (val !== cache[name]) {
           cache[name] = val;
           this.handleSingle(name, val);
@@ -8122,7 +8225,7 @@ var template = Object.freeze({
           return self._data[key].apply(self._data, arguments);
         }
 
-        this[key]._reactive = true;
+        setupReactiveFunction(this[key]);
       }
     };
 
@@ -8186,7 +8289,7 @@ var template = Object.freeze({
           }
 
           this[key] = gen(def.get, def.set);
-          this[key]._reactive = true;
+          setupReactiveFunction(this[key]);
         }
       }
     };
@@ -9065,13 +9168,13 @@ var template = Object.freeze({
           var self = this;
           return function statementHandler() {
             self.$arguments = toArray(arguments);
-            var result = res.get.call(self, self);
+            var result = reactToValue(res.get.call(self, self));
             self.$arguments = null;
             return result;
           };
         } else {
           try {
-            return res.get.call(this, this);
+            return reactToValue(res.get.call(this, this));
           } catch (e) {}
         }
       }
@@ -9943,6 +10046,10 @@ var template = Object.freeze({
     orderBy: orderBy,
     filterBy: filterBy,
     limitBy: limitBy,
+    $val: function(val)
+    {
+      return reactToValue(val)
+    },
 
     /**
      * Stringify value.

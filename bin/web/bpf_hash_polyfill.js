@@ -54,6 +54,21 @@
             });
         }
 
+        if(pro.previousElementSibling == null)
+        {
+            Object.defineProperty(pro, 'previousElementSibling', {
+                get: function() {
+                    var el = this;
+                    while (el = el.previousSibling) {
+                      if (el.nodeType === 1) {
+                          return el;
+                      }
+                    }
+                    return null;
+                }
+            });
+        }
+
         if(pro.childElementCount == null)
         {
             Object.defineProperty(pro, 'childElementCount', {
@@ -155,7 +170,6 @@
 
     if(bin.platform.ie < 9 || pageConfig.es5sham)
     {
-        deps.push("es5shim");
         deps.push("es5sham");
     }
     else if(pageConfig.es5shim)
