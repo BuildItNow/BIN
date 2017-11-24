@@ -46,6 +46,7 @@ bitnow-cli provides some useful view templates to generate the base view code.
 $ bitnow view create <view-path> [template-name]
 ```
 the `view-path` is based on you current path, so `index` will create ** *index.html* ** and ** *index.js* ** in current path, and `login/index` will create ** *index.html* ** and ** *index.js* ** in ** *./login* **, the parent path will be created by cli if not exists.
+<br/>
 In BIN, each view consists of **two files**: ** *.html* ** describes the structure and appearance, ** *.js* ** describes the logic of business and the **ViewModel** links them together. So it's more close to traditional web development and even close to traditional GUI application development.
 
 ### List available view template
