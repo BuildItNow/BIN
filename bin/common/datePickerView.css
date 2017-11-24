@@ -18,6 +18,8 @@
 	left: 50%; 
 	margin-left: -7rem;
 	background-color: white;
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 #datePickerView .DatePickerView-title-block
