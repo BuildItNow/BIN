@@ -22,7 +22,7 @@ function(Base, TabBarView, SwipeView)
 		{
 			elem = $(this.$().children()[0]);
 		}
-		var current    = this._options.current ? this._options.current : this._optinos.items[0];
+		var current    = this._options.current ? this._options.current : this._options.items[0];
 
 		var options = 
 		{
