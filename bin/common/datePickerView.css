@@ -126,8 +126,7 @@
 	position: relative;
 	width:100%;
 	height:2rem;
-	font-size:0rem;
-	background-color: rgba(230, 230, 230, 1.0);
+	font-size:0;
     border-top: solid 1px rgba(200, 200, 200, 1.0); 
 }
 
@@ -137,7 +136,6 @@
 	height:2rem;
 	font-size: 0.8rem;
 	line-height:2rem; 
-	background-color: white;
 	display: inline-block;
 	vertical-align: top;
 	text-align: center;
