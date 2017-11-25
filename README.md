@@ -12,7 +12,7 @@ $ npm install -g bitnow-cli
 ```
 ### Generate project from template
 ``` bash
-$ bitnow init <project-name> [template]
+$ bitnow init <project-name> [template-name]
 ```
 
 ### Run the project
@@ -35,7 +35,7 @@ $ bitnow list
 ### Update to the latest framework
 The whole source code of framework comes to bin directory.
 ``` bash
-$ bitnow list
+$ bitnow update
 ```
 
 ## Auto generate code
@@ -45,9 +45,9 @@ bitnow-cli provides some useful view templates to generate the base view code.
 ``` bash
 $ bitnow view create <view-path> [template-name]
 ```
-the `view-path` is based on you current path, so `index` will create ** *index.html* ** and ** *index.js* ** in current path, and `login/index` will create ** *index.html* ** and ** *index.js* ** in ** *./login* **, the parent path will be created by cli if not exists.
+the `view-path` is based on you current path, so `index` will create *index.html* and *index.js* in current path, and `login/index` will create *index.html* and *index.js* in *./login*, the parent path will be created by cli if not exists.
 <br/>
-In BIN, each view consists of **two files**: ** *.html* ** describes the structure and appearance, ** *.js* ** describes the logic of business and the **ViewModel** links them together. So it's more close to traditional web development and even close to traditional GUI application development.
+In BIN, each view consists of **two files**: **.html** describes the structure and appearance, **.js** describes the logic of business and the **ViewModel** links them together. So it's more close to traditional web development and even close to traditional GUI application development.
 
 ### List available view template
 ``` bash
