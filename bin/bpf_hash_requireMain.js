@@ -86,6 +86,7 @@ var cordova = typeof cordova === "undefined" ? undefined : cordova;
   			return ret;
   		}
   		var queryString = window.location.href.substring(i+1);
+        
   		i = queryString.lastIndexOf("#");
   		if(i>=0)
   		{
@@ -97,18 +98,25 @@ var cordova = typeof cordova === "undefined" ? undefined : cordova;
   			return ret;
   		}
 
-		var pairs = queryString.split("&");
-		var k = null;
-		var v = null;
-		var pair = null;
-		for(i = 0; i < pairs.length; ++i) 
-		{
-			pair = pairs[i].split('=');
-			if(pair.length === 2)
-			{
-				ret[pair[0]] = pair[1];
-			}
-		}
+		queryString = decodeURI(queryString);
+
+        var pairs = queryString.split("&");
+        var v = null;
+        var pair = null;
+        for(i = 0; i < pairs.length; ++i) 
+        {
+            pair = pairs[i].split('=');
+            if(pair.length === 2)
+            {
+                v = pair[1]
+                if(v && v.length >= 6 && v.substr(0, 6) === "_json_")
+                {
+                    v = v.substr(6);
+                    v = JSON.parse(v);
+                }
+                ret[pair[0]] = v;
+            }
+        }
 
 		return ret;
 	})();

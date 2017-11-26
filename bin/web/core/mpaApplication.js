@@ -63,6 +63,11 @@ define(["bin/web/core/webApplication", "fastclick"], function(Application, fastc
 
 		this.fixWindow();
 
+        this._naviController = new bin.core.NavigationController();
+        this._naviController.init();
+
+        bin.naviController = this._naviController;
+
         Application.prototype.init.apply(this); 
 	}
 
