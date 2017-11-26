@@ -1,11 +1,22 @@
-define(["bin/core/application"], 
-	function(Application)
+define(["bin/core/application", "bin/core/mapManager"], 
+	function(Application, MapManager)
 	{
 		var Class = {};
 
 		Class.init = function()
 		{
+            var mapSDK = bin.globalConfig.mapSDK;
+            if(mapSDK)
+            {
+                this._mapManager = new MapManager();
+                this._mapManager.init();
+                bin.mapManager = this._mapManager;
+            }
+
+            bin.globalConfig.mapSDK = false;
+            // In web application, mapManager needs init sync
 			Application.prototype.init.apply(this);
+            bin.globalConfig.mapSDK = mapSDK;
 
 			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
@@ -21,22 +32,33 @@ define(["bin/core/application"],
 		{
 			if(data)
 			{
-				var pairs = [];
-				var value = null;
-				for(var key in data)
-            	{
-            		value = data[key];
-            		if(value !== null && value !== undefined)
-            		{
-            			if(typeof value === "object")
-            			{
-            				value = JSON.stringify(value);
-            			}
-            		}
-                	pairs.push(key+"="+value);    
-            	}
+                var queryString = "";
 
-            	url = url+(url.indexOf('?')<0 ? "?" : "&")+pairs.join("&");
+                if(bin.isString(data))
+                {
+                    queryString = data;
+                }
+                else
+				{
+                    var pairs = [];
+    				var value = null;
+    				for(var key in data)
+                	{
+                		value = data[key];
+                		if(value !== null && value !== undefined)
+                		{
+                			if(typeof value === "object")
+                			{
+                				value = "_json_"+JSON.stringify(value);
+                			}
+                		}
+                    	pairs.push(key+"="+value);    
+                	}
+
+                    queryString = pairs.join("&");
+                }
+
+            	url = url+(url.indexOf('?')<0 ? "?" : "&")+queryString;
             }
 
             window.location.href = url;
@@ -44,7 +66,15 @@ define(["bin/core/application"],
 
 		Class.back = function(n)
 		{
-			window.history.back(n);
+            if(!n)
+            {
+                n = -1;
+            }
+            else if(n>0)
+            {
+                n = -n;
+            }   
+			window.history.go(n);
 		}
 
 		return Application.extend(Class);
