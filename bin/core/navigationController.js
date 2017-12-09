@@ -87,8 +87,8 @@ function(effecters, Vue)
       	this._views = [];
 	    this._pushData = null;
 	    this._popData  = null;
-		  this._pushTime = 0;
-		  this._popTime = 0;
+		this._pushTime = 0;
+		this._popTime = 0;
 	}
 
 	NavigationController.extend = bin.extend;
@@ -155,7 +155,7 @@ function(effecters, Vue)
 				bind:function()
 				{
 					var dirc = this;
-					var arg  = this.arg;
+					var arg  = this.arg || "push";
 					var data = undefined;
 					var func = undefined;
 					var hand = undefined;

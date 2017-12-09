@@ -23,7 +23,7 @@ function(Vue)
                 bind:function()
                 {
                     var dirc = this;
-                    var arg  = this.arg;
+                    var arg  = this.arg || "push";
                     var data = undefined;
                     var func = undefined;
                     var view = undefined;
@@ -91,6 +91,16 @@ function(Vue)
         bin.app.goto(name, pushData);
 
         return true;
+    }
+
+    cls.pushRoute = function(path, routeData)
+    {
+        bin.router.push(path, routeData);
+    }
+
+    cls.popRoute = function(count)
+    {
+        bin.router.pop(count);
     }
 
     return NavigationController;
