@@ -18,9 +18,21 @@ define(["bin/core/application", "bin/core/mapManager"],
 			Application.prototype.init.apply(this);
             bin.globalConfig.mapSDK = mapSDK;
 
+            this._naviController = new bin.core.NavigationController();
+            this._naviController.init();
+            bin.naviController = this._naviController;
+
 			this._hudManager = new bin.core.HUDManager();
 			this._hudManager.init();
 			bin.hudManager  = this._hudManager;
+
+            if(bin.core.Router)
+            {
+                this._router = new bin.core.Router();
+                this._router.init();
+
+                bin.router = this._router;
+            }
 
 			if(this.appBootBg && !this.appBootBg.time)
 			{
