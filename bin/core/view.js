@@ -3,6 +3,23 @@ function(util, Vue)
 {
     if(Vue)
     {
+        bin.Vue = Vue;
+        
+        bin.vmDirective = function()
+        {
+            Vue.directive.apply(Vue, arguments);
+        }
+
+        bin.vmElementDirective = function()
+        {
+            Vue.elementDirective.apply(Vue, arguments);
+        }
+
+        bin.vmFilter = function()
+        {
+            Vue.filter.apply(Vue, arguments);
+        }
+
         var ViewModel = bin.extend.call(Vue, 
         {
             constructor:function()  // two-phase to create view-model

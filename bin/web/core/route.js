@@ -107,6 +107,10 @@ function(Vue)
                         path += "$";
                     }
                 }
+                else if(path === "#" || path === "")
+                {
+                    path = "^$";
+                }
                 else
                 {
                     var optionalParam = /\((.*?)\)/g;
@@ -355,6 +359,11 @@ function(Vue)
                 path = this.expression || el.getAttribute("pushPath");
                 data = el.getAttribute("pushData");
                 func = "push";
+
+                if(path === "#")
+                {
+                    path = "";
+                }
             }
             else if(arg === "pop")
             {
@@ -402,7 +411,7 @@ function(Vue)
             // Setup route checking
             this._activeRegex = el.getAttribute("activeRegex") || path;
 
-            if(this._activeRegex.lastIndexOf("?") < 0)
+            if(this._activeRegex && this._activeRegex.lastIndexOf("?") < 0)
             {
                 this._activeRegex += this._activeRegex.endsWith("/") ? ".*" : "(/.*)*";
             }

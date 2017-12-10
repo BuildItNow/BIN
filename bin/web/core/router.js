@@ -103,6 +103,13 @@ function(Route)
 
     pro.onRoute = function(path, queryString)
     {
+        if(this._routing)
+        {
+            return ;
+        }
+
+        this._routing = true;
+
         this._routeContext = {path: path};
 
         if(!queryString)
@@ -128,6 +135,8 @@ function(Route)
         }
 
         this.trigger("ROUTE-CHANGE", this._routeContext.path);
+
+        this._routing = false;
     }
 
     pro.getRouteContext = function()
@@ -218,6 +227,11 @@ function(Route)
             else if(bin.isString(data))
             {
                 this._routeContext.queryString = data;
+            }
+
+            if(!this._routing)
+            {
+                this.trigger("ROUTE-CHANGE", this._routeContext.path);
             }
         }
         else
