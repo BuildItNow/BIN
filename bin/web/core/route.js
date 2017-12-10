@@ -107,6 +107,10 @@ function(Vue)
                         path += "$";
                     }
                 }
+                else if(path === "#" || path === "")
+                {
+                    path = "^$";
+                }
                 else
                 {
                     var optionalParam = /\((.*?)\)/g;
