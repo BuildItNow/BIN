@@ -27,9 +27,10 @@ function(Vue)
             var view = vm._b_view;
             var el   = this.el;
 
-            var viewPath = null;
-            var singleton = false;
-            var silent  = false;
+            var viewPath  = null;
+            var createModel = "normal";
+            var silent    = false;
+
             var opts = null;
             var otherOpts = {};
             
@@ -46,9 +47,9 @@ function(Vue)
                 {
                     viewPath = attrVale;
                 }
-                else if(attrName === "singleton")
+                else if(attrName === "createmodel")
                 {
-                    singleton = true;
+                    createModel = attrVale;
                 }
                 else if(attrName === "silent")
                 {
@@ -144,7 +145,7 @@ function(Vue)
 
             el.innerHTML = "";
 
-            this._route = new Route({el:el, paths:paths, viewPath:viewPath, singleton:singleton, silent:silent}, otherOpts);
+            this._route = new Route({el:el, paths:paths, viewPath:viewPath, createModel:createModel, silent:silent}, otherOpts);
             this._route.init();
         },
         unbind:function()
@@ -171,14 +172,14 @@ function(Vue)
     var pro = Route.prototype;
 
     pro.init = function()
-    {
+    {   
         bin.router.addRoute(this);
-
-        this._match = -1;
+        this.inited = true;
 
         if(!this._options.silent)
         {
-            this.onRoute(bin.router.getRoutePath());
+            var func = this.onRoute(bin.router.getRoutePath());
+            func && func();
         }
     }
 
@@ -191,16 +192,37 @@ function(Vue)
             this._view.remove();
             this._view = null;
         }
+
+        this.inited = false;
     }
 
     pro.onRoute = function(path)
     {
         var match = this.execMatch(path);
-        var newMatch = match ? 1 : 0;
 
-        newMatch ? this.onMatch(match.slice(1)) : this.onUnmatch();
+        if(!this._match && !match)
+        {
+            return ;
+        }
 
-        this._match = newMatch;
+        var self = this;
+        var ret = function()
+        {
+            if(!self.inited)
+            {
+                return ;
+            }
+
+            var newMatch = !!match;
+
+            newMatch ? self.onMatch(match.slice(1)) : self.onUnmatch();
+
+            self._match = newMatch;
+        }
+
+        ret.match = !!match;
+
+        return ret;
     }
 
     pro.execMatch = function(path)
@@ -259,7 +281,7 @@ function(Vue)
             var matches     = self._matchContext;
 
             var args = [];
-            args.push(oldMatch < 0 ? null : !!oldMatch);
+            args.push(oldMatch);
             args.push(true);
             for(var i=0,i_sz=matches.length; i<i_sz; ++i)
             {
@@ -279,6 +301,13 @@ function(Vue)
             }
         }
 
+        var oldView = null;
+        if(this._options.createModel === "always")
+        {
+            oldView = this._view;
+            this._view = null;
+        }
+
         if(!this._view)
         {
             this._requireing = true;
@@ -286,6 +315,12 @@ function(Vue)
             require([this._options.viewPath], function(ViewClass)
             {
                 self._requireing = false;
+
+                if(oldView)
+                {
+                    oldView.remove();
+                    oldView = null;
+                }
 
                 // Double check
                 if(!self._match)
@@ -314,34 +349,30 @@ function(Vue)
 
     pro.onUnmatch = function()
     {
-        // Check the old part
-        if(!this._match)
+        if(!this._view)
         {
             return ;
         }
 
-        if(this._view)
+        if(this._options.createModel === "never")
         {
-            if(this._options.singleton)
+            var viewHandled = false;
+            if(this._view.onRoute)
             {
-                var viewHandled = false;
-                if(this._view.onRoute)
-                {
-                    viewHandled = this._view.onRoute(this._match, false);
-                }
-
-                if(viewHandled)
-                {
-                   return ; 
-                }
-
-                this._view.hide();
+                viewHandled = this._view.onRoute(this._match, false);
             }
-            else
+
+            if(viewHandled)
             {
-                this._view.remove();
-                this._view = null;
+               return ; 
             }
+
+            this._view.hide();
+        }
+        else
+        {
+            this._view.remove();
+            this._view = null;
         }
     }
 
