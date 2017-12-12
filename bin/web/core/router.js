@@ -125,13 +125,32 @@ function(Route)
             this._routeContext.queryString = queryString;
         }
 
+        var unmatches = [];
+        var matches   = [];
+
         var fist = this._routes;
         var next = fist.next;
+        var func = null;
         while(next !== fist)
         {
-            next.onRoute(this._routeContext.path);
+            func = next.onRoute(this._routeContext.path);
+            if(func)
+            {
+                (func.match ? matches : unmatches).push(func);
+            }
 
             next = next.next;
+        }
+
+        // Do unmatch first, as reverse order
+        for(var i=unmatches.length-1; i>=0; --i)
+        {
+            unmatches[i]();
+        }
+
+        for(var i=0,i_sz=matches.length; i<i_sz; ++i)
+        {
+            matches[i]();
         }
 
         this.trigger("ROUTE-CHANGE", this._routeContext.path);
