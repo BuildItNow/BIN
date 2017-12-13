@@ -1,83 +1,108 @@
- define(["layerui"], function()
+ define(["bin/core/hudManager", bin.componentConfig.indicator || "view!bin/web/common/pcIndicatorView"], function(Super, IndicatorView)
 	{
-		var HUDManager = function()
-		{
-
-		}
-
-		var Class = HUDManager.prototype;
+		var Class = {};
 
 		Class.init = function()
 		{
-			// var root = $("#HUDContainer");
+			var rootElem = $("<div style='position:fixed' class='bin-HUD-container'></div>")
+			$("body").append(rootElem);
 
-			// this._hudViews = {};
+			this._hudViews = {};
 
-			// // Add net
-			// var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
-			// root.append(elemIndicatorContainer);
+			// Add net
+			var elemIndicatorContainer = $("<div id='indicatorHUD' class='bin-hud-wrapper' style='z-index:1;'></div>");
+			rootElem.append(elemIndicatorContainer);
 
-			// // Add alert
-			// this._elemAlertContainer = $("<div id='alertHUD'       style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
-			// root.append(this._elemAlertContainer);	
-			// // Add status
-			// this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
-			// root.append(this._elemStatusContainer);
+			this._indicator = IndicatorView.create();
+			elemIndicatorContainer.append(this._indicator.$());
 
-			// this._alertZIndex = 1;
+			// Add alert
+			this._elemAlertContainer = $("<div id='alertHUD' class='bin-hud-wrapper' style='z-index:2;text-align:center;'></div>");
+			rootElem.append(this._elemAlertContainer);	
+
+			// Add status
+			this._elemStatusContainer = $("<div id='statusHUD' class='bin-hud-wrapper' style='z-index:3;text-align:center;'></div>");
+			rootElem.append(this._elemStatusContainer);
+
+			this._alertZIndex = 1;
+
+			this.initComponentConfig();
 		
-			// console.info("HUDManager module initialize");
-
-			// var self = this;
-			// require([bin.componentConfig.indicator || "view!bin/common/indicatorView"], function(IndicatorView)
-			// {
-			// 	self._indicator = IndicatorView.create();
-			// 	elemIndicatorContainer.append(self._indicator.$());
-			// });
-
- 			this._indicator = {id:-1,count:0};
+			console.info("HUDManager module initialize");
 		}
 
-		Class.startIndicator = function(options)
+		Class.initComponentConfig = function()
 		{
-			if(this._indicator.id < 0)
-			{
-				this._indicator.id = layer.load(1, options);
-				this._indicator.count = 1;
-			}
-			else
-			{
-				++this._indicator.count;
-			}
+			Super.prototype.initComponentConfig.call(this);
 
-			return this._indicator;
+			this.IndicatorViewPath = bin.componentConfig.indicator || "view!bin/web/common/pcIndicatorView";
+			this.StatusViewPath = bin.componentConfig.status || "view!bin/web/common/pcStatusView";
+			this.SelectViewPath = bin.componentConfig.select || "view!bin/web/common/pcSelectView";
+			this.AlertViewPath = bin.componentConfig.alert || "view!bin/web/common/pcAlertView";
 		}
 
-		Class.stopIndicator = function()
+		Class.alert = function(options, cb, alert)
 		{
-			if(this._indicator.id > 0)
+			if(bin.isString(options))
 			{
-				if(--this._indicator.count === 0)
+				var message = options;
+				options = 
 				{
-					layer.close(this._indicator.id);
-					this._indicator.id = -1;
+					title: {text:"信息"},
+					message: {text:message},
+					buttons: [
+						{
+							text: "确定",
+							onClick: cb
+						}
+					]
 				}
+
+				cb = null;
 			}
+
+			Super.prototype.alert.call(this, options, cb, alert);
 		}
 
-		Class.showStatus = function(message)
+		Class.confirm = function(message, onYes, onNo, cb)
 		{
-			layer.msg(message);			
+			var options = 
+			{
+				title:{text:"信息"}, 
+				message:{text:message}, 
+				buttons:[
+					{
+						text:"确定", 
+						onClick:function(view, text)
+						{
+							return onYes && onYes(view, text);
+						}
+					},
+					{
+						text:"取消", 
+						onClick:function(view, text)
+						{
+							return onNo && onNo(view, text);
+						}
+					}
+				]
+			};
+
+			return this.alert(options, cb);
 		}
 
-		Class.alert = function(message, options, onYes)
+		Class.alertError = function(message, title)
 		{
-			layer.alert(message, options, onYes);
+			title = title || "错误";
+			
+			return Super.prototype.alertError.call(this, message, title);
 		}
 
-		Class.confirm = function(message, options, onYes, onNo)
+		Class.alertInfo = function(message, title)
 		{
-			layer.confirm(message, options, onYes, onNo);
+			title = title || "信息";
+			
+			return Super.prototype.alertInfo.call(this, message, title);
 		}
 
 		Class.dialog = function(view, options, cb)
@@ -89,6 +114,6 @@
 			});
 		}
 
-		return HUDManager;
+		return Super.extend(Class);
 	}
 );

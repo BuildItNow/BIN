@@ -1,0 +1,105 @@
+<div id="pcAlertView" class="bin-mask-layer">
+    <style>
+    #pcAlertView
+    {
+        display: none;
+
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+
+        pointer-events: auto;
+    }
+
+    #pcAlertView .modal-dialog
+    {
+        position: absolute;
+        
+        left: 50%;
+        top: 50%;
+
+        width: 320px;
+
+        transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+
+        background-color: white;
+
+        margin: 0;
+
+        -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    #pcAlertView .modal-header
+    {
+        font-size: 14px;
+        font-weight: bold;
+
+        padding: 15px 20px;
+
+        background-color: #F8F8F8;
+
+        border: none;
+
+        width: 100%;
+    }   
+
+    #pcAlertView .modal-title
+    {
+        text-align: left;
+    }
+
+    #pcAlertView .modal-body
+    {
+        text-align: left;
+        font-size: 12px;
+        padding: 15px 20px;
+
+        word-break: break-all;
+
+        width: 100%;
+    }
+
+    #pcAlertView .modal-footer
+    {
+        border: none;
+        width: 100%;
+
+        padding: 15px 20px;
+    }
+
+    #pcAlertView .modal-footer .btn
+    {
+        border-radius: 0;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-width: 1px;
+    }
+
+    @media (max-width: 768px) 
+    {
+        #pcAlertView .modal-dialog
+        {
+            width: 240px;
+        }
+    }
+    </style>
+    <div id="contentBlock" class="modal-dialog">
+        <div class="modal-header">
+            <button type="button" class="close"><span>&times;</span></button>
+            <div id="title" class="modal-title">
+            </div>
+        </div>
+        <div id="message" class="modal-body">
+        </div>
+        <div id="buttons" class="modal-footer">
+        </div>
+    </div>
+</div>
