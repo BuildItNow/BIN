@@ -29,17 +29,13 @@ function(Super)
                     elem = this.addButton(options.buttons[i]);
                     if(i === 0)
                     {
-                        elem.addClass("btn-primary");
-                    }
-                    else
-                    {
-                        elem.addClass("btn-default");
+                        elem.addClass("primary");
                     }
                 }
             }
 
             var self = this;
-            this.$(".close").on("click", function()
+            this.$(".PcAlertView-close").on("click", function()
             {
                 self.close();
             });
@@ -85,7 +81,7 @@ function(Super)
     {
         var self = this;
         
-        var elem = $('<button class="btn btn-sm">'+button.text+'</button>');
+        var elem = $('<button class="PcAlertView-button">'+button.text+'</button>');
         elem.on("click", function(e)
         {
             if(!button.onClick || !button.onClick(self, button.text))

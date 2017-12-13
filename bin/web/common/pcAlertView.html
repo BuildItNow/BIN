@@ -13,7 +13,14 @@
         pointer-events: auto;
     }
 
-    #pcAlertView .modal-dialog
+    #pcAlertView *
+    {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    #pcAlertView .PcAlertView
     {
         position: absolute;
         
@@ -27,79 +34,139 @@
 
         background-color: white;
 
-        margin: 0;
-
         -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
         box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+        -moz-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
 
         border-radius: 2px;
         overflow: hidden;
     }
 
-    #pcAlertView .modal-header
+    #pcAlertView .PcAlertView-header
     {
-        font-size: 14px;
-        font-weight: bold;
-
         padding: 15px 20px;
-
         background-color: #F8F8F8;
-
-        border: none;
-
-        width: 100%;
-    }   
-
-    #pcAlertView .modal-title
-    {
-        text-align: left;
     }
 
-    #pcAlertView .modal-body
+    #pcAlertView .PcAlertView-close
     {
+        float: right;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 1;
+        color: #0006;
+        text-shadow: 0 1px 0 #fff;
+        filter: alpha(opacity=20);
+
+        -webkit-appearance: none;
+        padding: 0;
+        cursor: pointer;
+        background: transparent;
+        border: 0;
+    }  
+
+    #pcAlertView .PcAlertView-close:hover
+    {
+        color: #1ea3ff;
+    } 
+
+    #pcAlertView .PcAlertView-title
+    {
+        text-align: left;
+        
+        font-size: 14px;
+        line-height: 1.5;
+        font-weight: bold;
+    }
+
+    #pcAlertView .PcAlertView-body
+    {
+        position: relative;
         text-align: left;
         font-size: 12px;
         padding: 15px 20px;
+        font-weight: normal;
 
         word-break: break-all;
-
-        width: 100%;
     }
 
-    #pcAlertView .modal-footer
+    #pcAlertView .PcAlertView-footer
     {
-        border: none;
-        width: 100%;
-
+        text-align: right;
         padding: 15px 20px;
+
+        font-size: 12px;
+        line-height: 1.5;
     }
 
-    #pcAlertView .modal-footer .btn
+    #pcAlertView .PcAlertView-button
     {
         border-radius: 0;
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none;
-        border-width: 1px;
+
+        border: 1px solid #dedede;
+        background-color: white;
+        color: #333;
+
+        display: inline-block;
+
+        padding: 5px 10px;
+        margin-left: 10px;
+        font-size: inherit;
+        line-height: inherit;
+        
+        font-weight: normal;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: top;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        background-image: none;  
+    }
+
+    #pcAlertView .PcAlertView-button:hover
+    {
+        background-color: #dedede;
+    }
+
+    #pcAlertView .PcAlertView-button.primary
+    {
+        border-color: #347eff;
+        background-color: #347eff;
+        color: white;
+    }
+
+    #pcAlertView .PcAlertView-button.primary:hover
+    {
+        border-color: #1ea3ff;
+        background-color: #1ea3ff;
     }
 
     @media (max-width: 768px) 
     {
-        #pcAlertView .modal-dialog
+        #pcAlertView .PcAlertView
         {
             width: 240px;
         }
     }
     </style>
-    <div id="contentBlock" class="modal-dialog">
-        <div class="modal-header">
-            <button type="button" class="close"><span>&times;</span></button>
-            <div id="title" class="modal-title">
+    <div id="contentBlock" class="PcAlertView">
+        <div class="PcAlertView-header">
+            <button class="PcAlertView-close" ><span>&times;</span></button>
+            <div id="title" class="PcAlertView-title">
             </div>
         </div>
-        <div id="message" class="modal-body">
+        <div id="message" class="PcAlertView-body">
         </div>
-        <div id="buttons" class="modal-footer">
+        <div id="buttons" class="PcAlertView-footer">
         </div>
     </div>
 </div>
