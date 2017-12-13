@@ -1,0 +1,31 @@
+<div id="pcIndicatorView">
+	<style>
+    #pcIndicatorView
+    {
+        position:absolute;
+        background-color:transparent;
+        pointer-events:none;
+        width:100%;
+        height:100%;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+    }
+
+    #pcIndicatorView .PcIndicatorView-indicator
+    {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: 50%; 
+        left: 50%; 
+        margin-top: -15px; 
+        margin-left: -15px;
+        -webkit-background-size: 100% 100%;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+	</style>
+    <div id='indicator' class='PcIndicatorView-indicator bin-loading-active'>
+    </div>
+</div>

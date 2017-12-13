@@ -6,6 +6,8 @@
 
 		}
 
+		HUDManager.extend = bin.extend;
+
 		var Class = HUDManager.prototype;
 
 		Class.init = function()
@@ -15,26 +17,37 @@
 			this._hudViews = {};
 
 			// Add net
-			var elemIndicatorContainer = $("<div id='indicatorHUD' style='z-index:1;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%'></div>");
+			var elemIndicatorContainer = $("<div id='indicatorHUD' class='bin-hud-wrapper' style='z-index:1;'></div>");
 			root.append(elemIndicatorContainer);
 
 			// Add alert
-			this._elemAlertContainer = $("<div id='alertHUD'       style='z-index:2;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
+			this._elemAlertContainer = $("<div id='alertHUD' class='bin-hud-wrapper' style='z-index:2;text-align:center;'></div>");
 			root.append(this._elemAlertContainer);	
 			// Add status
-			this._elemStatusContainer = $("<div id='statusHUD'      style='z-index:3;position:absolute;background-color:transparent;pointer-events:none;width:100%;height:100%;text-align:center;'></div>");
+			this._elemStatusContainer = $("<div id='statusHUD' class='bin-hud-wrapper' style='z-index:3;text-align:center;'></div>");
 			root.append(this._elemStatusContainer);
 
 			this._alertZIndex = 1;
+
+			this.initComponentConfig();
 		
 			console.info("HUDManager module initialize");
 
 			var self = this;
-			require([bin.componentConfig.indicator || "view!bin/common/indicatorView"], function(IndicatorView)
+			require([this.IndicatorViewPath], function(IndicatorView)
 			{
 				self._indicator = IndicatorView.create();
 				elemIndicatorContainer.append(self._indicator.$());
 			});
+		}
+
+		Class.initComponentConfig = function()
+		{
+			this.IndicatorViewPath = bin.componentConfig.indicator || "view!bin/common/indicatorView";
+			this.StatusViewPath = bin.componentConfig.status || "view!bin/common/statusView";
+			this.SelectViewPath = bin.componentConfig.select || "view!bin/common/selectView";
+			this.AlertViewPath = bin.componentConfig.alert || "view!bin/common/alertView";
+			this.DatePickerViewPath = bin.componentConfig.datePicker || "view!bin/common/datePickerView";
 		}
 
 		Class.startIndicator = function(options)
@@ -50,7 +63,7 @@
 		Class.showStatus = function(message, cb, status)
 		{
 			var self = this;
-			require([status || bin.componentConfig.status || "view!bin/common/statusView"], function(StatusView)
+			require([status || this.StatusViewPath], function(StatusView)
 			{
 				var v = StatusView.create({text:message});
 				self._elemStatusContainer.append(v.$()); 
@@ -62,7 +75,7 @@
 		Class.select = function(options, cb, select)
 		{
 			var self = this;
-			require([select || bin.componentConfig.select || "view!bin/common/selectView"], function(SelectView)
+			require([select || this.SelectViewPath], function(SelectView)
 			{
 				var v = SelectView.create(options);
 				v.$().css("z-index", self._alertZIndex);
@@ -76,8 +89,25 @@
 		}
 		Class.alert = function(options, cb, alert)
 		{
+			if(bin.isString(options))
+			{
+				var message = options;
+				options = 
+				{
+					message: {text:message},
+					buttons: [
+						{
+							text: "确定",
+							onClick: cb
+						}
+					]
+				}
+
+				cb = null;
+			}
+
 			var self = this;
-			require([alert || bin.componentConfig.alert || "view!bin/common/alertView"], function(AlertView)
+			require([alert || this.AlertViewPath], function(AlertView)
 			{
 				var v = AlertView.create(options);
 				v.$().css("z-index", self._alertZIndex);
@@ -142,7 +172,7 @@
 		Class.datePicker = function(options, cb, datePicker)
 		{
 			var self = this;
-			require([datePicker || bin.componentConfig.datePicker || "view!bin/common/datePickerView"], function(DatePickerView)
+			require([datePicker || this.DatePickerViewPath], function(DatePickerView)
 			{
 				if(typeof options === "function")
 				{
