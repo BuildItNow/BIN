@@ -59,19 +59,32 @@ function(Vue)
                 {
                     if(attrName.length === 4)
                     {
-                        opts = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
+                        opts = Vue.b_makeValueFunction(attrVale); 
                     }
                     else
                     {
                         var optsName = camelize(attrName.substring(5));
-                        otherOpts[optsName] = Vue.b_makeValueFunction(attrVale)(view, vm, el); 
+                        otherOpts[optsName] = Vue.b_makeValueFunction(attrVale); 
                     }
                 }
             }
 
-            if(opts)
+            var viewOptions = function()
             {
-                otherOpts = _.extend(opts, otherOpts);
+                var o = opts && opts(view, vm, el);
+                var oo = {};
+
+                for(var k in otherOpts)
+                {
+                    oo[k] = otherOpts[k](view, vm, el);
+                }
+
+                if(o)
+                {
+                    oo = _.extend(o, oo);
+                }
+
+                return oo;
             }
 
             var pathEls = [];
@@ -145,7 +158,7 @@ function(Vue)
 
             el.innerHTML = "";
 
-            this._route = new Route({el:el, paths:paths, viewPath:viewPath, createModel:createModel, silent:silent}, otherOpts);
+            this._route = new Route({el:el, paths:paths, viewPath:viewPath, createModel:createModel, silent:silent}, viewOptions);
             this._route.init();
         },
         unbind:function()
@@ -192,6 +205,9 @@ function(Vue)
             this._view.remove();
             this._view = null;
         }
+
+        this._options = null;
+        this._viewOptions = null;
 
         this.inited = false;
     }
@@ -328,9 +344,11 @@ function(Vue)
                     return ;
                 }
 
-                self._view = ViewClass.create(self._viewOptions);
+                var options = self._viewOptions();
 
-                if(!self._viewOptions.elemParent)
+                self._view = ViewClass.create(options);
+
+                if(!options.elemParent)
                 {
                     self._options.el.appendChild(self._view.$()[0]);
                 }
