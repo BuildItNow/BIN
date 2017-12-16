@@ -599,6 +599,7 @@ var requirejs, require, define;
 
         function cleanRegistry(id) {
             //Clean up machinery used for waiting modules.
+
             delete registry[id];
             delete enabledRegistry[id];
         }
@@ -1574,6 +1575,11 @@ var requirejs, require, define;
                 }
 
                 checkLoaded();
+
+                if(requireScriptModules[moduleName])
+                {
+                    onRequireScriptSucceed(moduleName);
+                }
             },
 
             /**
@@ -1688,10 +1694,63 @@ var requirejs, require, define;
                 if (!hasPathFallback(data.id)) {
                     return onError(makeError('scripterror', 'Script error for: ' + data.id, evt, [data.id]));
                 }
+
+                if(requireScriptModules[data.id])
+                {
+                    onRequireScriptError(id);
+                }
             }
         };
 
-        context.require = context.makeRequire();
+        context.require  = context.makeRequire();
+
+        var requireScriptModules = context.requireScriptModules = {};
+
+        var onRequireScriptSucceed = function(id)
+        {
+            delete requireScriptModules[id];
+
+            var mod = getOwn(registry, id);
+            var depMaps = mod && mod.depMaps;
+
+            if(depMaps && depMaps.length > 0)
+            {
+                requireScript(depMaps);
+            }
+        }
+
+        var onRequireScriptError = function(id)
+        {
+            delete requireScriptModules[id];
+        }
+
+        var requireScript = function(deps)
+        {
+            var depMap = null;
+            for(var i=0,i_sz=deps.length; i<i_sz; ++i)
+            {
+                depMap = makeModuleMap(deps[i]);
+
+                if(depMap.prefix)
+                {
+                    continue;
+                }
+
+                if(!urlFetched[depMap.url])
+                {
+                    urlFetched[depMap.url] = true;
+
+                    requireScriptModules[depMap.id] = true;
+
+                    console.log("Require Script => "+depMap.url);
+
+                    req.load(context, depMap.id, depMap.url);
+                }
+            }
+        }
+
+        context.requireScript = requireScript;
+
         return context;
     }
 
@@ -1753,15 +1812,52 @@ var requirejs, require, define;
         return req(config);
     };
 
+    req.requireScript = function(deps, contextName)
+    {
+        var context;
+        var contextName = contextName || defContextName;
+
+        context = getOwn(contexts, contextName);
+        if(!context) 
+        {
+            context = contexts[contextName] = req.s.newContext(contextName);
+        }
+
+        context.requireScript(deps);
+    }
+
     /**
      * Execute something after the current tick
      * of the event loop. Override for other envs
      * that have a better solution than setTimeout.
      * @param  {Function} fn function to execute later.
      */
-    req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
-        setTimeout(fn, 4);
-    } : function (fn) { fn(); };
+    // req.nextTick = typeof setTimeout !== 'undefined' ? function (fn) {
+    //     setTimeout(fn, 0);
+    // } : function (fn) { fn(); };
+
+    var fnQueue = [];
+    var fnTimer = false;
+    req.nextTick = function(fn)
+    {
+        fnQueue.push(fn);
+        if(!fnTimer)
+        {
+            fnTimer = true;
+            setTimeout(function()
+            {
+                fnTimer = false;
+
+                var q = fnQueue;
+                fnQueue = [];
+
+                for(var i=0,i_sz=q.length; i<i_sz; ++i)
+                {
+                    q[i]();
+                }
+            });
+        }
+    }
 
     /**
      * Export require as a global, but only if it does not already exist.

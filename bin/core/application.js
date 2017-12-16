@@ -45,6 +45,14 @@ define([],
 			});
 			this.onResize();
 
+			if(bin.core.Router)
+            {
+                this._router = new bin.core.Router();
+                this._router.init();
+
+                bin.router = this._router;
+            }
+
 			// Parse query params
 			/**
 			 * Singleton object of NetManager who do the whole http jobs. 
@@ -119,10 +127,33 @@ define([],
 					}
 
 					this.time = this.elem.attr("time");
+					this.effect = this.elem.attr("effect");
+
+					if(this.effect === "fade")
+					{
+						this.elem.css({
+							opacity: "1",
+							transition: "opacity 0.3s ease-out"
+						})
+					}
 				}
 
 				appBootBg.dismiss = function()
 				{
+					if(this.effect === "fade")
+					{
+						this.effect = "";
+						this.elem.css("opacity", 0);
+
+						var self = this;
+						setTimeout(function()
+						{
+							self.dismiss();
+						}, 300);
+
+						return ;
+					}
+
 					if(document.body.className.indexOf(" app-boot") >= 0)
 					{
 						document.body.className = document.body.className.replace(" app-boot", "");

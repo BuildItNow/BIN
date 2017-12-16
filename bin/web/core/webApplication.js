@@ -26,14 +26,6 @@ define(["bin/core/application", "bin/core/mapManager"],
 			this._hudManager.init();
 			bin.hudManager  = this._hudManager;
 
-            if(bin.core.Router)
-            {
-                this._router = new bin.core.Router();
-                this._router.init();
-
-                bin.router = this._router;
-            }
-
 			if(this.appBootBg && !this.appBootBg.time)
 			{
 				this.appBootBg.time = page.pageConfig.appBootBgTime || bin.globalConfig.appBootBgTime;
@@ -52,22 +44,7 @@ define(["bin/core/application", "bin/core/mapManager"],
                 }
                 else
 				{
-                    var pairs = [];
-    				var value = null;
-    				for(var key in data)
-                	{
-                		value = data[key];
-                		if(value !== null && value !== undefined)
-                		{
-                			if(typeof value === "object")
-                			{
-                				value = "_json_"+JSON.stringify(value);
-                			}
-                		}
-                    	pairs.push(key+"="+value);    
-                	}
-
-                    queryString = pairs.join("&");
+                    queryString = bin.toQueryString(data);
                 }
 
             	url = url+(url.indexOf('?')<0 ? "?" : "&")+queryString;
