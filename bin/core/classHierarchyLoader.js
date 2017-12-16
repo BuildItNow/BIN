@@ -81,6 +81,12 @@ define([], function()
 	var ClassHierarchyLoader = function(config, holder)
 	{
 		this._config = config;
+		if(config && config.requireScripts)
+		{
+			this._scripts  = config.requireScripts;
+			delete config.requireScripts;
+		}
+
 		this._holder = holder || bin;
 		this._hierarchyDone = false;
 		this._cbs = [];
@@ -125,6 +131,11 @@ define([], function()
 		else
 		{
 			onDone();
+		}
+
+		if(this._scripts)
+		{
+			require.requireScript(this._scripts);
 		}
 	}
 

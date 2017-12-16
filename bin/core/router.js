@@ -1,69 +1,10 @@
 define(
-["bin/web/core/route"], 
+["bin/core/route"], 
 function(Route)
 {
-    var queryString = function(data)
-    {
-        var ret = "";
+    var queryString = bin.toQueryString;
 
-        if(bin.isString(data))
-        {
-            ret = data;
-        }
-        else
-        {
-            var pairs = [];
-            var value = null;
-            for(var key in data)
-            {
-                value = data[key];
-                if(value !== null && value !== undefined)
-                {
-                    if(typeof value === "object")
-                    {
-                        value = "_json_"+JSON.stringify(value);
-                    }
-                }
-                pairs.push(key+"="+value);    
-            }
-
-            ret = pairs.join("&");
-        }
-
-        return ret;
-    }
-
-    var queryParams = function(queryString) 
-    {
-        var ret = {};
-
-        if(queryString === undefined || queryString === null || queryString === "")
-        {
-            return ret;
-        }
-
-        queryString = decodeURI(queryString);
-
-        var pairs = queryString.split("&");
-        var v = null;
-        var pair = null;
-        for(i = 0; i < pairs.length; ++i) 
-        {
-            pair = pairs[i].split('=');
-            if(pair.length === 2)
-            {
-                v = pair[1]
-                if(v && v.length >= 6 && v.substr(0, 6) === "_json_")
-                {
-                    v = v.substr(6);
-                    v = JSON.parse(v);
-                }
-                ret[pair[0]] = v;
-            }
-        }
-
-        return ret;
-    }
+    var queryParams = bin.toQueryParams;
 
     var Router = function()
     {

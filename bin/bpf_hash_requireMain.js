@@ -14,91 +14,108 @@ var bin = {};
  */
 var cordova = typeof cordova === "undefined" ? undefined : cordova;
 
-
 (function()
 {
-	var toString = Object.prototype.toString;
+    var toString = Object.prototype.toString;
 
-	bin.isObject = function(obj) 
-	{
-    	return !!(obj && typeof obj === "object" && obj === Object(obj));
-  	};
+    bin.isObject = function(obj) 
+    {
+        return !!(obj && typeof obj === "object" && obj === Object(obj));
+    };
 
-  	var genFunc = function(name)
-  	{
-  		return function(obj)
-  		{
-  			return toString.call(obj) == "[object "+name+"]";
-  		}
-  	}
+    var genFunc = function(name)
+    {
+        return function(obj)
+        {
+            return toString.call(obj) == "[object "+name+"]";
+        }
+    }
 
-  	var types = ["Array", "Function", "String", "Number", "Date", "RegExp"];
-  	for(var i=0,i_sz=types.length; i<i_sz; ++i)
-  	{
-  		bin["is"+types[i]] = genFunc(types[i]);
-  	}
+    var types = ["Array", "Function", "String", "Number", "Date", "RegExp"];
+    for(var i=0,i_sz=types.length; i<i_sz; ++i)
+    {
+        bin["is"+types[i]] = genFunc(types[i]);
+    }
 
-  	if(Array.isArray)
-  	{
-  		bin.isArray = Array.isArray;
-  	}
+    if(Array.isArray)
+    {
+        bin.isArray = Array.isArray;
+    }
 
-  	if (typeof (/./) !== "function") 
-  	{
-    	bin.isFunction = function(obj) 
-    	{
-      		return typeof obj === "function";
-    	};
-  	}
+    if (typeof (/./) !== "function") 
+    {
+        bin.isFunction = function(obj) 
+        {
+            return typeof obj === "function";
+        };
+    }
 
-  	bin.isNaN = function(obj) 
-  	{
-    	return bin.isNumber(obj) && obj != +obj;
-  	};
+    bin.isNaN = function(obj) 
+    {
+        return bin.isNumber(obj) && obj != +obj;
+    };
 
-  	bin.isBoolean = function(obj) 
-  	{
-    	return obj === true || obj === false || toString.call(obj) == "[object Boolean]";
-  	};
+    bin.isBoolean = function(obj) 
+    {
+        return obj === true || obj === false || toString.call(obj) == "[object Boolean]";
+    };
 
-  	bin.isNull = function(obj) 
-  	{
-    	return obj === null;
-  	};
+    bin.isNull = function(obj) 
+    {
+        return obj === null;
+    };
 
-  	bin.isUndefined = function(obj) 
-  	{
-    	return obj === void 0;
-  	};
+    bin.isUndefined = function(obj) 
+    {
+        return obj === void 0;
+    };
 
-  	bin.isNU = function(obj)
-  	{
-  		return bin.isUndefined(obj) || bin.isNull(obj);
-  	}
+    bin.isNU = function(obj)
+    {
+        return bin.isUndefined(obj) || bin.isNull(obj);
+    }
 
-  	bin.queryParams = (function() 
-  	{
-  		var ret = {};
+    bin.toQueryString = function(data)
+    {
+        var ret = "";
 
-  		var i = window.location.href.indexOf("?");
-  		if(i<0)
-  		{
-  			return ret;
-  		}
-  		var queryString = window.location.href.substring(i+1);
-        
-  		i = queryString.lastIndexOf("#");
-  		if(i>=0)
-  		{
-  			queryString = queryString.substring(0, i);
-  		}
+        if(bin.isString(data))
+        {
+            ret = data;
+        }
+        else
+        {
+            var pairs = [];
+            var value = null;
+            for(var key in data)
+            {
+                value = data[key];
+                if(value !== null && value !== undefined)
+                {
+                    if(typeof value === "object")
+                    {
+                        value = "_json_"+JSON.stringify(value);
+                    }
+                }
+                pairs.push(key+"="+value);    
+            }
 
-  		if(!queryString)
-  		{
-  			return ret;
-  		}
+            ret = pairs.join("&");
+        }
 
-		queryString = decodeURI(queryString);
+        return ret;
+    }
+
+    bin.toQueryParams = function(queryString) 
+    {
+        var ret = {};
+
+        if(queryString === undefined || queryString === null || queryString === "")
+        {
+            return ret;
+        }
+
+        queryString = decodeURI(queryString);
 
         var pairs = queryString.split("&");
         var v = null;
@@ -118,47 +135,78 @@ var cordova = typeof cordova === "undefined" ? undefined : cordova;
             }
         }
 
-		return ret;
-	})();
+        return ret;
+    }
 
-	// Setup platform info
-	/**
-	 * Platform information, you can use it to check what system your code is running on, android, ios or browser.
-	 * NB: Only available for SPA.
-	 * @memberof bin
-	 * @namespace
-	 */
-	bin.platform = {};
-	if(cordova)
-	{
-		/**
-		 * Platform type, available values are "android","ios","browser"
-		 * @memberof bin.platform
-		 */
-		bin.platform.type = cordova.platformId;
+    bin.queryString = (function() 
+    {
+        var queryString = window.location.href;
 
-		/**
-		 * Quick type checking for android, equivalent to bin.platform.type === "android"
-		 * @memberof bin.platform
-		 */
-		bin.platform.android = bin.platform.type === "android";
+        var i = queryString.indexOf("#");
+        if(i>=0)
+        {
+            queryString = window.location.href.substring(0, i);
+        }
+        
+        i = queryString.indexOf("?");
+        if(i>=0)
+        {
+            queryString = queryString.substring(i+1);
+        }
 
-		/**
-		 * Quick type checking for ios, equivalent to bin.platform.type === "ios"
-		 * @memberof bin.platform
-		 */
-		bin.platform.ios     = bin.platform.type === "ios";
-	}
-	else
-	{
-		bin.platform.type = "browser";
-		/**
-		 * Quick type checking for browser, equivalent to bin.platform.type === "browser"
-		 * @memberof bin.platform
-		 */
-		bin.platform.browser = true;
-	}
+        return queryString;
+    })()
 
+    bin.queryParams = bin.toQueryParams(bin.queryString);
+
+    // Setup platform info
+    /**
+     * Platform information, you can use it to check what system your code is running on, android, ios or browser.
+     * NB: Only available for SPA.
+     * @memberof bin
+     * @namespace
+     */
+    bin.platform = {};
+    if(cordova)
+    {
+        /**
+         * Platform type, available values are "android","ios","browser"
+         * @memberof bin.platform
+         */
+        bin.platform.type = cordova.platformId;
+
+        /**
+         * Quick type checking for android, equivalent to bin.platform.type === "android"
+         * @memberof bin.platform
+         */
+        bin.platform.android = bin.platform.type === "android";
+
+        /**
+         * Quick type checking for ios, equivalent to bin.platform.type === "ios"
+         * @memberof bin.platform
+         */
+        bin.platform.ios     = bin.platform.type === "ios";
+    }
+    else
+    {
+        bin.platform.type = "browser";
+        /**
+         * Quick type checking for browser, equivalent to bin.platform.type === "browser"
+         * @memberof bin.platform
+         */
+        bin.platform.browser = true;
+
+        // From http://keenwon.com/demo/201402/js-check-browser.html
+        var Sys = bin.platform;
+        var ua = navigator.userAgent.toLowerCase();
+        var s;
+        (s = ua.match(/rv:([\d.]+)\) like gecko/)) ? Sys.ie = s[1] :
+        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+        (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+        (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+        (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+    }
 })();
 
 require.onError = function(err)
@@ -177,7 +225,7 @@ require.onError = function(err)
 // Config the core lib
 require.config(
 {
-	baseUrl:'./', 
+	baseUrl: './', 
 	packages:[],
 	paths: 
 	{
@@ -209,7 +257,51 @@ require.config(
 	shim: {}
 });
 
-require(["config/bpf_hash_globalConfig", "bin/bpf_hash_polyfill"], function(globalConfig)
+if(window.requireBaseUrl)
+{
+    require.config(
+    {
+        baseUrl: window.requireBaseUrl
+    });
+}
+
+(function()
+{
+    if(typeof String.prototype.startsWith !== "function") 
+    {
+        String.prototype.startsWith = function (prefix)
+        {
+            return this.slice(0, prefix.length) === prefix;
+        };
+    }
+
+    if(typeof String.prototype.endsWith !== "function") 
+    {
+        String.prototype.endsWith = function(suffix) 
+        {
+            return this.indexOf(suffix, this.length - suffix.length) !== -1;
+        };
+    }
+
+    var deps = [];
+    if(typeof Promise === "undefined")
+    {
+        deps.push("bin/3rdParty/promise/promise");
+    }
+
+    // Start loading scripts
+    if(deps.length > 0)
+    {
+        require.requireScript(deps);
+    }
+
+    define("polyfill", deps, function()
+    {
+        return undefined;
+    });
+})();
+
+require(["config/bpf_hash_globalConfig", "polyfill"], function(globalConfig)
 {
 	bin.globalConfig  = globalConfig;
 	bin.runtimeConfig = globalConfig[globalConfig.runtime || "RELEASE"] || {};

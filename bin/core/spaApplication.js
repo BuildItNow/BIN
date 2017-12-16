@@ -275,17 +275,6 @@ define([
 			return this.clientHeight()-this.navHeight();
 		}
 
-		Class.fireReady = function()
-		{
-			if(cordova && cordova.binPlugins && cordova.binPlugins.eventEmiter)
-			{
-				setTimeout(function()
-				{
-					cordova.binPlugins.eventEmiter.fire("SCRIPT_EVENT_READY");
-				}, 0);
-			}
-		}
-
 		return Application.extend(Class);
 	}
 );

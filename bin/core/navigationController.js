@@ -7,24 +7,6 @@ function(effecters, Vue)
 		return path.replace(/\\/g, '/');
 	}
 
-	var NavigationRouter = Backbone.Router.extend(
-	{
-		initialize:function(callback)
-		{
-			Backbone.Router.prototype.initialize.call(this);
-			
-			this._callbackImpl = callback;
-		},
-		routes: 
-		{
-			'*path(?*queryString)': '_callback',
-		},
-		_callback: function(path, queryString)
-		{
-			this._callbackImpl(path, queryString);
-		}
-	});
-
 	var toNaviName = function(path)
 	{
 	    if(!path || path === "")
@@ -49,26 +31,10 @@ function(effecters, Vue)
 
   	var queryParams = function(queryString) 
   	{
-  		var ret = {_queryString:queryString};
-  		if(queryString === undefined || queryString === null || queryString === "")
-  		{
-  			return ret;
-  		}
-		
-		var pairs = queryString.split("&");
-		var k = null;
-		var v = null;
-		var pair = null;
-		for(i = 0; i < pairs.length; ++i) 
-		{
-			pair = pairs[i].split('=');
-			if(pair.length === 2)
-			{
-				ret[pair[0]] = pair[1];
-			}
-		}
+  		var ret = bin.toQueryParams(queryString);
+  		ret._queryString = queryString;
 
-		return ret;
+  		return ret;
 	}
 
 	var viewKey = function(path, queryString)
@@ -105,31 +71,17 @@ function(effecters, Vue)
 		var self = this;
 		this._container = $("#navigationContainer");
 
-		// Redirect to index.html
-		// window.location.href = './index.html#';
-
 		var pageHistory = bin.globalConfig.pageHistory || "hashChange";
-		if(pageHistory === "hashChange" || pageHistory === "pushState")	// Use backbone router
+		if(pageHistory === "hashChange")	
 		{
-			this._router = new NavigationRouter(function(path, queryString){self._route(path, queryString)});
-	
-			this._pageHistory = Backbone.history;
+			this._useRouter  = true;
+			this._navVerson  = ""+(_.now()%1000);
 
-			var options = {silent:true};
-			if(pageHistory === "pushState")
+			bin.router.on("ROUTE-CHANGE", function(path)
 			{
-				console.warn("pushState feature not supported on SPA, use hashChange instead.");
-				// options.pushState = true;
-				// var root = window.location.host+window.location.pathname;
-				// var i = root.lastIndexOf("/");
-				// if(i > 0)
-				// {
-				// 	root = root.substring(0, i);
-				// }
-				
-				// options.root = root;
-			}
-			this._pageHistory.start(options);
+				var queryString = bin.router.getRouteQueryString();
+				self._route(path, queryString);
+			});
 		}
 		
 		this._zIndex = 100;
@@ -283,9 +235,9 @@ function(effecters, Vue)
 		this._popData = {data:popData, options:options, count:count};
 		this._popTime = now;
 
-		if(this._pageHistory)
+		if(this._useRouter)
 		{
-			window.history.go(-count);
+			bin.router.pop(count);
 		}
 		else
 		{
@@ -306,11 +258,7 @@ function(effecters, Vue)
 			return false;
 		}
 
-		options = options || {trigger: true};
-		if(options.trigger === undefined)
-		{
-			options.trigger = true;
-		}
+		options = options || {}
 
 		var effecter = options.effect;
 		if(effecter && (typeof effecter === "string"))
@@ -324,7 +272,7 @@ function(effecters, Vue)
 
 		var pos = name.indexOf('?');
 		var path = name;
-		var queryString = null;
+		var queryString = "";
 		if(pos >= 0)
 		{
 			path = name.substring(0, pos);
@@ -333,9 +281,10 @@ function(effecters, Vue)
 		
 		path = toNaviName(path);
 
-		if(this._pageHistory)
+		if(this._useRouter)
 		{
-			queryString = queryString ? queryString+"&_t="+now : "_t="+now;
+			var tv = "_t="+now+"&_v="+this._navVerson;
+			queryString += queryString ? "&"+tv : tv;
 		}
 
       	name = queryString ? path+"?"+queryString : path;
@@ -343,22 +292,14 @@ function(effecters, Vue)
 		this._pushData = {path:path, queryString:queryString, data:pushData, options:options, effecter:effecter};
 		this._pushTime = now;
 
-		if(this._pageHistory)
+		if(this._useRouter)
 		{
-			this._pageHistory.navigate(name, options);
+			bin.router.push(name);
 		}
 		else
 		{
 			this._route(path, queryString);
 		}
-		//if(options.native)
-		//{
-		//	this._route(path, queryString);
-		//}
-		//else
-		//{
-			//Backbone.history.navigate(name, options); // ==> route
-		//}
 
 		return true;
 	}
@@ -406,12 +347,6 @@ function(effecters, Vue)
 
 	cls.startWith = function(view, data, options)
 	{	
-		// Set backgone to a invalid fragment to clear the old url
-		if(this._pageHistory)
-		{
-			this._pageHistory.fragment = "";
-		}
-
 		options = options || {};
 		options.start = true;
 		
@@ -479,14 +414,28 @@ function(effecters, Vue)
 			return ;
 		}
 
-		// window.history.go or window.history.back
+		var params = queryParams(queryString);
+		if(params._v !== this._navVerson)
+		{
+			return ;
+		}
+
+		// From router
 		if(path)
 		{
-			// Check back
+			
 			path = toNaviName(path);
 			var vk  = viewKey(path, queryString);
-			var pos = this._views.length-2;
 
+			// Check current
+			var cv  = this.current();
+			if(cv && cv.key === vk)
+			{
+				return ;
+			}
+
+			// Check back
+			var pos = this._views.length-2;
 			for(; pos >= 0; --pos)
 			{
 				if(this._views[pos].key === vk)
@@ -497,8 +446,7 @@ function(effecters, Vue)
 			} 
 
 			// Do push
-			// Ignore : Must call naviController.push to do naviage operation
-			this._doPush({path:path, queryParams:queryParams(queryString), effecter:this._defaultIOEffecter});
+			this._doPush({path:path, queryParams:params, effecter:this._defaultIOEffecter});
 		}
 	}
 
