@@ -75,13 +75,15 @@ function(effecters, Vue)
 		if(pageHistory === "hashChange")	
 		{
 			this._useRouter  = true;
-			this._navVerson  = ""+(_.now()%1000);
+			// this._navVerson  = ""+(_.now()%1000);
 
 			bin.router.on("ROUTE-CHANGE", function(path)
 			{
 				var queryString = bin.router.getRouteQueryString();
 				self._route(path, queryString);
 			});
+
+			this._isfirstPush = true;
 		}
 		
 		this._zIndex = 100;
@@ -283,7 +285,7 @@ function(effecters, Vue)
 
 		if(this._useRouter)
 		{
-			var tv = "_t="+now+"&_v="+this._navVerson;
+			var tv = "_t="+now; // +"&_v="+this._navVerson;
 			queryString += queryString ? "&"+tv : tv;
 		}
 
@@ -294,7 +296,8 @@ function(effecters, Vue)
 
 		if(this._useRouter)
 		{
-			bin.router.push(name);
+			bin.router.push(name, undefined, this._isfirstPush ? { replace: true } : undefined);
+			this._isfirstPush = false;
 		}
 		else
 		{
@@ -415,10 +418,10 @@ function(effecters, Vue)
 		}
 
 		var params = queryParams(queryString);
-		if(params._v !== this._navVerson)
-		{
-			return ;
-		}
+		// if(params._v !== this._navVerson)
+		// {
+		// 	return ;
+		// }
 
 		// From router
 		if(path)

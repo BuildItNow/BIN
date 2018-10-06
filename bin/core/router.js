@@ -200,14 +200,22 @@ function(Route)
         }
     }
 
-    pro.push = function(path, data)
+    pro.push = function(path, data, options)
     {
         if(data)
         {
             path = path+(path.indexOf("?")<0 ? "?" : "&")+queryString(data);
         }
 
-        Backbone.history.navigate(path, {trigger:true});
+        if (!options) {
+            options = {};
+        }
+
+        if (options.trigger === undefined) {
+            options.trigger = true;
+        }
+
+        Backbone.history.navigate(path, options);
     }
 
     pro.pop = function(n)
